@@ -1,0 +1,8 @@
+{
+  "demos": [
+    {
+      "preview": "./img/b1.jpg",
+      "js": "b1.js"
+    }
+  ]
+}

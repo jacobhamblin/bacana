@@ -1,0 +1,23 @@
+html body {
+  margin: 0;
+  padding: 0;
+  background-color: #d0d6d6;
+  color: #DDE2E2; }
+  html body a {
+    text-decoration: none; }
+  html body section.content {
+    width: 90%;
+    max-width: 1080px;
+    margin: 0 auto; }
+    html body section.content div.previews-container {
+      display: -webkit-box;
+      display: flex;
+      flex-wrap: wrap;
+      -webkit-box-pack: center;
+              justify-content: center; }
+      html body section.content div.previews-container div.preview {
+        background-image: url("https://s.graphiq.com/sites/default/files/stories/t4/20_Best_Breeds_for_First-Time_Dog_Owners_3132_4371.jpg");
+        background-size: cover;
+        margin: 1em;
+        width: 15em;
+        height: 15em; }
