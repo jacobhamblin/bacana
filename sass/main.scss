@@ -1,3 +1,5 @@
+$previewSize: 15rem;
+
 html {
   body {
     margin: 0;
@@ -15,12 +17,27 @@ html {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        div.preview {
-          background-image: url('https://s.graphiq.com/sites/default/files/stories/t4/20_Best_Breeds_for_First-Time_Dog_Owners_3132_4371.jpg');
-          background-size: cover;
-          margin: 1em;
-          width: 15em;
-          height: 15em;
+        div.preview-container {
+          width: $previewSize;
+          height: $previewSize;
+          margin: 1rem;
+          overflow: hidden;
+          background-color: #777;
+          &:hover {
+
+          }
+          div.preview {
+            background-image: url('https://s.graphiq.com/sites/default/files/stories/t4/20_Best_Breeds_for_First-Time_Dog_Owners_3132_4371.jpg');
+            background-size: cover;
+            width: $previewSize;
+            height: $previewSize;
+            cursor: pointer;
+            transform: scale(1);
+            transition: .2s all ease;
+            &:hover {
+              transform: scale(1.25);
+            }
+          }
         }
       }
     }

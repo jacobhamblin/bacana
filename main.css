@@ -15,9 +15,22 @@ html body {
       flex-wrap: wrap;
       -webkit-box-pack: center;
               justify-content: center; }
-      html body section.content div.previews-container div.preview {
-        background-image: url("https://s.graphiq.com/sites/default/files/stories/t4/20_Best_Breeds_for_First-Time_Dog_Owners_3132_4371.jpg");
-        background-size: cover;
-        margin: 1em;
-        width: 15em;
-        height: 15em; }
+      html body section.content div.previews-container div.preview-container {
+        width: 15rem;
+        height: 15rem;
+        margin: 1rem;
+        overflow: hidden;
+        background-color: #777; }
+        html body section.content div.previews-container div.preview-container div.preview {
+          background-image: url("https://s.graphiq.com/sites/default/files/stories/t4/20_Best_Breeds_for_First-Time_Dog_Owners_3132_4371.jpg");
+          background-size: cover;
+          width: 15rem;
+          height: 15rem;
+          cursor: pointer;
+          -webkit-transform: scale(1);
+                  transform: scale(1);
+          -webkit-transition: .2s all ease;
+          transition: .2s all ease; }
+          html body section.content div.previews-container div.preview-container div.preview:hover {
+            -webkit-transform: scale(1.25);
+                    transform: scale(1.25); }

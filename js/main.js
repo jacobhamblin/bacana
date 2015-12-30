@@ -8,14 +8,18 @@ demosCode.b1 = b1;
 const demos = demosJson.demos;
 for (var i =  0; i < demos.length; i++) {
   let demo = demos[i];
-  let div = document.createElement('div');
-  div.className = 'preview';
-  div.style.backgroundImage = 'url(' + demo.preview + ')';
+  let previewContainer = document.createElement('div');
+  previewContainer.className = 'preview-container';
+  let preview = document.createElement('div');
+  preview.className = 'preview';
+  preview.style.backgroundImage = 'url(' + demo.preview + ')';
   let num = i;
-  div.addEventListener('click', function (e) {
+  preview.addEventListener('click', function (e) {
     event.preventDefault();
     // move css
     demosCode['b' + (num + 1).toString()].init();
   })
-  document.querySelectorAll('.previews-container')[0].appendChild(div);
+  previewContainer.appendChild(preview);
+  document.querySelectorAll('.previews-container')[0].appendChild(previewContainer);
+
 }
