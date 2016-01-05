@@ -2,9 +2,52 @@ html body {
   margin: 0;
   padding: 0;
   background-color: #d0d6d6;
-  color: #DDE2E2; }
+  color: #DDE2E2;
+  overflow-x: hidden; }
   html body a {
     text-decoration: none; }
+  html body div.fullscreen {
+    position: absolute;
+    top: 0;
+    left: 100vw;
+    height: 100%;
+    width: 100%;
+    background-color: #222;
+    z-index: 1;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease; }
+    html body div.fullscreen.active {
+      left: 0; }
+      html body div.fullscreen.active div.close-container div.close div.line {
+        width: 22px; }
+      html body div.fullscreen.active div.close-container div.close div.line:first-of-type {
+        -webkit-transform: rotate(45deg) translateY(7px) translateX(5px);
+                transform: rotate(45deg) translateY(7px) translateX(5px); }
+      html body div.fullscreen.active div.close-container div.close div.line:nth-of-type(2) {
+        width: 0; }
+      html body div.fullscreen.active div.close-container div.close div.line:last-of-type {
+        -webkit-transform: rotate(-45deg) translateY(-1px) translateX(-2px);
+                transform: rotate(-45deg) translateY(-1px) translateX(-2px); }
+    html body div.fullscreen div.close-container {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 1rem 1rem;
+      z-index: 2;
+      cursor: pointer; }
+      html body div.fullscreen div.close-container div.close {
+        width: 20px;
+        height: 20px; }
+        html body div.fullscreen div.close-container div.close div.line {
+          width: 15px;
+          height: 2px;
+          display: block;
+          margin-bottom: 2px;
+          background-color: #eee;
+          -webkit-transform: rotate(0deg);
+                  transform: rotate(0deg);
+          -webkit-transition: all .2s ease;
+          transition: all .2s ease; }
   html body section.content {
     width: 90%;
     max-width: 1080px;

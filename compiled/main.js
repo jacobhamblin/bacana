@@ -61,6 +61,19 @@
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
 
+	function toggleClass(el, className) {
+	  if (el.classList) {
+	    el.classList.toggle(className);
+	  } else {
+	    var classes = el.className.split(' ');
+	    var existingIndex = classes.indexOf(className);
+
+	    if (existingIndex >= 0) classes.splice(existingIndex, 1);else classes.push(className);
+
+	    el.className = classes.join(' ');
+	  }
+	}
+
 	var demos = _demos2.default.demos;
 
 	var _loop = function _loop() {
@@ -74,6 +87,7 @@
 	  preview.addEventListener('click', function (e) {
 	    event.preventDefault();
 	    // move css
+	    toggleClass(document.querySelectorAll('div.fullscreen')[0], "active");
 	    demosCode['b' + (num + 1).toString()].init();
 	  });
 	  previewContainer.appendChild(preview);
@@ -83,6 +97,10 @@
 	for (var i = 0; i < demos.length; i++) {
 	  _loop();
 	}
+
+	document.querySelectorAll('div.fullscreen div.close-container')[0].addEventListener('click', function () {
+	  toggleClass(document.querySelectorAll('div.fullscreen')[0], "active");
+	});
 
 /***/ },
 /* 1 */
