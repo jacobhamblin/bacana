@@ -1,6 +1,6 @@
 // b1.js
 
-import THREE from './vendor/three.min.js';
+import THREE from 'three';
 
 const b1 = {
   init: function () {

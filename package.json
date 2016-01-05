@@ -1,7 +1,8 @@
 {
   "name": "bacana",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple platform for viewing three.js scenes",
+  "repository": "https://github.com/jacobhamblin/bacana",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,6 +26,7 @@
     "precss": "^1.3.0",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
+    "three": "^0.73.0",
     "url-loader": "^0.5.7"
   }
 }
