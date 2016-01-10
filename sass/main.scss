@@ -1,4 +1,8 @@
 $previewSize: 15rem;
+$slateblu: #6a7989;
+$lightgray: #d0d6d6;
+
+@import './headerBox.scss';
 
 html {
   body {
@@ -60,6 +64,13 @@ html {
         }
       }
     }
+    header {
+      width: 90%;
+      max-width: 1080px;
+      height: 17rem;
+      margin: 2rem auto 0 auto;
+
+    }
     section.content {
       width: 90%;
       max-width: 1080px;
@@ -71,7 +82,6 @@ html {
         div.preview-container {
           width: $previewSize;
           height: $previewSize;
-          margin: 1rem;
           overflow: hidden;
           background-color: #777;
           &:hover {

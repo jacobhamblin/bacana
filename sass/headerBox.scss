@@ -1,0 +1,60 @@
+$slateblu: #6a7989;
+$lightgray: #d0d6d6;
+$accent: #777;
+
+$prismHeight: 2rem;
+$prismWidth: 2rem;
+$prismWidthLarger: 3rem;
+$prismGroupHeight: 100%;
+$nPrisms: 9;
+$nPrismGroups: 32;
+$time: 4s;
+$animDur: 2s;
+
+header {
+  div.box {
+    width: 100%;
+    height: 100%;
+    background-color: $accent;
+    div.prisms-container {
+      width: 150%;
+      height: 100%;
+      margin-left: -.25rem;
+      div.prism-group {
+        height: $prismGroupHeight;
+        width: $prismWidth;
+        margin: 0;
+        display: inline-block;
+        @for $i from 0 to $nPrismGroups {
+          &:nth-child(#{$i + 1}) {
+
+            div.prism {
+              @for $j from 0 to $nPrisms {
+                &:nth-child(#{$j + 1}) {
+                  animation-delay: ($j*$time/$nPrisms) + ($i*$time/$nPrismGroups), ($j*$time/$nPrisms) + ($i*$time/$nPrismGroups);
+
+                }
+              }
+            }
+          }
+        }
+
+        div.prism {
+          transform: rotate(45deg);
+          width: $prismWidth;
+          height: $prismHeight;
+          animation-name: growth, growth;
+          background-color: $lightgray;
+          animation-iteration-count: infinite, infinite;
+          animation-duration: $animDur, $animDur;
+          animation-direction: alternate, reverse;
+          border: 1px solid transparent;
+        }
+      }
+    }
+    @keyframes growth {
+      from { width: $prismWidth; height: $prismHeight; }
+      to { width: $prismWidthLarger; height: $prismWidthLarger; }
+    }
+  }
+}
