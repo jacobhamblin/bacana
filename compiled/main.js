@@ -54,13 +54,13 @@
 
 	var _b2 = _interopRequireDefault(_b);
 
-	var _b3 = __webpack_require__(6);
+	var _b3 = __webpack_require__(4);
 
 	var _b4 = _interopRequireDefault(_b3);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(4);
+	__webpack_require__(5);
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
@@ -113,10 +113,15 @@
 	  toggleClass(document.querySelectorAll('div.fullscreen')[0], "active");
 	});
 
-	var prevs = document.querySelectorAll('div.preview-container');
-	prevs.forEach(function (p) {
-	  p.addEventListener('hover', function (e) {
-	    debugger;
+	var prevsNodeList = document.querySelectorAll('div.preview-container');
+	var prevsArray = Array.prototype.slice.call(prevsNodeList, 0);
+
+	prevsArray.forEach(function (p) {
+	  p.addEventListener('mouseenter', function (e) {
+	    toggleClass(e.target, "hovered");
+	  });
+	  p.addEventListener('mouseleave', function (e) {
+	    toggleClass(e.target, "hovered");
 	  });
 	});
 
@@ -36352,13 +36357,6 @@
 
 /***/ },
 /* 4 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 5 */,
-/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36376,6 +36374,12 @@
 	}; // b2.js
 
 	module.exports = b2;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);

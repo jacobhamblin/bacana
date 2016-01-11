@@ -9,6 +9,16 @@ div.previews-container {
   flex-wrap: wrap;
   justify-content: center;
   overflow: hidden;
+  div.preview-container.hovered {
+    div.preview-overlay {
+      &:nth-of-type(2) {
+
+      }
+      &:nth-of-type(3) {
+        
+      }
+    }
+  }
   div.preview-container {
     width: $previewSize;
     height: $previewSize;

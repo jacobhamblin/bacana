@@ -54,9 +54,14 @@ document.querySelectorAll('div.fullscreen div.close-container')[0]
     toggleClass(document.querySelectorAll('div.fullscreen')[0], "active")
   })
 
-const prevs = document.querySelectorAll('div.preview-container');
-prevs.forEach(p => {
-  p.addEventListener('hover', (e) => {
-    debugger
+const prevsNodeList = document.querySelectorAll('div.preview-container');
+const prevsArray = Array.prototype.slice.call(prevsNodeList, 0);
+
+prevsArray.forEach(p => {
+  p.addEventListener('mouseenter', (e) => {
+    toggleClass(e.target, "hovered");
+  })
+  p.addEventListener('mouseleave', (e) => {
+    toggleClass(e.target, "hovered");
   })
 });
