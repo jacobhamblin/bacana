@@ -57,11 +57,11 @@ header {
           transform: rotate(45deg);
           width: $prismWidth;
           height: $prismHeight;
-          animation-name: growth, growth;
+          animation-name: growth;
           background-color: $lightgray;
-          animation-iteration-count: infinite, infinite;
-          animation-duration: $animDur, $animDur;
-          animation-direction: alternate, reverse;
+          animation-iteration-count: infinite;
+          animation-duration: $animDur;
+          animation-direction: alternate;
           border: 1px solid transparent;
         }
       }

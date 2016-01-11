@@ -15,7 +15,7 @@ div.previews-container {
 
       }
       &:nth-of-type(3) {
-        
+
       }
     }
   }
@@ -39,17 +39,17 @@ div.previews-container {
       pointer-events: none;
       &:nth-of-type(2) {
         transform: rotate(45deg) translateX(-20rem);
-        animation-iteration-count: infinite, infinite;
-        animation-duration: $animDur, $animDur;
-        animation-direction: alternate, reverse;
-        animation-name: retract1, retract1;
+        animation-iteration-count: infinite;
+        animation-duration: $animDur;
+        animation-direction: alternate;
+        animation-name: retract1;
       }
       &:nth-of-type(3) {
         transform: rotate(45deg) translateX(8.5rem);
-        animation-iteration-count: infinite, infinite;
-        animation-duration: $animDur, $animDur;
-        animation-direction: alternate, reverse;
-        animation-name: retract2, retract2;
+        animation-iteration-count: infinite;
+        animation-duration: $animDur;
+        animation-direction: alternate;
+        animation-name: retract2;
       }
     }
     div.preview {

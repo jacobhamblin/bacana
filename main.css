@@ -893,15 +893,15 @@ header div.box {
                 transform: rotate(45deg);
         width: 2rem;
         height: 2rem;
-        -webkit-animation-name: growth, growth;
-                animation-name: growth, growth;
+        -webkit-animation-name: growth;
+                animation-name: growth;
         background-color: #d0d6d6;
-        -webkit-animation-iteration-count: infinite, infinite;
-                animation-iteration-count: infinite, infinite;
-        -webkit-animation-duration: 2s, 2s;
-                animation-duration: 2s, 2s;
-        -webkit-animation-direction: alternate, reverse;
-                animation-direction: alternate, reverse;
+        -webkit-animation-iteration-count: infinite;
+                animation-iteration-count: infinite;
+        -webkit-animation-duration: 2s;
+                animation-duration: 2s;
+        -webkit-animation-direction: alternate;
+                animation-direction: alternate;
         border: 1px solid transparent; }
 
 @-webkit-keyframes growth {
@@ -946,25 +946,25 @@ div.previews-container {
       div.previews-container div.preview-container div.preview-overlay:nth-of-type(2) {
         -webkit-transform: rotate(45deg) translateX(-20rem);
                 transform: rotate(45deg) translateX(-20rem);
-        -webkit-animation-iteration-count: infinite, infinite;
-                animation-iteration-count: infinite, infinite;
-        -webkit-animation-duration: 2s, 2s;
-                animation-duration: 2s, 2s;
-        -webkit-animation-direction: alternate, reverse;
-                animation-direction: alternate, reverse;
-        -webkit-animation-name: retract1, retract1;
-                animation-name: retract1, retract1; }
+        -webkit-animation-iteration-count: infinite;
+                animation-iteration-count: infinite;
+        -webkit-animation-duration: 2s;
+                animation-duration: 2s;
+        -webkit-animation-direction: alternate;
+                animation-direction: alternate;
+        -webkit-animation-name: retract1;
+                animation-name: retract1; }
       div.previews-container div.preview-container div.preview-overlay:nth-of-type(3) {
         -webkit-transform: rotate(45deg) translateX(8.5rem);
                 transform: rotate(45deg) translateX(8.5rem);
-        -webkit-animation-iteration-count: infinite, infinite;
-                animation-iteration-count: infinite, infinite;
-        -webkit-animation-duration: 2s, 2s;
-                animation-duration: 2s, 2s;
-        -webkit-animation-direction: alternate, reverse;
-                animation-direction: alternate, reverse;
-        -webkit-animation-name: retract2, retract2;
-                animation-name: retract2, retract2; }
+        -webkit-animation-iteration-count: infinite;
+                animation-iteration-count: infinite;
+        -webkit-animation-duration: 2s;
+                animation-duration: 2s;
+        -webkit-animation-direction: alternate;
+                animation-direction: alternate;
+        -webkit-animation-name: retract2;
+                animation-name: retract2; }
     div.previews-container div.preview-container div.preview {
       background-image: url("https://s.graphiq.com/sites/default/files/stories/t4/20_Best_Breeds_for_First-Time_Dog_Owners_3132_4371.jpg");
       background-size: cover;
