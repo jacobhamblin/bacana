@@ -26,6 +26,7 @@ div.previews-container {
       transform: rotate(45deg);
       z-index: 1;
       top: 0;
+      pointer-events: none;
       &:nth-of-type(2) {
         transform: rotate(45deg) translateX(-20rem);
         animation-iteration-count: infinite, infinite;
