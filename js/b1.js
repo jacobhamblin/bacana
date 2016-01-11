@@ -4,7 +4,7 @@ import THREE from 'three';
 
 const b1 = {
   init: function () {
-    console.log('initialized!');
+    console.log('initialized b1!');
   }
 };
 

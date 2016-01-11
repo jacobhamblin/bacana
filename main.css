@@ -3,11 +3,22 @@ header div.box {
   height: 100%;
   background-color: #777;
   z-index: 1;
-  position: relative; }
+  position: relative;
+  -webkit-filter: saturate(0);
+          filter: saturate(0);
+  opacity: 0.7;
+  -webkit-transition: opacity 1s ease;
+  transition: opacity 1s ease;
+  background-image: linear-gradient(45deg, #440088, rgba(255, 255, 255, 0));
+  background-image: -webkit-linear-gradient(45deg, #440088, rgba(255, 255, 255, 0));
+  background-image: -ms-linear-gradient(45deg, #440088, rgba(255, 255, 255, 0)); }
+  header div.box:hover {
+    opacity: 0.0; }
   header div.box div.prisms-container {
     width: 101%;
     height: 100%;
-    margin-left: -.25rem; }
+    margin-left: -.25rem;
+    pointer-events: none; }
     header div.box div.prisms-container div.prism-group {
       height: 100%;
       width: 2rem;

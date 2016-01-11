@@ -54,12 +54,17 @@
 
 	var _b2 = _interopRequireDefault(_b);
 
+	var _b3 = __webpack_require__(6);
+
+	var _b4 = _interopRequireDefault(_b3);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	__webpack_require__(4);
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
+	demosCode.b2 = _b4.default;
 
 	function toggleClass(el, className) {
 	  if (el.classList) {
@@ -108,6 +113,13 @@
 	  toggleClass(document.querySelectorAll('div.fullscreen')[0], "active");
 	});
 
+	var prevs = document.querySelectorAll('div.preview-container');
+	prevs.forEach(function (p) {
+	  p.addEventListener('hover', function (e) {
+	    debugger;
+	  });
+	});
+
 /***/ },
 /* 1 */
 /***/ function(module, exports) {
@@ -117,6 +129,10 @@
 			{
 				"preview": "./img/b1.jpg",
 				"js": "b1.js"
+			},
+			{
+				"preview": "./img/b2.jpg",
+				"js": "b2.js"
 			}
 		]
 	};
@@ -135,7 +151,7 @@
 
 	var b1 = {
 	  init: function init() {
-	    console.log('initialized!');
+	    console.log('initialized b1!');
 	  }
 	}; // b1.js
 
@@ -36339,6 +36355,27 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 5 */,
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(3);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var b2 = {
+	  init: function init() {
+	    console.log('initialized b2!');
+	  }
+	}; // b2.js
+
+	module.exports = b2;
 
 /***/ }
 /******/ ]);

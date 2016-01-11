@@ -1,9 +1,11 @@
 require('../sass/main.scss');
 import demosJson from './demos.json';
 import b1 from './b1.js';
+import b2 from './b2.js';
 
 const demosCode = new Object;
 demosCode.b1 = b1;
+demosCode.b2 = b2;
 
 function toggleClass(el, className) {
   if (el.classList) {
@@ -51,3 +53,10 @@ document.querySelectorAll('div.fullscreen div.close-container')[0]
   .addEventListener('click', function () {
     toggleClass(document.querySelectorAll('div.fullscreen')[0], "active")
   })
+
+const prevs = document.querySelectorAll('div.preview-container');
+prevs.forEach(p => {
+  p.addEventListener('hover', (e) => {
+    debugger
+  })
+});

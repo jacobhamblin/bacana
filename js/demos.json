@@ -3,6 +3,10 @@
     {
       "preview": "./img/b1.jpg",
       "js": "b1.js"
+    },
+    {
+      "preview": "./img/b2.jpg",
+      "js": "b2.js"
     }
   ]
 }
