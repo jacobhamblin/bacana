@@ -81,6 +81,10 @@
 	  var previewContainer = document.createElement('div');
 	  previewContainer.className = 'preview-container';
 	  var preview = document.createElement('div');
+	  var prevOverlay = document.createElement('div');
+	  var prevOverlay1 = document.createElement('div');
+	  prevOverlay.className = "preview-overlay";
+	  prevOverlay1.className = "preview-overlay";
 	  preview.className = 'preview';
 	  preview.style.backgroundImage = 'url(' + demo.preview + ')';
 	  var num = i;
@@ -91,6 +95,8 @@
 	    demosCode['b' + (num + 1).toString()].init();
 	  });
 	  previewContainer.appendChild(preview);
+	  previewContainer.appendChild(prevOverlay);
+	  previewContainer.appendChild(prevOverlay1);
 	  document.querySelectorAll('.previews-container')[0].appendChild(previewContainer);
 	};
 

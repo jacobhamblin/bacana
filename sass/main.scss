@@ -1,8 +1,9 @@
-$previewSize: 15rem;
 $slateblu: #6a7989;
 $lightgray: #d0d6d6;
+$maxWidth: 960px;
 
 @import './headerBox.scss';
+@import './previewContainer.scss';
 
 html {
   body {
@@ -21,7 +22,7 @@ html {
       height: 100%;
       width: 100%;
       background-color: #222;
-      z-index: 1;
+      z-index: 2;
       transition: all .5s ease;
       &.active {
         left: 0;
@@ -66,41 +67,17 @@ html {
     }
     header {
       width: 90%;
-      max-width: 1080px;
+      max-width: $maxWidth;
       height: 17rem;
       margin: 2rem auto 0 auto;
-
     }
     section.content {
       width: 90%;
-      max-width: 1080px;
+      max-width: $maxWidth;
       margin: 0 auto;
-      div.previews-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        div.preview-container {
-          width: $previewSize;
-          height: $previewSize;
-          overflow: hidden;
-          background-color: #777;
-          &:hover {
-
-          }
-          div.preview {
-            background-image: url('https://s.graphiq.com/sites/default/files/stories/t4/20_Best_Breeds_for_First-Time_Dog_Owners_3132_4371.jpg');
-            background-size: cover;
-            width: $previewSize;
-            height: $previewSize;
-            cursor: pointer;
-            transform: scale(1);
-            transition: .2s all ease;
-            &:hover {
-              transform: scale(1.25);
-            }
-          }
-        }
-      }
+      z-index: 1;
+      overflow: hidden;
+      position: relative;
     }
   }
 }

@@ -1,0 +1,65 @@
+$previewSize: 15rem;
+$slateblu: #6a7989;
+$lightgray: #d0d6d6;
+$time: 4s;
+$animDur: 2s;
+
+div.previews-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow: hidden;
+  div.preview-container {
+    width: $previewSize;
+    height: $previewSize;
+    overflow: hidden;
+    background-color: #777;
+    z-index: 0;
+    &:hover {
+
+    }
+    div.preview-overlay {
+      position: absolute;
+      width: 23rem;
+      height: 23rem;
+      background-color: $lightgray;
+      transform: rotate(45deg);
+      z-index: 1;
+      top: 0;
+      &:nth-of-type(2) {
+        transform: rotate(45deg) translateX(-20rem);
+        animation-iteration-count: infinite, infinite;
+        animation-duration: $animDur, $animDur;
+        animation-direction: alternate, reverse;
+        animation-name: retract1, retract1;
+      }
+      &:nth-of-type(3) {
+        transform: rotate(45deg) translateX(8.5rem);
+        animation-iteration-count: infinite, infinite;
+        animation-duration: $animDur, $animDur;
+        animation-direction: alternate, reverse;
+        animation-name: retract2, retract2;
+      }
+    }
+    div.preview {
+      background-image: url('https://s.graphiq.com/sites/default/files/stories/t4/20_Best_Breeds_for_First-Time_Dog_Owners_3132_4371.jpg');
+      background-size: cover;
+      width: $previewSize;
+      height: $previewSize;
+      cursor: pointer;
+      transform: scale(1);
+      transition: .2s all ease;
+      &:hover {
+        transform: scale(1.25);
+      }
+    }
+  }
+  @keyframes retract1 {
+    from { transform: rotate(45deg) translateX(-20rem); }
+    to { transform: rotate(45deg) translateX(-25rem); }
+  }
+  @keyframes retract2 {
+    from { transform: rotate(45deg) translateX(8.5rem); }
+    to { transform: rotate(45deg) translateX(13.5rem); }
+  }
+}
