@@ -39,8 +39,9 @@ for (var i =  0; i < demos.length; i++) {
   preview.addEventListener('click', function (e) {
     event.preventDefault();
     // move css
-    toggleClass(document.querySelectorAll('div.fullscreen')[0], "active");
-    demosCode['b' + (num + 1).toString()].init();
+    const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
+    toggleClass(divFullscreen, "active");
+    demosCode['b' + (num + 1).toString()].init(divFullscreen);
   })
   previewContainer.appendChild(preview);
   previewContainer.appendChild(prevOverlay);
@@ -51,7 +52,11 @@ for (var i =  0; i < demos.length; i++) {
 
 document.querySelectorAll('div.fullscreen div.close-container')[0]
   .addEventListener('click', function () {
-    toggleClass(document.querySelectorAll('div.fullscreen')[0], "active")
+    const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
+    toggleClass(divFullscreen, "active");
+    setTimeout(function () {
+      divFullscreen.removeChild(document.querySelectorAll('canvas')[0]);
+    }, 500)
   })
 
 const prevsNodeList = document.querySelectorAll('div.preview-container');

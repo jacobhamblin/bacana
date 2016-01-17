@@ -54,7 +54,7 @@
 
 	var _b2 = _interopRequireDefault(_b);
 
-	var _b3 = __webpack_require__(4);
+	var _b3 = __webpack_require__(3);
 
 	var _b4 = _interopRequireDefault(_b3);
 
@@ -96,8 +96,9 @@
 	  preview.addEventListener('click', function (e) {
 	    event.preventDefault();
 	    // move css
-	    toggleClass(document.querySelectorAll('div.fullscreen')[0], "active");
-	    demosCode['b' + (num + 1).toString()].init();
+	    var divFullscreen = document.querySelectorAll('div.fullscreen')[0];
+	    toggleClass(divFullscreen, "active");
+	    demosCode['b' + (num + 1).toString()].init(divFullscreen);
 	  });
 	  previewContainer.appendChild(preview);
 	  previewContainer.appendChild(prevOverlay);
@@ -110,7 +111,11 @@
 	}
 
 	document.querySelectorAll('div.fullscreen div.close-container')[0].addEventListener('click', function () {
-	  toggleClass(document.querySelectorAll('div.fullscreen')[0], "active");
+	  var divFullscreen = document.querySelectorAll('div.fullscreen')[0];
+	  toggleClass(divFullscreen, "active");
+	  setTimeout(function () {
+	    divFullscreen.removeChild(document.querySelectorAll('canvas')[0]);
+	  }, 500);
 	});
 
 	var prevsNodeList = document.querySelectorAll('div.preview-container');
@@ -148,15 +153,102 @@
 
 	'use strict';
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(4);
 
 	var _three2 = _interopRequireDefault(_three);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var b1 = {
-	  init: function init() {
-	    console.log('initialized b1!');
+	  init: function init(container) {
+	    var usefulThings = this.setup(container);
+	    this.animate(usefulThings);
+	  },
+	  setup: function setup(container) {
+	    console.log('initialized b2!');
+
+	    var camera = undefined,
+	        scene = undefined,
+	        raycaster = undefined,
+	        renderer = undefined;
+	    var mouse = new _three2.default.Vector2(),
+	        INTERSECTED = undefined;
+	    var objects = new Object();
+	    var usefulThings = new Object();
+	    var cubeCount = 5;
+	    var cameraMoveY = 0;
+
+	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / (window.innerHeight - 3), 1, 400);
+	    camera.position.set(0, 0, 800);
+	    camera.lookAt(0, 0, 0);
+
+	    scene = new _three2.default.Scene();
+
+	    renderer = new _three2.default.WebGLRenderer();
+	    renderer.setClearColor(0x222222);
+	    renderer.setPixelRatio(window.devicePixelRatio);
+	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+	    container.appendChild(renderer.domElement);
+
+	    var light = new _three2.default.PointLight(0xffffff, 1, 2000);
+
+	    light.position.set(0, 0, 900);
+
+	    scene.add(light);
+
+	    objects.cubes = [];
+
+	    for (var i = 0; i < cubeCount; i++) {
+	      var geometry = new _three2.default.BoxGeometry(10, 10, 10);
+	      var material = new _three2.default.MeshDepthMaterial();
+	      var cube = new _three2.default.Mesh(geometry, material);
+	      cube.position.set(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100 + 600);
+	      objects.cubes.push(cube);
+	      scene.add(cube);
+	    }
+
+	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY };
+
+	    window.addEventListener('resize', this.onWindowResize(usefulThings), false);
+
+	    return usefulThings;
+	  },
+	  onWindowResize: function onWindowResize(usefulThings) {
+	    var camera = usefulThings.camera;
+	    var renderer = usefulThings.renderer;
+
+	    camera.aspect = window.innerWidth / (window.innerHeight - 3);
+	    camera.updateProjectionMatrix();
+
+	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+	  },
+	  animate: function animate(usefulThings) {
+	    var self = this;
+
+	    var newThings = this.render(usefulThings);
+
+	    if (document.querySelectorAll('canvas')[0]) {
+	      requestAnimationFrame(function () {
+	        self.animate(newThings);
+	      });
+	    }
+	  },
+	  render: function render(usefulThings) {
+	    var objects = usefulThings.objects;
+	    var camera = usefulThings.camera;
+	    var cameraMoveY = usefulThings.cameraMoveY;
+	    var renderer = usefulThings.renderer;
+	    var scene = usefulThings.scene;
+	    var mouse = usefulThings.mouse;
+
+	    for (var i = 0; i < objects.cubes.length; i++) {
+	      objects.cubes[i].rotation.x += Math.random() * .05;
+	      objects.cubes[i].rotation.y += Math.random() * .05;
+	    }
+
+	    renderer.render(scene, camera);
+
+	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY };
 	  }
 	}; // b1.js
 
@@ -164,6 +256,117 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(4);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var b2 = {
+	  init: function init(container) {
+	    var usefulThings = this.setup(container);
+	    this.animate(usefulThings);
+	  },
+	  setup: function setup(container) {
+	    console.log('initialized b2!');
+
+	    var camera = undefined,
+	        scene = undefined,
+	        raycaster = undefined,
+	        renderer = undefined;
+	    var mouse = new _three2.default.Vector2(),
+	        INTERSECTED = undefined;
+	    var objects = new Object();
+	    var usefulThings = new Object();
+	    var cubeCount = 5;
+	    var cameraMoveY = 0;
+
+	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / (window.innerHeight - 3), 1, 400);
+	    camera.position.set(0, 0, 800);
+	    camera.lookAt(0, 0, 0);
+
+	    scene = new _three2.default.Scene();
+
+	    renderer = new _three2.default.WebGLRenderer();
+	    renderer.setClearColor(0x222222);
+	    renderer.setPixelRatio(window.devicePixelRatio);
+	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+	    container.appendChild(renderer.domElement);
+
+	    var light = new _three2.default.PointLight(0xffffff, 1, 2000);
+
+	    light.position.set(0, 0, 900);
+
+	    scene.add(light);
+
+	    objects.cubes = [];
+
+	    for (var i = 0; i < cubeCount; i++) {
+	      var geometry = new _three2.default.BoxGeometry(10, 10, 10);
+	      var material = new _three2.default.MeshDepthMaterial({ wireframe: true });
+	      var cube = new _three2.default.Mesh(geometry, material);
+	      cube.position.set(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100 + 600);
+	      objects.cubes.push(cube);
+	      scene.add(cube);
+	    }
+
+	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY };
+
+	    window.addEventListener('resize', this.onWindowResize(usefulThings), false);
+
+	    return usefulThings;
+	  },
+	  onWindowResize: function onWindowResize(usefulThings) {
+	    var camera = usefulThings.camera;
+	    var renderer = usefulThings.renderer;
+
+	    camera.aspect = window.innerWidth / (window.innerHeight - 3);
+	    camera.updateProjectionMatrix();
+
+	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+	  },
+	  animate: function animate(usefulThings) {
+	    var self = this;
+
+	    var newThings = this.render(usefulThings);
+
+	    if (document.querySelectorAll('canvas')[0]) {
+	      requestAnimationFrame(function () {
+	        self.animate(newThings);
+	      });
+	    }
+	  },
+	  render: function render(usefulThings) {
+	    var objects = usefulThings.objects;
+	    var camera = usefulThings.camera;
+	    var cameraMoveY = usefulThings.cameraMoveY;
+	    var renderer = usefulThings.renderer;
+	    var scene = usefulThings.scene;
+	    var mouse = usefulThings.mouse;
+
+	    for (var i = 0; i < objects.cubes.length; i++) {
+	      objects.cubes[i].rotation.x += Math.random() * .05;
+	      objects.cubes[i].rotation.y += Math.random() * .05;
+	    }
+
+	    camera.position.y += Math.cos(cameraMoveY) * .2;
+	    console.log(camera.position + ' ' + camera.position.y);
+	    cameraMoveY += 0.02;
+
+	    renderer.render(scene, camera);
+
+	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY };
+	  }
+	}; // b2.js
+
+	module.exports = b2;
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var self = self || {};// File:src/Three.js
@@ -36354,26 +36557,6 @@
 	  this['THREE'] = THREE;
 	}
 
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _three = __webpack_require__(3);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var b2 = {
-	  init: function init() {
-	    console.log('initialized b2!');
-	  }
-	}; // b2.js
-
-	module.exports = b2;
 
 /***/ },
 /* 5 */
