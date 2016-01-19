@@ -85,7 +85,6 @@ const b2 = {
     }
 
     camera.position.y += (Math.cos(cameraMoveY) * .2);
-    console.log(camera.position + ' ' + camera.position.y)
     cameraMoveY += 0.02;
 
     renderer.render(scene, camera);
