@@ -10,7 +10,7 @@ const b1 = {
     this.animate(usefulThings);
   },
   setup: function (container) {
-    console.log('initialized b2!');
+    console.log('initialized b1!');
 
     let camera, scene, raycaster, renderer;
     let mouse = new THREE.Vector2(), INTERSECTED;
