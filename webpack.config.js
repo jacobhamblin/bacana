@@ -30,6 +30,7 @@ module.exports = {
 			{ test: /\.eot$/, loader: 'file-loader?prefix=font/' },
 			{ test: /\.ttf$/, loader: 'file-loader?prefix=font/' },
 			{ test: /\.svg$/, loader: 'file-loader?prefix=font/' },
+			{ test: /\.txt$/, loader: 'raw-loader' },
     ],
   },
   plugins: [

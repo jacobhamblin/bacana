@@ -57,7 +57,12 @@ const b2 = {
 
     usefulThings = {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters};
 
-    window.addEventListener('resize', this.onWindowResize(usefulThings), false);
+    let self = this;
+    window.addEventListener(
+      'resize',
+      function() {self.onWindowResize(usefulThings)},
+      false
+    );
 
     return usefulThings;
   },

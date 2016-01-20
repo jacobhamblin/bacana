@@ -157,6 +157,22 @@
 
 	var _three2 = _interopRequireDefault(_three);
 
+	var _TessellateModifier = __webpack_require__(7);
+
+	var _TessellateModifier2 = _interopRequireDefault(_TessellateModifier);
+
+	var _ExplodeModifier = __webpack_require__(8);
+
+	var _ExplodeModifier2 = _interopRequireDefault(_ExplodeModifier);
+
+	var _fragment = __webpack_require__(9);
+
+	var _fragment2 = _interopRequireDefault(_fragment);
+
+	var _vertex = __webpack_require__(10);
+
+	var _vertex2 = _interopRequireDefault(_vertex);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var b1 = {
@@ -175,7 +191,8 @@
 	        INTERSECTED = undefined;
 	    var objects = new Object();
 	    var usefulThings = new Object();
-	    var objectsInfo = { count: 64, radius: 5, sphereRadius: 15 };
+	    var uniforms = undefined;
+	    var objectsInfo = { count: 1, radius: 15 };
 	    var counters = new Object();
 	    counters.a = 0;
 
@@ -197,31 +214,97 @@
 
 	    scene.add(light);
 
-	    objects.tetrahedrons = [];
+	    objects.obj1 = [];
 
 	    for (var i = 0; i < objectsInfo.count; i++) {
 
-	      var geometry = new _three2.default.TetrahedronGeometry(objectsInfo.radius, 0);
-	      var material = new _three2.default.MeshLambertMaterial({
-	        color: 0xbbbbbb
+	      var geometry = new _three2.default.IcosahedronGeometry(objectsInfo.radius);
+
+	      var tessellateModifier = new _TessellateModifier2.default(4);
+
+	      for (var j = 0; j < 6; j++) {
+	        tessellateModifier.modify(geometry);
+	      }
+
+	      var explodeModifier = new _ExplodeModifier2.default();
+	      explodeModifier.modify(geometry);
+
+	      var numFaces = geometry.faces.length;
+
+	      var newGeometry = new _three2.default.BufferGeometry().fromGeometry(geometry);
+
+	      // const material = new THREE.MeshPhongMaterial({
+	      //   color: 0xbbbbbb,
+	      //   shading: THREE.FlatShading
+	      // });
+
+	      var colors = new Float32Array(numFaces * 3 * 3);
+	      var displacement = new Float32Array(numFaces * 3 * 3);
+
+	      var color = new _three2.default.Color();
+
+	      for (var f = 0; f < numFaces; f++) {
+	        var index = 9 * f;
+
+	        var h = 0.5 + 0.2 * Math.random();
+	        var s = 0.5 + 0.2 * Math.random();
+	        var l = 0.5 + 0.3 * Math.random();
+
+	        color.setHSL(h, s, l);
+
+	        var d = 10 * (0.5 - Math.random());
+
+	        for (var k = 0; k < 3; k++) {
+
+	          colors[index + 3 * k] = color.r;
+	          colors[index + 3 * k + 1] = color.g;
+	          colors[index + 3 * k + 2] = color.b;
+
+	          displacement[index + 3 * k] = d;
+	          displacement[index + 3 * k + 1] = d;
+	          displacement[index + 3 * k + 2] = d;
+	        }
+	      }
+
+	      newGeometry.addAttribute('customColor', new _three2.default.BufferAttribute(colors, 3));
+	      newGeometry.addAttribute('displacement', new _three2.default.BufferAttribute(displacement, 3));
+
+	      uniforms = {
+	        amplitude: { type: "f", value: 0.0 }
+	      };
+
+	      var shaderMaterial = new _three2.default.ShaderMaterial({
+	        uniforms: uniforms,
+	        vertexShader: _vertex2.default,
+	        fragmentShader: _fragment2.default
 	      });
-	      var object = new _three2.default.Mesh(geometry, material);
-	      var phi = Math.acos(-1 + 2 * i / objectsInfo.count);
-	      var theta = Math.sqrt(objectsInfo.count * Math.PI) * phi;
 
-	      var spherePositions = [objectsInfo.sphereRadius * Math.cos(theta) * Math.sin(phi), objectsInfo.sphereRadius * Math.sin(theta) * Math.sin(phi), objectsInfo.sphereRadius * Math.cos(phi)];
+	      var object = new _three2.default.Mesh(newGeometry, shaderMaterial);
 
-	      object.position.set(spherePositions[0], spherePositions[1], spherePositions[2] + 750);
+	      object.position.set(0, 0, 750);
 
-	      objects.tetrahedrons.push(object);
+	      objects.obj1.push(object);
 	      scene.add(object);
 	    }
 
-	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
+	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms };
 
-	    window.addEventListener('resize', this.onWindowResize(usefulThings), false);
+	    var self = this;
+	    window.addEventListener('resize', function () {
+	      self.onWindowResize(usefulThings);
+	    }, false);
+	    window.addEventListener('mousemove', function () {
+	      self.onMouseMove(usefulThings);
+	    }, false);
 
 	    return usefulThings;
+	  },
+	  onMouseMove: function onMouseMove(usefulThings) {
+	    var mouse = usefulThings.mouse;
+
+	    event.preventDefault();
+	    mouse.x = event.clientX / window.innerWidth * 2 - 1;
+	    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 	  },
 	  onWindowResize: function onWindowResize(usefulThings) {
 	    var camera = usefulThings.camera;
@@ -250,16 +333,21 @@
 	    var renderer = usefulThings.renderer;
 	    var scene = usefulThings.scene;
 	    var mouse = usefulThings.mouse;
+	    var uniforms = usefulThings.uniforms;
 
-	    for (var i = 0; i < objects.tetrahedrons.length; i++) {
-	      objects.tetrahedrons[i].rotation.y += Math.cos(counters.a) * .05;
+	    var time = Date.now() * 0.001;
+
+	    for (var i = 0; i < objects.obj1.length; i++) {
+	      objects.obj1[i].rotation.y += Math.cos(counters.a) * .025;
 	    }
+
+	    uniforms.amplitude.value = 1.0 + Math.cos(time * 0.5);
 
 	    counters.a += 0.02;
 
 	    renderer.render(scene, camera);
 
-	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
+	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms };
 	  }
 	}; // b1.js
 
@@ -328,7 +416,10 @@
 
 	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
 
-	    window.addEventListener('resize', this.onWindowResize(usefulThings), false);
+	    var self = this;
+	    window.addEventListener('resize', function () {
+	      self.onWindowResize(usefulThings);
+	    }, false);
 
 	    return usefulThings;
 	  },
@@ -36574,6 +36665,298 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 6 */,
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(4);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var tessellateModifier = function tessellateModifier(maxEdgeLength) {
+
+		this.maxEdgeLength = maxEdgeLength;
+	}; /**
+	    * Break faces with edges longer than maxEdgeLength
+	    * - not recursive
+	    *
+	    * @author alteredq / http://alteredqualia.com/
+	    */
+
+	tessellateModifier.prototype.modify = function (geometry) {
+
+		var edge;
+
+		var faces = [];
+		var faceVertexUvs = [];
+		var maxEdgeLengthSquared = this.maxEdgeLength * this.maxEdgeLength;
+
+		for (var i = 0, il = geometry.faceVertexUvs.length; i < il; i++) {
+
+			faceVertexUvs[i] = [];
+		}
+
+		for (var i = 0, il = geometry.faces.length; i < il; i++) {
+
+			var face = geometry.faces[i];
+
+			if (face instanceof _three2.default.Face3) {
+
+				var a = face.a;
+				var b = face.b;
+				var c = face.c;
+
+				var va = geometry.vertices[a];
+				var vb = geometry.vertices[b];
+				var vc = geometry.vertices[c];
+
+				var dab = va.distanceToSquared(vb);
+				var dbc = vb.distanceToSquared(vc);
+				var dac = va.distanceToSquared(vc);
+
+				if (dab > maxEdgeLengthSquared || dbc > maxEdgeLengthSquared || dac > maxEdgeLengthSquared) {
+
+					var m = geometry.vertices.length;
+
+					var triA = face.clone();
+					var triB = face.clone();
+
+					if (dab >= dbc && dab >= dac) {
+
+						var vm = va.clone();
+						vm.lerp(vb, 0.5);
+
+						triA.a = a;
+						triA.b = m;
+						triA.c = c;
+
+						triB.a = m;
+						triB.b = b;
+						triB.c = c;
+
+						if (face.vertexNormals.length === 3) {
+
+							var vnm = face.vertexNormals[0].clone();
+							vnm.lerp(face.vertexNormals[1], 0.5);
+
+							triA.vertexNormals[1].copy(vnm);
+							triB.vertexNormals[0].copy(vnm);
+						}
+
+						if (face.vertexColors.length === 3) {
+
+							var vcm = face.vertexColors[0].clone();
+							vcm.lerp(face.vertexColors[1], 0.5);
+
+							triA.vertexColors[1].copy(vcm);
+							triB.vertexColors[0].copy(vcm);
+						}
+
+						edge = 0;
+					} else if (dbc >= dab && dbc >= dac) {
+
+						var vm = vb.clone();
+						vm.lerp(vc, 0.5);
+
+						triA.a = a;
+						triA.b = b;
+						triA.c = m;
+
+						triB.a = m;
+						triB.b = c;
+						triB.c = a;
+
+						if (face.vertexNormals.length === 3) {
+
+							var vnm = face.vertexNormals[1].clone();
+							vnm.lerp(face.vertexNormals[2], 0.5);
+
+							triA.vertexNormals[2].copy(vnm);
+
+							triB.vertexNormals[0].copy(vnm);
+							triB.vertexNormals[1].copy(face.vertexNormals[2]);
+							triB.vertexNormals[2].copy(face.vertexNormals[0]);
+						}
+
+						if (face.vertexColors.length === 3) {
+
+							var vcm = face.vertexColors[1].clone();
+							vcm.lerp(face.vertexColors[2], 0.5);
+
+							triA.vertexColors[2].copy(vcm);
+
+							triB.vertexColors[0].copy(vcm);
+							triB.vertexColors[1].copy(face.vertexColors[2]);
+							triB.vertexColors[2].copy(face.vertexColors[0]);
+						}
+
+						edge = 1;
+					} else {
+
+						var vm = va.clone();
+						vm.lerp(vc, 0.5);
+
+						triA.a = a;
+						triA.b = b;
+						triA.c = m;
+
+						triB.a = m;
+						triB.b = b;
+						triB.c = c;
+
+						if (face.vertexNormals.length === 3) {
+
+							var vnm = face.vertexNormals[0].clone();
+							vnm.lerp(face.vertexNormals[2], 0.5);
+
+							triA.vertexNormals[2].copy(vnm);
+							triB.vertexNormals[0].copy(vnm);
+						}
+
+						if (face.vertexColors.length === 3) {
+
+							var vcm = face.vertexColors[0].clone();
+							vcm.lerp(face.vertexColors[2], 0.5);
+
+							triA.vertexColors[2].copy(vcm);
+							triB.vertexColors[0].copy(vcm);
+						}
+
+						edge = 2;
+					}
+
+					faces.push(triA, triB);
+					geometry.vertices.push(vm);
+
+					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
+
+						if (geometry.faceVertexUvs[j].length) {
+
+							var uvs = geometry.faceVertexUvs[j][i];
+
+							var uvA = uvs[0];
+							var uvB = uvs[1];
+							var uvC = uvs[2];
+
+							// AB
+
+							if (edge === 0) {
+
+								var uvM = uvA.clone();
+								uvM.lerp(uvB, 0.5);
+
+								var uvsTriA = [uvA.clone(), uvM.clone(), uvC.clone()];
+								var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
+
+								// BC
+							} else if (edge === 1) {
+
+									var uvM = uvB.clone();
+									uvM.lerp(uvC, 0.5);
+
+									var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
+									var uvsTriB = [uvM.clone(), uvC.clone(), uvA.clone()];
+
+									// AC
+								} else {
+
+										var uvM = uvA.clone();
+										uvM.lerp(uvC, 0.5);
+
+										var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
+										var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
+									}
+
+							faceVertexUvs[j].push(uvsTriA, uvsTriB);
+						}
+					}
+				} else {
+
+					faces.push(face);
+
+					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
+
+						faceVertexUvs[j].push(geometry.faceVertexUvs[j][i]);
+					}
+				}
+			}
+		}
+
+		geometry.faces = faces;
+		geometry.faceVertexUvs = faceVertexUvs;
+	};
+
+	module.exports = tessellateModifier;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(4);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var explodeModifier = function explodeModifier() {}; /**
+	                                                      * Make all faces use unique vertices
+	                                                      * so that each face can be separated from others
+	                                                      *
+	                                                      * @author alteredq / http://alteredqualia.com/
+	                                                      */
+
+	explodeModifier.prototype.modify = function (geometry) {
+
+		var vertices = [];
+
+		for (var i = 0, il = geometry.faces.length; i < il; i++) {
+
+			var n = vertices.length;
+
+			var face = geometry.faces[i];
+
+			var a = face.a;
+			var b = face.b;
+			var c = face.c;
+
+			var va = geometry.vertices[a];
+			var vb = geometry.vertices[b];
+			var vc = geometry.vertices[c];
+
+			vertices.push(va.clone());
+			vertices.push(vb.clone());
+			vertices.push(vc.clone());
+
+			face.a = n;
+			face.b = n + 1;
+			face.c = n + 2;
+		}
+
+		geometry.vertices = vertices;
+		delete geometry.__tmpVertices;
+	};
+
+	module.exports = explodeModifier;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	module.exports = "\n\n\t\t\tvarying vec3 vNormal;\n\t\t\tvarying vec3 vColor;\n\n\t\t\tvoid main() {\n\n\t\t\t\tconst float ambient = 0.4;\n\n\t\t\t\tvec3 light = vec3( 1.0 );\n\t\t\t\tlight = normalize( light );\n\n\t\t\t\tfloat directional = max( dot( vNormal, light ), 0.0 );\n\n\t\t\t\tgl_FragColor = vec4( ( directional + ambient ) * vColor, 1.0 );\n\n\t\t\t}\n"
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	module.exports = "\n\t\t\tuniform float amplitude;\n\n\t\t\tattribute vec3 customColor;\n\t\t\tattribute vec3 displacement;\n\n\t\t\tvarying vec3 vNormal;\n\t\t\tvarying vec3 vColor;\n\n\t\t\tvoid main() {\n\n\t\t\t\tvNormal = normal;\n\t\t\t\tvColor = customColor;\n\n\t\t\t\tvec3 newPosition = position + normal * amplitude * displacement;\n\t\t\t\tgl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );\n\n\t\t\t}\n"
 
 /***/ }
 /******/ ]);
