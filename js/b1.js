@@ -2,8 +2,6 @@
 
 import THREE from 'three';
 
-
-
 const b1 = {
   init: function (container) {
     let usefulThings = this.setup(container);
@@ -16,8 +14,9 @@ const b1 = {
     let mouse = new THREE.Vector2(), INTERSECTED;
     let objects = new Object;
     let usefulThings = new Object;
-    let cubeCount = 5;
-    let cameraMoveY = 0;
+    let objectsInfo = {count: 64, radius: 5, sphereRadius: 15};
+    const counters = new Object;
+    counters.a = 0;
 
     camera = new THREE.PerspectiveCamera(
       70,
@@ -42,21 +41,37 @@ const b1 = {
 
     scene.add(light);
 
-    objects.cubes = [];
+    objects.tetrahedrons = [];
 
-    for (let i = 0; i < cubeCount; i++) {
-      let geometry = new THREE.BoxGeometry(10, 10, 10);
-      let material = new THREE.MeshDepthMaterial();
-      let cube = new THREE.Mesh(geometry, material);
-      cube.position.set(
-        Math.random() * 200 - 100,
-        Math.random() * 200 - 100,
-        (Math.random() * 200 - 100) + 600);
-      objects.cubes.push(cube);
-      scene.add(cube);
+    for (let i = 0; i < objectsInfo.count; i++) {
+
+      const geometry = new THREE.TetrahedronGeometry(objectsInfo.radius, 0);
+      const material = new THREE.MeshLambertMaterial({
+        color: 0xbbbbbb,
+      });
+      const object = new THREE.Mesh(geometry, material);
+      const phi = Math.acos( -1 + ( 2 * i ) / objectsInfo.count );
+      const theta = Math.sqrt( objectsInfo.count * Math.PI ) * phi;
+
+      const spherePositions = [
+        objectsInfo.sphereRadius * Math.cos(theta) * Math.sin(phi),
+        objectsInfo.sphereRadius * Math.sin(theta) * Math.sin(phi),
+        objectsInfo.sphereRadius * Math.cos(phi)
+      ];
+
+
+
+      object.position.set(
+        spherePositions[0],
+        spherePositions[1],
+        spherePositions[2] + 750
+      );
+
+      objects.tetrahedrons.push(object);
+      scene.add(object);
     }
 
-    usefulThings = {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY};
+    usefulThings = {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters};
 
     window.addEventListener('resize', this.onWindowResize(usefulThings), false);
 
@@ -80,15 +95,16 @@ const b1 = {
     }
   },
   render: function(usefulThings) {
-    let { objects, camera, cameraMoveY, renderer, scene, mouse } = usefulThings;
-    for (let i = 0; i < objects.cubes.length; i++) {
-      objects.cubes[i].rotation.x += Math.random() * .05;
-      objects.cubes[i].rotation.y += Math.random() * .05;
+    let { objects, camera, counters, renderer, scene, mouse } = usefulThings;
+    for (let i = 0; i < objects.tetrahedrons.length; i++) {
+      objects.tetrahedrons[i].rotation.y += (Math.cos(counters.a) * .05);
     }
+
+    counters.a += 0.02;
 
     renderer.render(scene, camera);
 
-    return {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY};
+    return {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters};
   }
 };
 

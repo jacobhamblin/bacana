@@ -15,7 +15,8 @@ const b2 = {
     let objects = new Object;
     let usefulThings = new Object;
     let cubeCount = 5;
-    let cameraMoveY = 0;
+    const counters = new Object;
+    counters.cameraMoveY = 0;
 
     camera = new THREE.PerspectiveCamera(
       70,
@@ -54,7 +55,7 @@ const b2 = {
       scene.add(cube);
     }
 
-    usefulThings = {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY};
+    usefulThings = {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters};
 
     window.addEventListener('resize', this.onWindowResize(usefulThings), false);
 
@@ -78,18 +79,18 @@ const b2 = {
     }
   },
   render: function(usefulThings) {
-    let { objects, camera, cameraMoveY, renderer, scene, mouse } = usefulThings;
+    let { objects, camera, counters, renderer, scene, mouse } = usefulThings;
     for (let i = 0; i < objects.cubes.length; i++) {
       objects.cubes[i].rotation.x += Math.random() * .05;
       objects.cubes[i].rotation.y += Math.random() * .05;
     }
 
-    camera.position.y += (Math.cos(cameraMoveY) * .2);
-    cameraMoveY += 0.02;
+    camera.position.y += (Math.cos(counters.cameraMoveY) * .2);
+    counters.cameraMoveY += 0.02;
 
     renderer.render(scene, camera);
 
-    return {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY};
+    return {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters};
   }
 };
 

@@ -165,7 +165,7 @@
 	    this.animate(usefulThings);
 	  },
 	  setup: function setup(container) {
-	    console.log('initialized b2!');
+	    console.log('initialized b1!');
 
 	    var camera = undefined,
 	        scene = undefined,
@@ -175,8 +175,9 @@
 	        INTERSECTED = undefined;
 	    var objects = new Object();
 	    var usefulThings = new Object();
-	    var cubeCount = 5;
-	    var cameraMoveY = 0;
+	    var objectsInfo = { count: 64, radius: 5, sphereRadius: 15 };
+	    var counters = new Object();
+	    counters.a = 0;
 
 	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / (window.innerHeight - 3), 1, 400);
 	    camera.position.set(0, 0, 800);
@@ -196,18 +197,27 @@
 
 	    scene.add(light);
 
-	    objects.cubes = [];
+	    objects.tetrahedrons = [];
 
-	    for (var i = 0; i < cubeCount; i++) {
-	      var geometry = new _three2.default.BoxGeometry(10, 10, 10);
-	      var material = new _three2.default.MeshDepthMaterial();
-	      var cube = new _three2.default.Mesh(geometry, material);
-	      cube.position.set(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100 + 600);
-	      objects.cubes.push(cube);
-	      scene.add(cube);
+	    for (var i = 0; i < objectsInfo.count; i++) {
+
+	      var geometry = new _three2.default.TetrahedronGeometry(objectsInfo.radius, 0);
+	      var material = new _three2.default.MeshLambertMaterial({
+	        color: 0xbbbbbb
+	      });
+	      var object = new _three2.default.Mesh(geometry, material);
+	      var phi = Math.acos(-1 + 2 * i / objectsInfo.count);
+	      var theta = Math.sqrt(objectsInfo.count * Math.PI) * phi;
+
+	      var spherePositions = [objectsInfo.sphereRadius * Math.cos(theta) * Math.sin(phi), objectsInfo.sphereRadius * Math.sin(theta) * Math.sin(phi), objectsInfo.sphereRadius * Math.cos(phi)];
+
+	      object.position.set(spherePositions[0], spherePositions[1], spherePositions[2] + 750);
+
+	      objects.tetrahedrons.push(object);
+	      scene.add(object);
 	    }
 
-	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY };
+	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
 
 	    window.addEventListener('resize', this.onWindowResize(usefulThings), false);
 
@@ -236,19 +246,20 @@
 	  render: function render(usefulThings) {
 	    var objects = usefulThings.objects;
 	    var camera = usefulThings.camera;
-	    var cameraMoveY = usefulThings.cameraMoveY;
+	    var counters = usefulThings.counters;
 	    var renderer = usefulThings.renderer;
 	    var scene = usefulThings.scene;
 	    var mouse = usefulThings.mouse;
 
-	    for (var i = 0; i < objects.cubes.length; i++) {
-	      objects.cubes[i].rotation.x += Math.random() * .05;
-	      objects.cubes[i].rotation.y += Math.random() * .05;
+	    for (var i = 0; i < objects.tetrahedrons.length; i++) {
+	      objects.tetrahedrons[i].rotation.y += Math.cos(counters.a) * .05;
 	    }
+
+	    counters.a += 0.02;
 
 	    renderer.render(scene, camera);
 
-	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY };
+	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
 	  }
 	}; // b1.js
 
@@ -283,7 +294,8 @@
 	    var objects = new Object();
 	    var usefulThings = new Object();
 	    var cubeCount = 5;
-	    var cameraMoveY = 0;
+	    var counters = new Object();
+	    counters.cameraMoveY = 0;
 
 	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / (window.innerHeight - 3), 1, 400);
 	    camera.position.set(0, 0, 800);
@@ -314,7 +326,7 @@
 	      scene.add(cube);
 	    }
 
-	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY };
+	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
 
 	    window.addEventListener('resize', this.onWindowResize(usefulThings), false);
 
@@ -343,7 +355,7 @@
 	  render: function render(usefulThings) {
 	    var objects = usefulThings.objects;
 	    var camera = usefulThings.camera;
-	    var cameraMoveY = usefulThings.cameraMoveY;
+	    var counters = usefulThings.counters;
 	    var renderer = usefulThings.renderer;
 	    var scene = usefulThings.scene;
 	    var mouse = usefulThings.mouse;
@@ -353,13 +365,12 @@
 	      objects.cubes[i].rotation.y += Math.random() * .05;
 	    }
 
-	    camera.position.y += Math.cos(cameraMoveY) * .2;
-	    console.log(camera.position + ' ' + camera.position.y);
-	    cameraMoveY += 0.02;
+	    camera.position.y += Math.cos(counters.cameraMoveY) * .2;
+	    counters.cameraMoveY += 0.02;
 
 	    renderer.render(scene, camera);
 
-	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, cameraMoveY: cameraMoveY };
+	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
 	  }
 	}; // b2.js
 
