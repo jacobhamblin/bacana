@@ -191,8 +191,8 @@
 	        INTERSECTED = undefined;
 	    var objects = new Object();
 	    var usefulThings = new Object();
-	    var uniforms = undefined;
-	    var objectsInfo = { count: 1, radius: 15 };
+	    var uniforms = [];
+	    var objectsInfo = { count: 7, radius: 15 };
 	    var counters = new Object();
 	    counters.a = 0;
 
@@ -220,7 +220,8 @@
 
 	      var geometry = new _three2.default.IcosahedronGeometry(objectsInfo.radius);
 
-	      var tessellateModifier = new _TessellateModifier2.default(4);
+	      var maxLength = i % 2 === 0 ? 16 : 4;
+	      var tessellateModifier = new _TessellateModifier2.default(maxLength);
 
 	      for (var j = 0; j < 6; j++) {
 	        tessellateModifier.modify(geometry);
@@ -246,7 +247,7 @@
 	      for (var f = 0; f < numFaces; f++) {
 	        var index = 9 * f;
 
-	        var h = 0.5 + 0.2 * Math.random();
+	        var h = 0.5 + (i - 3) * .1 * Math.random();
 	        var s = 0.5 + 0.2 * Math.random();
 	        var l = 0.5 + 0.3 * Math.random();
 
@@ -269,19 +270,19 @@
 	      newGeometry.addAttribute('customColor', new _three2.default.BufferAttribute(colors, 3));
 	      newGeometry.addAttribute('displacement', new _three2.default.BufferAttribute(displacement, 3));
 
-	      uniforms = {
+	      uniforms.push({
 	        amplitude: { type: "f", value: 0.0 }
-	      };
+	      });
 
 	      var shaderMaterial = new _three2.default.ShaderMaterial({
-	        uniforms: uniforms,
+	        uniforms: uniforms[i],
 	        vertexShader: _vertex2.default,
 	        fragmentShader: _fragment2.default
 	      });
 
 	      var object = new _three2.default.Mesh(newGeometry, shaderMaterial);
 
-	      object.position.set(0, 0, 750);
+	      object.position.set(Math.random() * 150 - 75, Math.random() * 150 - 75, Math.random() * 300 + 450);
 
 	      objects.obj1.push(object);
 	      scene.add(object);
@@ -339,9 +340,8 @@
 
 	    for (var i = 0; i < objects.obj1.length; i++) {
 	      objects.obj1[i].rotation.y += Math.cos(counters.a) * .025;
+	      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 0.5);
 	    }
-
-	    uniforms.amplitude.value = 1.0 + Math.cos(time * 0.5);
 
 	    counters.a += 0.02;
 

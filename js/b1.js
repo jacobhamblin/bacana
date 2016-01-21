@@ -18,8 +18,8 @@ const b1 = {
     let mouse = new THREE.Vector2(), INTERSECTED;
     let objects = new Object;
     let usefulThings = new Object;
-    let uniforms;
-    let objectsInfo = {count: 1, radius: 15};
+    let uniforms = [];
+    let objectsInfo = {count: 7, radius: 15};
     const counters = new Object;
     counters.a = 0;
 
@@ -52,7 +52,8 @@ const b1 = {
 
       const geometry = new THREE.IcosahedronGeometry(objectsInfo.radius);
 
-      const tessellateModifier = new TessellateModifier(4);
+      const maxLength = (i % 2 === 0 ? 16 : 4);
+      const tessellateModifier = new TessellateModifier(maxLength);
 
       for (let j = 0; j < 6; j++) {
         tessellateModifier.modify(geometry);
@@ -79,7 +80,7 @@ const b1 = {
       for ( let f = 0; f < numFaces; f ++ ) {
         let index = 9 * f;
 
-        let h = 0.5 + 0.2 * Math.random();
+        let h = 0.5 + ((i - 3) * .1) * Math.random();
         let s = 0.5 + 0.2 * Math.random();
         let l = 0.5 + 0.3 * Math.random();
 
@@ -107,12 +108,12 @@ const b1 = {
         new THREE.BufferAttribute(displacement, 3)
       );
 
-      uniforms = {
+      uniforms.push({
 				amplitude: { type: "f", value: 0.0 }
-			};
+			});
 
 			const shaderMaterial = new THREE.ShaderMaterial( {
-				uniforms:       uniforms,
+				uniforms:       uniforms[i],
 				vertexShader:   VertexShader,
 				fragmentShader: FragmentShader
 			});
@@ -120,9 +121,9 @@ const b1 = {
       const object = new THREE.Mesh(newGeometry, shaderMaterial);
 
       object.position.set(
-        0,
-        0,
-        750
+        Math.random() * 150 - 75,
+        Math.random() * 150 - 75,
+        Math.random() * 300 + 450
       );
 
       objects.obj1.push(object);
@@ -183,9 +184,8 @@ const b1 = {
 
     for (let i = 0; i < objects.obj1.length; i++) {
       objects.obj1[i].rotation.y += (Math.cos(counters.a) * .025);
+      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 0.5);
     }
-
-    uniforms.amplitude.value = 1.0 + Math.cos(time * 0.5);
 
     counters.a += 0.02;
 
