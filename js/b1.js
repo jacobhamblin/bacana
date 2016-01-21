@@ -89,7 +89,6 @@ const b1 = {
         var d = 10 * ( 0.5 - Math.random() );
 
         for ( var k = 0; k < 3; k ++ ) {
-
           colors[index + (3 * k)    ] = color.r;
           colors[index + (3 * k) + 1] = color.g;
           colors[index + (3 * k) + 2] = color.b;

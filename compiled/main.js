@@ -54,13 +54,13 @@
 
 	var _b2 = _interopRequireDefault(_b);
 
-	var _b3 = __webpack_require__(3);
+	var _b3 = __webpack_require__(8);
 
 	var _b4 = _interopRequireDefault(_b3);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(5);
+	__webpack_require__(9);
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
@@ -137,7 +137,7 @@
 	module.exports = {
 		"demos": [
 			{
-				"preview": "./img/b1.jpg",
+				"preview": "./img/b1.png",
 				"js": "b1.js"
 			},
 			{
@@ -153,23 +153,23 @@
 
 	'use strict';
 
-	var _three = __webpack_require__(4);
+	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _TessellateModifier = __webpack_require__(7);
+	var _TessellateModifier = __webpack_require__(4);
 
 	var _TessellateModifier2 = _interopRequireDefault(_TessellateModifier);
 
-	var _ExplodeModifier = __webpack_require__(8);
+	var _ExplodeModifier = __webpack_require__(5);
 
 	var _ExplodeModifier2 = _interopRequireDefault(_ExplodeModifier);
 
-	var _fragment = __webpack_require__(9);
+	var _fragment = __webpack_require__(6);
 
 	var _fragment2 = _interopRequireDefault(_fragment);
 
-	var _vertex = __webpack_require__(10);
+	var _vertex = __webpack_require__(7);
 
 	var _vertex2 = _interopRequireDefault(_vertex);
 
@@ -256,7 +256,6 @@
 	        var d = 10 * (0.5 - Math.random());
 
 	        for (var k = 0; k < 3; k++) {
-
 	          colors[index + 3 * k] = color.r;
 	          colors[index + 3 * k + 1] = color.g;
 	          colors[index + 3 * k + 2] = color.b;
@@ -355,120 +354,6 @@
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _three = __webpack_require__(4);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var b2 = {
-	  init: function init(container) {
-	    var usefulThings = this.setup(container);
-	    this.animate(usefulThings);
-	  },
-	  setup: function setup(container) {
-	    console.log('initialized b2!');
-
-	    var camera = undefined,
-	        scene = undefined,
-	        raycaster = undefined,
-	        renderer = undefined;
-	    var mouse = new _three2.default.Vector2(),
-	        INTERSECTED = undefined;
-	    var objects = new Object();
-	    var usefulThings = new Object();
-	    var cubeCount = 5;
-	    var counters = new Object();
-	    counters.cameraMoveY = 0;
-
-	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / (window.innerHeight - 3), 1, 400);
-	    camera.position.set(0, 0, 800);
-	    camera.lookAt(0, 0, 0);
-
-	    scene = new _three2.default.Scene();
-
-	    renderer = new _three2.default.WebGLRenderer();
-	    renderer.setClearColor(0x222222);
-	    renderer.setPixelRatio(window.devicePixelRatio);
-	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
-	    container.appendChild(renderer.domElement);
-
-	    var light = new _three2.default.PointLight(0xffffff, 1, 2000);
-
-	    light.position.set(0, 0, 900);
-
-	    scene.add(light);
-
-	    objects.cubes = [];
-
-	    for (var i = 0; i < cubeCount; i++) {
-	      var geometry = new _three2.default.BoxGeometry(10, 10, 10);
-	      var material = new _three2.default.MeshDepthMaterial({ wireframe: true });
-	      var cube = new _three2.default.Mesh(geometry, material);
-	      cube.position.set(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100 + 600);
-	      objects.cubes.push(cube);
-	      scene.add(cube);
-	    }
-
-	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
-
-	    var self = this;
-	    window.addEventListener('resize', function () {
-	      self.onWindowResize(usefulThings);
-	    }, false);
-
-	    return usefulThings;
-	  },
-	  onWindowResize: function onWindowResize(usefulThings) {
-	    var camera = usefulThings.camera;
-	    var renderer = usefulThings.renderer;
-
-	    camera.aspect = window.innerWidth / (window.innerHeight - 3);
-	    camera.updateProjectionMatrix();
-
-	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
-	  },
-	  animate: function animate(usefulThings) {
-	    var self = this;
-
-	    var newThings = this.render(usefulThings);
-
-	    if (document.querySelectorAll('canvas')[0]) {
-	      requestAnimationFrame(function () {
-	        self.animate(newThings);
-	      });
-	    }
-	  },
-	  render: function render(usefulThings) {
-	    var objects = usefulThings.objects;
-	    var camera = usefulThings.camera;
-	    var counters = usefulThings.counters;
-	    var renderer = usefulThings.renderer;
-	    var scene = usefulThings.scene;
-	    var mouse = usefulThings.mouse;
-
-	    for (var i = 0; i < objects.cubes.length; i++) {
-	      objects.cubes[i].rotation.x += Math.random() * .05;
-	      objects.cubes[i].rotation.y += Math.random() * .05;
-	    }
-
-	    camera.position.y += Math.cos(counters.cameraMoveY) * .2;
-	    counters.cameraMoveY += 0.02;
-
-	    renderer.render(scene, camera);
-
-	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
-	  }
-	}; // b2.js
-
-	module.exports = b2;
-
-/***/ },
-/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var self = self || {};// File:src/Three.js
@@ -36661,19 +36546,12 @@
 
 
 /***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 6 */,
-/* 7 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _three = __webpack_require__(4);
+	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
 
@@ -36895,12 +36773,12 @@
 	module.exports = tessellateModifier;
 
 /***/ },
-/* 8 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _three = __webpack_require__(4);
+	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
 
@@ -36947,16 +36825,136 @@
 	module.exports = explodeModifier;
 
 /***/ },
-/* 9 */
+/* 6 */
 /***/ function(module, exports) {
 
 	module.exports = "\n\n\t\t\tvarying vec3 vNormal;\n\t\t\tvarying vec3 vColor;\n\n\t\t\tvoid main() {\n\n\t\t\t\tconst float ambient = 0.4;\n\n\t\t\t\tvec3 light = vec3( 1.0 );\n\t\t\t\tlight = normalize( light );\n\n\t\t\t\tfloat directional = max( dot( vNormal, light ), 0.0 );\n\n\t\t\t\tgl_FragColor = vec4( ( directional + ambient ) * vColor, 1.0 );\n\n\t\t\t}\n"
 
 /***/ },
-/* 10 */
+/* 7 */
 /***/ function(module, exports) {
 
 	module.exports = "\n\t\t\tuniform float amplitude;\n\n\t\t\tattribute vec3 customColor;\n\t\t\tattribute vec3 displacement;\n\n\t\t\tvarying vec3 vNormal;\n\t\t\tvarying vec3 vColor;\n\n\t\t\tvoid main() {\n\n\t\t\t\tvNormal = normal;\n\t\t\t\tvColor = customColor;\n\n\t\t\t\tvec3 newPosition = position + normal * amplitude * displacement;\n\t\t\t\tgl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );\n\n\t\t\t}\n"
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(3);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var b2 = {
+	  init: function init(container) {
+	    var usefulThings = this.setup(container);
+	    this.animate(usefulThings);
+	  },
+	  setup: function setup(container) {
+	    console.log('initialized b2!');
+
+	    var camera = undefined,
+	        scene = undefined,
+	        raycaster = undefined,
+	        renderer = undefined;
+	    var mouse = new _three2.default.Vector2(),
+	        INTERSECTED = undefined;
+	    var objects = new Object();
+	    var usefulThings = new Object();
+	    var cubeCount = 5;
+	    var counters = new Object();
+	    counters.cameraMoveY = 0;
+
+	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / (window.innerHeight - 3), 1, 400);
+	    camera.position.set(0, 0, 800);
+	    camera.lookAt(0, 0, 0);
+
+	    scene = new _three2.default.Scene();
+
+	    renderer = new _three2.default.WebGLRenderer();
+	    renderer.setClearColor(0x222222);
+	    renderer.setPixelRatio(window.devicePixelRatio);
+	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+	    container.appendChild(renderer.domElement);
+
+	    var light = new _three2.default.PointLight(0xffffff, 1, 2000);
+
+	    light.position.set(0, 0, 900);
+
+	    scene.add(light);
+
+	    objects.cubes = [];
+
+	    for (var i = 0; i < cubeCount; i++) {
+	      var geometry = new _three2.default.BoxGeometry(10, 10, 10);
+	      var material = new _three2.default.MeshDepthMaterial({ wireframe: true });
+	      var cube = new _three2.default.Mesh(geometry, material);
+	      cube.position.set(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100 + 600);
+	      objects.cubes.push(cube);
+	      scene.add(cube);
+	    }
+
+	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
+
+	    var self = this;
+	    window.addEventListener('resize', function () {
+	      self.onWindowResize(usefulThings);
+	    }, false);
+
+	    return usefulThings;
+	  },
+	  onWindowResize: function onWindowResize(usefulThings) {
+	    var camera = usefulThings.camera;
+	    var renderer = usefulThings.renderer;
+
+	    camera.aspect = window.innerWidth / (window.innerHeight - 3);
+	    camera.updateProjectionMatrix();
+
+	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+	  },
+	  animate: function animate(usefulThings) {
+	    var self = this;
+
+	    var newThings = this.render(usefulThings);
+
+	    if (document.querySelectorAll('canvas')[0]) {
+	      requestAnimationFrame(function () {
+	        self.animate(newThings);
+	      });
+	    }
+	  },
+	  render: function render(usefulThings) {
+	    var objects = usefulThings.objects;
+	    var camera = usefulThings.camera;
+	    var counters = usefulThings.counters;
+	    var renderer = usefulThings.renderer;
+	    var scene = usefulThings.scene;
+	    var mouse = usefulThings.mouse;
+
+	    for (var i = 0; i < objects.cubes.length; i++) {
+	      objects.cubes[i].rotation.x += Math.random() * .05;
+	      objects.cubes[i].rotation.y += Math.random() * .05;
+	    }
+
+	    camera.position.y += Math.cos(counters.cameraMoveY) * .2;
+	    counters.cameraMoveY += 0.02;
+
+	    renderer.render(scene, camera);
+
+	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
+	  }
+	}; // b2.js
+
+	module.exports = b2;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);

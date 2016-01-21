@@ -1,7 +1,7 @@
 {
   "demos": [
     {
-      "preview": "./img/b1.jpg",
+      "preview": "./img/b1.png",
       "js": "b1.js"
     },
     {
