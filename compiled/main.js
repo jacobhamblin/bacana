@@ -175,6 +175,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// import FresnelShader from './vendor/shaders/FresnelShader.js';
+
 	var b1 = {
 	  init: function init(container) {
 	    var usefulThings = this.setup(container);
@@ -192,7 +194,7 @@
 	    var objects = new Object();
 	    var usefulThings = new Object();
 	    var uniforms = [];
-	    var objectsInfo = { count: 7, radius: 15 };
+	    var objectsInfo = { count: 1, radius: 15 };
 	    var counters = new Object();
 	    counters.a = 0;
 
@@ -247,7 +249,7 @@
 	      for (var f = 0; f < numFaces; f++) {
 	        var index = 9 * f;
 
-	        var h = 0.5 + (i - 3) * .1 * Math.random();
+	        var h = 0.5 + (i - 1) * .1 * Math.random();
 	        var s = 0.5 + 0.2 * Math.random();
 	        var l = 0.5 + 0.3 * Math.random();
 
@@ -274,14 +276,14 @@
 	      });
 
 	      var shaderMaterial = new _three2.default.ShaderMaterial({
-	        uniforms: uniforms[i],
+	        fragmentShader: _fragment2.default,
 	        vertexShader: _vertex2.default,
-	        fragmentShader: _fragment2.default
+	        uniforms: uniforms[i]
 	      });
 
 	      var object = new _three2.default.Mesh(newGeometry, shaderMaterial);
 
-	      object.position.set(Math.random() * 150 - 75, Math.random() * 150 - 75, Math.random() * 300 + 450);
+	      object.position.set(0, 0, 750);
 
 	      objects.obj1.push(object);
 	      scene.add(object);
@@ -338,8 +340,8 @@
 	    var time = Date.now() * 0.001;
 
 	    for (var i = 0; i < objects.obj1.length; i++) {
-	      objects.obj1[i].rotation.y += Math.cos(counters.a) * .025;
-	      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 0.5);
+	      objects.obj1[i].rotation.y += 0.05;
+	      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 0.75);
 	    }
 
 	    counters.a += 0.02;

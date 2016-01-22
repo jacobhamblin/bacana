@@ -5,6 +5,7 @@ import TessellateModifier from './vendor/TessellateModifier.js';
 import ExplodeModifier from './vendor/ExplodeModifier.js';
 import FragmentShader from './vendor/shaders/fragment.txt';
 import VertexShader from './vendor/shaders/vertex.txt';
+// import FresnelShader from './vendor/shaders/FresnelShader.js';
 
 const b1 = {
   init: function (container) {
@@ -19,7 +20,7 @@ const b1 = {
     let objects = new Object;
     let usefulThings = new Object;
     let uniforms = [];
-    let objectsInfo = {count: 7, radius: 15};
+    let objectsInfo = {count: 1, radius: 15};
     const counters = new Object;
     counters.a = 0;
 
@@ -80,7 +81,7 @@ const b1 = {
       for ( let f = 0; f < numFaces; f ++ ) {
         let index = 9 * f;
 
-        let h = 0.5 + ((i - 3) * .1) * Math.random();
+        let h = 0.5 + ((i - 1) * .1) * Math.random();
         let s = 0.5 + 0.2 * Math.random();
         let l = 0.5 + 0.3 * Math.random();
 
@@ -112,17 +113,17 @@ const b1 = {
 			});
 
 			const shaderMaterial = new THREE.ShaderMaterial( {
-				uniforms:       uniforms[i],
-				vertexShader:   VertexShader,
-				fragmentShader: FragmentShader
+				fragmentShader: FragmentShader,
+        vertexShader: VertexShader,
+        uniforms: uniforms[i]
 			});
 
       const object = new THREE.Mesh(newGeometry, shaderMaterial);
 
       object.position.set(
-        Math.random() * 150 - 75,
-        Math.random() * 150 - 75,
-        Math.random() * 300 + 450
+        0,
+        0,
+        750
       );
 
       objects.obj1.push(object);
@@ -182,8 +183,8 @@ const b1 = {
     let time = Date.now() * 0.001;
 
     for (let i = 0; i < objects.obj1.length; i++) {
-      objects.obj1[i].rotation.y += (Math.cos(counters.a) * .025);
-      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 0.5);
+      objects.obj1[i].rotation.y += 0.05;
+      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 0.75);
     }
 
     counters.a += 0.02;
