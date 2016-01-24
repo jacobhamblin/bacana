@@ -5,7 +5,7 @@ import TessellateModifier from './vendor/TessellateModifier.js';
 import ExplodeModifier from './vendor/ExplodeModifier.js';
 import FragmentShader from './vendor/shaders/fragment.txt';
 import VertexShader from './vendor/shaders/vertex.txt';
-// import FresnelShader from './vendor/shaders/FresnelShader.js';
+import FresnelShader from './vendor/shaders/FresnelShader.js';
 
 const b1 = {
   init: function (container) {
@@ -82,8 +82,8 @@ const b1 = {
         let index = 9 * f;
 
         let h = 0.5 + ((i - 1) * .1) * Math.random();
-        let s = 0.5 + 0.2 * Math.random();
-        let l = 0.5 + 0.3 * Math.random();
+        let s = 0;
+        let l = 0.2 + 0.2 * Math.random();
 
         color.setHSL( h, s, l );
 
@@ -113,7 +113,8 @@ const b1 = {
 			});
 
 			const shaderMaterial = new THREE.ShaderMaterial( {
-				fragmentShader: FragmentShader,
+        shading: THREE.FlatShading,
+        fragmentShader: FragmentShader,
         vertexShader: VertexShader,
         uniforms: uniforms[i]
 			});
@@ -184,7 +185,7 @@ const b1 = {
 
     for (let i = 0; i < objects.obj1.length; i++) {
       objects.obj1[i].rotation.y += 0.05;
-      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 0.75);
+      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
     }
 
     counters.a += 0.02;

@@ -54,13 +54,13 @@
 
 	var _b2 = _interopRequireDefault(_b);
 
-	var _b3 = __webpack_require__(8);
+	var _b3 = __webpack_require__(9);
 
 	var _b4 = _interopRequireDefault(_b3);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(9);
+	__webpack_require__(10);
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
@@ -173,9 +173,13 @@
 
 	var _vertex2 = _interopRequireDefault(_vertex);
 
+	var _FresnelShader = __webpack_require__(8);
+
+	var _FresnelShader2 = _interopRequireDefault(_FresnelShader);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// import FresnelShader from './vendor/shaders/FresnelShader.js';
+	// b1.js
 
 	var b1 = {
 	  init: function init(container) {
@@ -250,8 +254,8 @@
 	        var index = 9 * f;
 
 	        var h = 0.5 + (i - 1) * .1 * Math.random();
-	        var s = 0.5 + 0.2 * Math.random();
-	        var l = 0.5 + 0.3 * Math.random();
+	        var s = 0;
+	        var l = 0.2 + 0.2 * Math.random();
 
 	        color.setHSL(h, s, l);
 
@@ -276,6 +280,7 @@
 	      });
 
 	      var shaderMaterial = new _three2.default.ShaderMaterial({
+	        shading: _three2.default.FlatShading,
 	        fragmentShader: _fragment2.default,
 	        vertexShader: _vertex2.default,
 	        uniforms: uniforms[i]
@@ -341,7 +346,7 @@
 
 	    for (var i = 0; i < objects.obj1.length; i++) {
 	      objects.obj1[i].rotation.y += 0.05;
-	      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 0.75);
+	      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
 	    }
 
 	    counters.a += 0.02;
@@ -350,7 +355,7 @@
 
 	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms };
 	  }
-	}; // b1.js
+	};
 
 	module.exports = b1;
 
@@ -36842,6 +36847,40 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	var _three = __webpack_require__(3);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_three2.default.FresnelShader = {
+
+		uniforms: {
+
+			"mRefractionRatio": { type: "f", value: 1.02 },
+			"mFresnelBias": { type: "f", value: 0.1 },
+			"mFresnelPower": { type: "f", value: 2.0 },
+			"mFresnelScale": { type: "f", value: 1.0 },
+			"tCube": { type: "t", value: null }
+
+		},
+
+		vertexShader: ["uniform float mRefractionRatio;", "uniform float mFresnelBias;", "uniform float mFresnelScale;", "uniform float mFresnelPower;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );", "vec4 worldPosition = modelMatrix * vec4( position, 1.0 );", "vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );", "vec3 I = worldPosition.xyz - cameraPosition;", "vReflect = reflect( I, worldNormal );", "vRefract[0] = refract( normalize( I ), worldNormal, mRefractionRatio );", "vRefract[1] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.99 );", "vRefract[2] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.98 );", "vReflectionFactor = mFresnelBias + mFresnelScale * pow( 1.0 + dot( normalize( I ), worldNormal ), mFresnelPower );", "gl_Position = projectionMatrix * mvPosition;", "}"].join("\n"),
+
+		fragmentShader: ["uniform samplerCube tCube;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 reflectedColor = textureCube( tCube, vec3( -vReflect.x, vReflect.yz ) );", "vec4 refractedColor = vec4( 1.0 );", "refractedColor.r = textureCube( tCube, vec3( -vRefract[0].x, vRefract[0].yz ) ).r;", "refractedColor.g = textureCube( tCube, vec3( -vRefract[1].x, vRefract[1].yz ) ).g;", "refractedColor.b = textureCube( tCube, vec3( -vRefract[2].x, vRefract[2].yz ) ).b;", "gl_FragColor = mix( refractedColor, reflectedColor, clamp( vReflectionFactor, 0.0, 1.0 ) );", "}"].join("\n")
+
+	}; /**
+	    * @author alteredq / http://alteredqualia.com/
+	    *
+	    * Based on Nvidia Cg tutorial
+	    */
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	var _three = __webpack_require__(3);
@@ -36953,7 +36992,7 @@
 	module.exports = b2;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
