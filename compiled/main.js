@@ -198,6 +198,8 @@
 	    var objects = new Object();
 	    var usefulThings = new Object();
 	    var uniforms = [];
+	    var parameters = [];
+	    var materials = [];
 	    var objectsInfo = { count: 1, radius: 15 };
 	    var counters = new Object();
 	    counters.a = 0;
@@ -221,24 +223,53 @@
 	    scene.add(light);
 
 	    objects.obj1 = [];
+	    objects.particles1 = [];
+	    objects.materials = [];
+
+	    objects.particlesParameters = [[[1, 1, 0.5], 1.25], [[0.95, 1, 0.5], 1], [[0.90, 1, 0.5], 0.75], [[0.85, 1, 0.5], 0.5], [[0.80, 1, 0.5], 0.25]];
+
+	    var geometry = new _three2.default.Geometry();
+
+	    for (var i = 0; i < 20000; i++) {
+	      var vertex = new _three2.default.Vector3();
+	      vertex.x = Math.random() * 2000 - 1000;
+	      vertex.y = Math.random() * 2000 - 1000;
+	      vertex.z = Math.random() * 2000 - 1000;
+	      geometry.vertices.push(vertex);
+	    }
+
+	    for (var i = 0; i < objects.particlesParameters.length; i++) {
+	      var color = objects.particlesParameters[i][0];
+	      var size = objects.particlesParameters[i][1];
+
+	      materials[i] = new _three2.default.PointsMaterial({ size: size });
+	      objects.materials.push(materials[i]);
+	      var particles = new _three2.default.Points(geometry, materials[i]);
+	      particles.rotation.x = Math.random() * 6;
+	      particles.rotation.y = Math.random() * 6;
+	      particles.rotation.z = Math.random() * 6;
+
+	      objects.particles1.push(particles);
+	      scene.add(particles);
+	    }
 
 	    for (var i = 0; i < objectsInfo.count; i++) {
 
-	      var geometry = new _three2.default.IcosahedronGeometry(objectsInfo.radius);
+	      var _geometry = new _three2.default.IcosahedronGeometry(objectsInfo.radius);
 
 	      var maxLength = i % 2 === 0 ? 16 : 4;
 	      var tessellateModifier = new _TessellateModifier2.default(maxLength);
 
 	      for (var j = 0; j < 6; j++) {
-	        tessellateModifier.modify(geometry);
+	        tessellateModifier.modify(_geometry);
 	      }
 
 	      var explodeModifier = new _ExplodeModifier2.default();
-	      explodeModifier.modify(geometry);
+	      explodeModifier.modify(_geometry);
 
-	      var numFaces = geometry.faces.length;
+	      var numFaces = _geometry.faces.length;
 
-	      var newGeometry = new _three2.default.BufferGeometry().fromGeometry(geometry);
+	      var newGeometry = new _three2.default.BufferGeometry().fromGeometry(_geometry);
 
 	      // const material = new THREE.MeshPhongMaterial({
 	      //   color: 0xbbbbbb,
@@ -255,7 +286,7 @@
 
 	        var h = 0.5 + (i - 1) * .1 * Math.random();
 	        var s = 0;
-	        var l = 0.2 + 0.2 * Math.random();
+	        var l = 0.05 + 0.05 * Math.random();
 
 	        color.setHSL(h, s, l);
 
@@ -312,6 +343,8 @@
 	    event.preventDefault();
 	    mouse.x = event.clientX / window.innerWidth * 2 - 1;
 	    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+	    console.log(mouse.x + ' ' + mouse.y);
 	  },
 	  onWindowResize: function onWindowResize(usefulThings) {
 	    var camera = usefulThings.camera;
@@ -343,10 +376,25 @@
 	    var uniforms = usefulThings.uniforms;
 
 	    var time = Date.now() * 0.001;
+	    var altTime = Date.now() * 0.000025;
+
+	    camera.position.x += mouse.x * 3 - camera.position.x;
+	    camera.position.y += -(mouse.y * 3) - camera.position.y;
 
 	    for (var i = 0; i < objects.obj1.length; i++) {
 	      objects.obj1[i].rotation.y += 0.05;
 	      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
+	    }
+	    for (var i = 0; i < objects.particles1.length; i++) {
+	      var particle = objects.particles1[i];
+	      particle.rotation.x = altTime * (i < 4 ? i + 1 : -(i + 1));
+	    }
+	    for (var i = 0; i < objects.materials.length; i++) {
+	      var material = objects.materials[i];
+	      var color = objects.particlesParameters[i][0];
+
+	      var h = 360 * (color[0] + altTime) % 360 / 360;
+	      material.color.setHSL(h, color[1], color[2]);
 	    }
 
 	    counters.a += 0.02;

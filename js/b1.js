@@ -20,6 +20,8 @@ const b1 = {
     let objects = new Object;
     let usefulThings = new Object;
     let uniforms = [];
+    let parameters = [];
+    let materials = [];
     let objectsInfo = {count: 1, radius: 15};
     const counters = new Object;
     counters.a = 0;
@@ -48,6 +50,41 @@ const b1 = {
     scene.add(light);
 
     objects.obj1 = [];
+    objects.particles1 = [];
+    objects.materials = [];
+
+    objects.particlesParameters = [
+      [ [1, 1, 0.5], 1.25 ],
+      [ [0.95, 1, 0.5], 1 ],
+      [ [0.90, 1, 0.5], 0.75 ],
+      [ [0.85, 1, 0.5], 0.5 ],
+      [ [0.80, 1, 0.5], 0.25 ]
+    ];
+
+    const geometry = new THREE.Geometry();
+
+		for ( let i = 0; i < 20000; i ++ ) {
+			let vertex = new THREE.Vector3();
+			vertex.x = Math.random() * 2000 - 1000;
+			vertex.y = Math.random() * 2000 - 1000;
+			vertex.z = Math.random() * 2000 - 1000;
+			geometry.vertices.push( vertex );
+		}
+
+    for ( let i = 0; i < objects.particlesParameters.length; i ++ ) {
+      let color = objects.particlesParameters[i][0];
+      let size  = objects.particlesParameters[i][1];
+
+      materials[i] = new THREE.PointsMaterial( { size: size } );
+      objects.materials.push(materials[i]);
+      const particles = new THREE.Points( geometry, materials[i] );
+      particles.rotation.x = Math.random() * 6;
+      particles.rotation.y = Math.random() * 6;
+      particles.rotation.z = Math.random() * 6;
+
+      objects.particles1.push(particles);
+      scene.add( particles );
+    }
 
     for (let i = 0; i < objectsInfo.count; i++) {
 
@@ -59,6 +96,7 @@ const b1 = {
       for (let j = 0; j < 6; j++) {
         tessellateModifier.modify(geometry);
       }
+
 
       const explodeModifier = new ExplodeModifier();
       explodeModifier.modify(geometry);
@@ -83,7 +121,7 @@ const b1 = {
 
         let h = 0.5 + ((i - 1) * .1) * Math.random();
         let s = 0;
-        let l = 0.2 + 0.2 * Math.random();
+        let l = 0.05 + 0.05 * Math.random();
 
         color.setHSL( h, s, l );
 
@@ -153,6 +191,8 @@ const b1 = {
     event.preventDefault();
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+    console.log(mouse.x + ' ' + mouse.y)
   },
   onWindowResize: function(usefulThings) {
     let { camera, renderer } = usefulThings;
@@ -181,11 +221,28 @@ const b1 = {
       mouse,
       uniforms
     } = usefulThings;
+
+
     let time = Date.now() * 0.001;
+    let altTime = Date.now() * 0.000025;
+
+    camera.position.x += ( (mouse.x * 3) - camera.position.x );
+    camera.position.y += ( (-(mouse.y * 3)) - camera.position.y );
 
     for (let i = 0; i < objects.obj1.length; i++) {
       objects.obj1[i].rotation.y += 0.05;
       uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
+    }
+    for (let i = 0; i < objects.particles1.length; i++) {
+      let particle = objects.particles1[i];
+      particle.rotation.x = altTime * (i < 4 ? i+1 : -(i + 1))
+    }
+    for (let i = 0; i < objects.materials.length; i++) {
+      let material = objects.materials[i];
+      let color = objects.particlesParameters[i][0];
+
+      let h = ( 360 * ( color[0] + altTime ) % 360 ) / 360;
+			material.color.setHSL( h, color[1], color[2] );
     }
 
     counters.a += 0.02;
