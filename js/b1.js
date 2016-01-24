@@ -125,7 +125,7 @@ const b1 = {
 
         color.setHSL( h, s, l );
 
-        var d = 10 * ( 0.5 - Math.random() );
+        let d = 10 * ( 0.5 - Math.random() );
 
         for ( var k = 0; k < 3; k ++ ) {
           colors[index + (3 * k)    ] = color.r;
@@ -225,9 +225,6 @@ const b1 = {
 
     let time = Date.now() * 0.001;
     let altTime = Date.now() * 0.000025;
-
-    camera.position.x += ( (mouse.x * 3) - camera.position.x );
-    camera.position.y += ( (-(mouse.y * 3)) - camera.position.y );
 
     for (let i = 0; i < objects.obj1.length; i++) {
       objects.obj1[i].rotation.y += 0.05;

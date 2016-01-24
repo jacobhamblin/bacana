@@ -378,9 +378,6 @@
 	    var time = Date.now() * 0.001;
 	    var altTime = Date.now() * 0.000025;
 
-	    camera.position.x += mouse.x * 3 - camera.position.x;
-	    camera.position.y += -(mouse.y * 3) - camera.position.y;
-
 	    for (var i = 0; i < objects.obj1.length; i++) {
 	      objects.obj1[i].rotation.y += 0.05;
 	      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
