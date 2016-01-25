@@ -2,10 +2,19 @@ require('../sass/main.scss');
 import demosJson from './demos.json';
 import b1 from './b1.js';
 import b2 from './b2.js';
+import FastClick from './vendor/fastclick.min.js';
 
 const demosCode = new Object;
 demosCode.b1 = b1;
 demosCode.b2 = b2;
+
+(function attachFastClick() {
+  if ('addEventListener' in document) {
+    document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+    }, false);
+  }
+})
 
 function toggleClass(el, className) {
   if (el.classList) {

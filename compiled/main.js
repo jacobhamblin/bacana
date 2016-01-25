@@ -58,13 +58,25 @@
 
 	var _b4 = _interopRequireDefault(_b3);
 
+	var _fastclickMin = __webpack_require__(13);
+
+	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(10);
+	__webpack_require__(11);
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
 	demosCode.b2 = _b4.default;
+
+	(function attachFastClick() {
+	  if ('addEventListener' in document) {
+	    document.addEventListener('DOMContentLoaded', function () {
+	      _fastclickMin2.default.attach(document.body);
+	    }, false);
+	  }
+	});
 
 	function toggleClass(el, className) {
 	  if (el.classList) {
@@ -36932,7 +36944,13 @@
 
 	var _three2 = _interopRequireDefault(_three);
 
+	var _OBJLoader = __webpack_require__(10);
+
+	var _OBJLoader2 = _interopRequireDefault(_OBJLoader);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// b2.js
 
 	var b2 = {
 	  init: function init(container) {
@@ -36953,6 +36971,23 @@
 	    var cubeCount = 5;
 	    var counters = new Object();
 	    counters.cameraMoveY = 0;
+	    var lights = [];
+
+	    var manager = new _three2.default.LoadingManager();
+	    manager.onProgress = function (item, loaded, total) {
+	      console.log(item, loaded, total);
+	    };
+
+	    var texture = new _three2.default.Texture();
+
+	    var onProgress = function onProgress(xhr) {
+	      if (xhr.lengthComputable) {
+	        var percentComplete = xhr.loaded / xhr.total * 100;
+	        console.log(Math.round(percentComplete, 2) + '% downloaded');
+	      }
+	    };
+
+	    var onError = function onError(xhr) {};
 
 	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / (window.innerHeight - 3), 1, 400);
 	    camera.position.set(0, 0, 800);
@@ -36966,24 +37001,66 @@
 	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
 	    container.appendChild(renderer.domElement);
 
+	    // const lightParameters = [
+	    //   [0xff0000, 0.5, [-100, 0, 900]],
+	    //   [0x7700FF, 0.5, [100, 0, 900]],
+	    // ]
+	    //
+	    // for (let i = 0; i < lightParameters.length; i++) {
+	    //   let light = new THREE.PointLight(
+	    //     lightParameters[i][0],
+	    //     lightParameters[i][1],
+	    //     2000
+	    //   );
+	    //
+	    //   light.position.set(
+	    //     lightParameters[i][2][0],
+	    //     lightParameters[i][2][1],
+	    //     lightParameters[i][2][2]
+	    //   );
+	    //
+	    //   lights.push(light);
+	    //   scene.add(light);
+	    // }
+
 	    var light = new _three2.default.PointLight(0xffffff, 1, 2000);
-
 	    light.position.set(0, 0, 900);
-
 	    scene.add(light);
 
+	    window.lights = lights;
+
 	    objects.cubes = [];
+	    objects.crystals = [];
+
+	    var material = new _three2.default.MeshPhongMaterial({
+	      shading: _three2.default.FlatShading,
+	      color: 0xaaaaaa
+	    });
+
+	    var loader = new _three2.default.OBJLoader(manager);
+	    loader.load('./obj/b2.obj', function (object) {
+	      object.traverse(function (child) {
+	        if (child instanceof _three2.default.Mesh) {
+	          child.material = material;
+	          child.position.set(0, 0, 700);
+	          child.scale.set(0.15, 0.15, 0.15);
+	          objects.crystals.push(child);
+	        }
+	      });
+
+	      scene.add(objects.crystals[0]);
+	    }, onProgress, onError);
 
 	    for (var i = 0; i < cubeCount; i++) {
 	      var geometry = new _three2.default.BoxGeometry(10, 10, 10);
-	      var material = new _three2.default.MeshDepthMaterial({ wireframe: true });
-	      var cube = new _three2.default.Mesh(geometry, material);
+	      var _material = new _three2.default.MeshDepthMaterial({ wireframe: true });
+	      var cube = new _three2.default.Mesh(geometry, _material);
 	      cube.position.set(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100 + 600);
 	      objects.cubes.push(cube);
 	      scene.add(cube);
 	    }
 
-	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
+	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lights: lights };
 
 	    var self = this;
 	    window.addEventListener('resize', function () {
@@ -37019,28 +37096,517 @@
 	    var renderer = usefulThings.renderer;
 	    var scene = usefulThings.scene;
 	    var mouse = usefulThings.mouse;
+	    var lights = usefulThings.lights;
 
 	    for (var i = 0; i < objects.cubes.length; i++) {
 	      objects.cubes[i].rotation.x += Math.random() * .05;
 	      objects.cubes[i].rotation.y += Math.random() * .05;
 	    }
 
+	    for (var i = 0; i < objects.crystals.length; i++) {
+	      var crystal = objects.crystals[i];
+	      crystal.rotation.y += 0.05;
+	    }
+
+	    // for (let i = 0; i < lights.length; i++) {
+	    //   lights[i].intensity = Math.abs(Math.cos(counters.cameraMoveY + i));
+	    // }
+
 	    camera.position.y += Math.cos(counters.cameraMoveY) * .2;
 	    counters.cameraMoveY += 0.02;
 
 	    renderer.render(scene, camera);
 
-	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters };
+	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lights: lights };
 	  }
-	}; // b2.js
+	};
 
 	module.exports = b2;
 
 /***/ },
 /* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(3);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_three2.default.OBJLoader = function (manager) {
+
+		this.manager = manager !== undefined ? manager : _three2.default.DefaultLoadingManager;
+	}; /**
+	    * @author mrdoob / http://mrdoob.com/
+	    */
+
+	_three2.default.OBJLoader.prototype = {
+
+		constructor: _three2.default.OBJLoader,
+
+		load: function load(url, onLoad, onProgress, onError) {
+
+			var scope = this;
+
+			var loader = new _three2.default.XHRLoader(scope.manager);
+			loader.setCrossOrigin(this.crossOrigin);
+			loader.load(url, function (text) {
+
+				onLoad(scope.parse(text));
+			}, onProgress, onError);
+		},
+
+		setCrossOrigin: function setCrossOrigin(value) {
+
+			this.crossOrigin = value;
+		},
+
+		parse: function parse(text) {
+
+			console.time('OBJLoader');
+
+			var object,
+			    objects = [];
+			var geometry, material;
+
+			function parseVertexIndex(value) {
+
+				var index = parseInt(value);
+
+				return (index >= 0 ? index - 1 : index + vertices.length / 3) * 3;
+			}
+
+			function parseNormalIndex(value) {
+
+				var index = parseInt(value);
+
+				return (index >= 0 ? index - 1 : index + normals.length / 3) * 3;
+			}
+
+			function parseUVIndex(value) {
+
+				var index = parseInt(value);
+
+				return (index >= 0 ? index - 1 : index + uvs.length / 2) * 2;
+			}
+
+			function addVertex(a, b, c) {
+
+				geometry.vertices.push(vertices[a], vertices[a + 1], vertices[a + 2], vertices[b], vertices[b + 1], vertices[b + 2], vertices[c], vertices[c + 1], vertices[c + 2]);
+			}
+
+			function addNormal(a, b, c) {
+
+				geometry.normals.push(normals[a], normals[a + 1], normals[a + 2], normals[b], normals[b + 1], normals[b + 2], normals[c], normals[c + 1], normals[c + 2]);
+			}
+
+			function addUV(a, b, c) {
+
+				geometry.uvs.push(uvs[a], uvs[a + 1], uvs[b], uvs[b + 1], uvs[c], uvs[c + 1]);
+			}
+
+			function addFace(a, b, c, d, ua, ub, uc, ud, na, nb, nc, nd) {
+
+				var ia = parseVertexIndex(a);
+				var ib = parseVertexIndex(b);
+				var ic = parseVertexIndex(c);
+				var id;
+
+				if (d === undefined) {
+
+					addVertex(ia, ib, ic);
+				} else {
+
+					id = parseVertexIndex(d);
+
+					addVertex(ia, ib, id);
+					addVertex(ib, ic, id);
+				}
+
+				if (ua !== undefined) {
+
+					ia = parseUVIndex(ua);
+					ib = parseUVIndex(ub);
+					ic = parseUVIndex(uc);
+
+					if (d === undefined) {
+
+						addUV(ia, ib, ic);
+					} else {
+
+						id = parseUVIndex(ud);
+
+						addUV(ia, ib, id);
+						addUV(ib, ic, id);
+					}
+				}
+
+				if (na !== undefined) {
+
+					ia = parseNormalIndex(na);
+					ib = parseNormalIndex(nb);
+					ic = parseNormalIndex(nc);
+
+					if (d === undefined) {
+
+						addNormal(ia, ib, ic);
+					} else {
+
+						id = parseNormalIndex(nd);
+
+						addNormal(ia, ib, id);
+						addNormal(ib, ic, id);
+					}
+				}
+			}
+
+			// create mesh if no objects in text
+
+			if (/^o /gm.test(text) === false) {
+
+				geometry = {
+					vertices: [],
+					normals: [],
+					uvs: []
+				};
+
+				material = {
+					name: ''
+				};
+
+				object = {
+					name: '',
+					geometry: geometry,
+					material: material
+				};
+
+				objects.push(object);
+			}
+
+			var vertices = [];
+			var normals = [];
+			var uvs = [];
+
+			// v float float float
+
+			var vertex_pattern = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+			// vn float float float
+
+			var normal_pattern = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+			// vt float float
+
+			var uv_pattern = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+			// f vertex vertex vertex ...
+
+			var face_pattern1 = /f( +-?\d+)( +-?\d+)( +-?\d+)( +-?\d+)?/;
+
+			// f vertex/uv vertex/uv vertex/uv ...
+
+			var face_pattern2 = /f( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))?/;
+
+			// f vertex/uv/normal vertex/uv/normal vertex/uv/normal ...
+
+			var face_pattern3 = /f( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))?/;
+
+			// f vertex//normal vertex//normal vertex//normal ...
+
+			var face_pattern4 = /f( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))?/;
+
+			//
+
+			var lines = text.split('\n');
+
+			for (var i = 0; i < lines.length; i++) {
+
+				var line = lines[i];
+				line = line.trim();
+
+				var result;
+
+				if (line.length === 0 || line.charAt(0) === '#') {
+
+					continue;
+				} else if ((result = vertex_pattern.exec(line)) !== null) {
+
+					// ["v 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
+
+					vertices.push(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3]));
+				} else if ((result = normal_pattern.exec(line)) !== null) {
+
+					// ["vn 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
+
+					normals.push(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3]));
+				} else if ((result = uv_pattern.exec(line)) !== null) {
+
+					// ["vt 0.1 0.2", "0.1", "0.2"]
+
+					uvs.push(parseFloat(result[1]), parseFloat(result[2]));
+				} else if ((result = face_pattern1.exec(line)) !== null) {
+
+					// ["f 1 2 3", "1", "2", "3", undefined]
+
+					addFace(result[1], result[2], result[3], result[4]);
+				} else if ((result = face_pattern2.exec(line)) !== null) {
+
+					// ["f 1/1 2/2 3/3", " 1/1", "1", "1", " 2/2", "2", "2", " 3/3", "3", "3", undefined, undefined, undefined]
+
+					addFace(result[2], result[5], result[8], result[11], result[3], result[6], result[9], result[12]);
+				} else if ((result = face_pattern3.exec(line)) !== null) {
+
+					// ["f 1/1/1 2/2/2 3/3/3", " 1/1/1", "1", "1", "1", " 2/2/2", "2", "2", "2", " 3/3/3", "3", "3", "3", undefined, undefined, undefined, undefined]
+
+					addFace(result[2], result[6], result[10], result[14], result[3], result[7], result[11], result[15], result[4], result[8], result[12], result[16]);
+				} else if ((result = face_pattern4.exec(line)) !== null) {
+
+					// ["f 1//1 2//2 3//3", " 1//1", "1", "1", " 2//2", "2", "2", " 3//3", "3", "3", undefined, undefined, undefined]
+
+					addFace(result[2], result[5], result[8], result[11], undefined, undefined, undefined, undefined, result[3], result[6], result[9], result[12]);
+				} else if (/^o /.test(line)) {
+
+					geometry = {
+						vertices: [],
+						normals: [],
+						uvs: []
+					};
+
+					material = {
+						name: ''
+					};
+
+					object = {
+						name: line.substring(2).trim(),
+						geometry: geometry,
+						material: material
+					};
+
+					objects.push(object);
+				} else if (/^g /.test(line)) {
+
+					// group
+
+				} else if (/^usemtl /.test(line)) {
+
+						// material
+
+						material.name = line.substring(7).trim();
+					} else if (/^mtllib /.test(line)) {
+
+						// mtl file
+
+					} else if (/^s /.test(line)) {
+
+							// smooth shading
+
+						} else {
+
+								// console.log( "THREE.OBJLoader: Unhandled line " + line );
+
+							}
+			}
+
+			var container = new _three2.default.Object3D();
+
+			for (var i = 0, l = objects.length; i < l; i++) {
+
+				object = objects[i];
+				geometry = object.geometry;
+
+				var buffergeometry = new _three2.default.BufferGeometry();
+
+				buffergeometry.addAttribute('position', new _three2.default.BufferAttribute(new Float32Array(geometry.vertices), 3));
+
+				if (geometry.normals.length > 0) {
+
+					buffergeometry.addAttribute('normal', new _three2.default.BufferAttribute(new Float32Array(geometry.normals), 3));
+				}
+
+				if (geometry.uvs.length > 0) {
+
+					buffergeometry.addAttribute('uv', new _three2.default.BufferAttribute(new Float32Array(geometry.uvs), 2));
+				}
+
+				material = new _three2.default.MeshLambertMaterial();
+				material.name = object.material.name;
+
+				var mesh = new _three2.default.Mesh(buffergeometry, material);
+				mesh.name = object.name;
+
+				container.add(mesh);
+			}
+
+			console.timeEnd('OBJLoader');
+
+			return container;
+		}
+
+	};
+
+/***/ },
+/* 11 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 12 */,
+/* 13 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+
+	/** Shrinkwrap URL:
+	 *      /v2/bundles/js?modules=fastclick%401.0.6%2Co-autoinit%401.2.0&shrinkwrap=
+	 */
+	!(function (t) {
+		function e(o) {
+			if (n[o]) return n[o].exports;var i = n[o] = { exports: {}, id: o, loaded: !1 };return t[o].call(i.exports, i, i.exports, e), i.loaded = !0, i.exports;
+		}var n = {};return e.m = t, e.c = n, e.p = "", e(0);
+	})([function (t, e, n) {
+		"use strict";
+		n(1), window.Origami = { fastclick: n(2), "o-autoinit": n(4) };
+	}, function (t, e) {
+		t.exports = { name: "__MAIN__", dependencies: { fastclick: "fastclick#*", "o-autoinit": "o-autoinit#^1.0.0" } };
+	}, function (t, e, n) {
+		t.exports = n(3);
+	}, function (t, e) {
+		"use strict";
+		var n = !1;!(function () {
+			/**
+	  * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.
+	  *
+	  * @codingstandard ftlabs-jsv2
+	  * @copyright The Financial Times Limited [All Rights Reserved]
+	  * @license MIT License (see LICENSE.txt)
+	  */
+			function e(t, n) {
+				function o(t, e) {
+					return function () {
+						return t.apply(e, arguments);
+					};
+				}var r;if ((n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t))) {
+					for (var a = ["onMouse", "onClick", "onTouchStart", "onTouchMove", "onTouchEnd", "onTouchCancel"], c = this, s = 0, u = a.length; u > s; s++) {
+						c[a[s]] = o(c[a[s]], c);
+					}i && (t.addEventListener("mouseover", this.onMouse, !0), t.addEventListener("mousedown", this.onMouse, !0), t.addEventListener("mouseup", this.onMouse, !0)), t.addEventListener("click", this.onClick, !0), t.addEventListener("touchstart", this.onTouchStart, !1), t.addEventListener("touchmove", this.onTouchMove, !1), t.addEventListener("touchend", this.onTouchEnd, !1), t.addEventListener("touchcancel", this.onTouchCancel, !1), Event.prototype.stopImmediatePropagation || (t.removeEventListener = function (e, n, o) {
+						var i = Node.prototype.removeEventListener;"click" === e ? i.call(t, e, n.hijacked || n, o) : i.call(t, e, n, o);
+					}, t.addEventListener = function (e, n, o) {
+						var i = Node.prototype.addEventListener;"click" === e ? i.call(t, e, n.hijacked || (n.hijacked = function (t) {
+							t.propagationStopped || n(t);
+						}), o) : i.call(t, e, n, o);
+					}), "function" == typeof t.onclick && (r = t.onclick, t.addEventListener("click", function (t) {
+						r(t);
+					}, !1), t.onclick = null);
+				}
+			}var o = navigator.userAgent.indexOf("Windows Phone") >= 0,
+			    i = navigator.userAgent.indexOf("Android") > 0 && !o,
+			    r = /iP(ad|hone|od)/.test(navigator.userAgent) && !o,
+			    a = r && /OS 4_\d(_\d)?/.test(navigator.userAgent),
+			    c = r && /OS [6-7]_\d/.test(navigator.userAgent),
+			    s = navigator.userAgent.indexOf("BB10") > 0;e.prototype.needsClick = function (t) {
+				switch (t.nodeName.toLowerCase()) {case "button":case "select":case "textarea":
+						if (t.disabled) return !0;break;case "input":
+						if (r && "file" === t.type || t.disabled) return !0;break;case "label":case "iframe":case "video":
+						return !0;}return (/\bneedsclick\b/.test(t.className)
+				);
+			}, e.prototype.needsFocus = function (t) {
+				switch (t.nodeName.toLowerCase()) {case "textarea":
+						return !0;case "select":
+						return !i;case "input":
+						switch (t.type) {case "button":case "checkbox":case "file":case "image":case "radio":case "submit":
+								return !1;}return !t.disabled && !t.readOnly;default:
+						return (/\bneedsfocus\b/.test(t.className)
+						);}
+			}, e.prototype.sendClick = function (t, e) {
+				var n, o;document.activeElement && document.activeElement !== t && document.activeElement.blur(), o = e.changedTouches[0], n = document.createEvent("MouseEvents"), n.initMouseEvent(this.determineEventType(t), !0, !0, window, 1, o.screenX, o.screenY, o.clientX, o.clientY, !1, !1, !1, !1, 0, null), n.forwardedTouchEvent = !0, t.dispatchEvent(n);
+			}, e.prototype.determineEventType = function (t) {
+				return i && "select" === t.tagName.toLowerCase() ? "mousedown" : "click";
+			}, e.prototype.focus = function (t) {
+				var e;r && t.setSelectionRange && 0 !== t.type.indexOf("date") && "time" !== t.type && "month" !== t.type ? (e = t.value.length, t.setSelectionRange(e, e)) : t.focus();
+			}, e.prototype.updateScrollParent = function (t) {
+				var e, n;if ((e = t.fastClickScrollParent, !e || !e.contains(t))) {
+					n = t;do {
+						if (n.scrollHeight > n.offsetHeight) {
+							e = n, t.fastClickScrollParent = n;break;
+						}n = n.parentElement;
+					} while (n);
+				}e && (e.fastClickLastScrollTop = e.scrollTop);
+			}, e.prototype.getTargetElementFromEventTarget = function (t) {
+				return t.nodeType === Node.TEXT_NODE ? t.parentNode : t;
+			}, e.prototype.onTouchStart = function (t) {
+				var e, n, o;if (t.targetTouches.length > 1) return !0;if ((e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r)) {
+					if ((o = window.getSelection(), o.rangeCount && !o.isCollapsed)) return !0;if (!a) {
+						if (n.identifier && n.identifier === this.lastTouchIdentifier) return t.preventDefault(), !1;this.lastTouchIdentifier = n.identifier, this.updateScrollParent(e);
+					}
+				}return this.trackingClick = !0, this.trackingClickStart = t.timeStamp, this.targetElement = e, this.touchStartX = n.pageX, this.touchStartY = n.pageY, t.timeStamp - this.lastClickTime < this.tapDelay && t.preventDefault(), !0;
+			}, e.prototype.touchHasMoved = function (t) {
+				var e = t.changedTouches[0],
+				    n = this.touchBoundary;return Math.abs(e.pageX - this.touchStartX) > n || Math.abs(e.pageY - this.touchStartY) > n ? !0 : !1;
+			}, e.prototype.onTouchMove = function (t) {
+				return this.trackingClick ? ((this.targetElement !== this.getTargetElementFromEventTarget(t.target) || this.touchHasMoved(t)) && (this.trackingClick = !1, this.targetElement = null), !0) : !0;
+			}, e.prototype.findControl = function (t) {
+				return void 0 !== t.control ? t.control : t.htmlFor ? document.getElementById(t.htmlFor) : t.querySelector("button, input:not([type=hidden]), keygen, meter, output, progress, select, textarea");
+			}, e.prototype.onTouchEnd = function (t) {
+				var e,
+				    n,
+				    o,
+				    s,
+				    u,
+				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if ((this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o)) {
+					if (e = this.findControl(l)) {
+						if ((this.focus(l), i)) return !1;l = e;
+					}
+				} else if (this.needsFocus(l)) return t.timeStamp - n > 100 || r && window.top !== window && "input" === o ? (this.targetElement = null, !1) : (this.focus(l), this.sendClick(l, t), r && "select" === o || (this.targetElement = null, t.preventDefault()), !1);return r && !a && (s = l.fastClickScrollParent, s && s.fastClickLastScrollTop !== s.scrollTop) ? !0 : (this.needsClick(l) || (t.preventDefault(), this.sendClick(l, t)), !1);
+			}, e.prototype.onTouchCancel = function () {
+				this.trackingClick = !1, this.targetElement = null;
+			}, e.prototype.onMouse = function (t) {
+				return this.targetElement ? t.forwardedTouchEvent ? !0 : t.cancelable && (!this.needsClick(this.targetElement) || this.cancelNextClick) ? (t.stopImmediatePropagation ? t.stopImmediatePropagation() : t.propagationStopped = !0, t.stopPropagation(), t.preventDefault(), !1) : !0 : !0;
+			}, e.prototype.onClick = function (t) {
+				var e;return this.trackingClick ? (this.targetElement = null, this.trackingClick = !1, !0) : "submit" === t.target.type && 0 === t.detail ? !0 : (e = this.onMouse(t), e || (this.targetElement = null), e);
+			}, e.prototype.destroy = function () {
+				var t = this.layer;i && (t.removeEventListener("mouseover", this.onMouse, !0), t.removeEventListener("mousedown", this.onMouse, !0), t.removeEventListener("mouseup", this.onMouse, !0)), t.removeEventListener("click", this.onClick, !0), t.removeEventListener("touchstart", this.onTouchStart, !1), t.removeEventListener("touchmove", this.onTouchMove, !1), t.removeEventListener("touchend", this.onTouchEnd, !1), t.removeEventListener("touchcancel", this.onTouchCancel, !1);
+			}, e.notNeeded = function (t) {
+				var e, n, o, r;if ("undefined" == typeof window.ontouchstart) return !0;if (n = +(/Chrome\/([0-9]+)/.exec(navigator.userAgent) || [, 0])[1]) {
+					if (!i) return !0;if (e = document.querySelector("meta[name=viewport]")) {
+						if (-1 !== e.content.indexOf("user-scalable=no")) return !0;if (n > 31 && document.documentElement.scrollWidth <= window.outerWidth) return !0;
+					}
+				}if (s && (o = navigator.userAgent.match(/Version\/([0-9]*)\.([0-9]*)/), o[1] >= 10 && o[2] >= 3 && (e = document.querySelector("meta[name=viewport]")))) {
+					if (-1 !== e.content.indexOf("user-scalable=no")) return !0;if (document.documentElement.scrollWidth <= window.outerWidth) return !0;
+				}return "none" === t.style.msTouchAction || "manipulation" === t.style.touchAction ? !0 : (r = +(/Firefox\/([0-9]+)/.exec(navigator.userAgent) || [, 0])[1], r >= 27 && (e = document.querySelector("meta[name=viewport]"), e && (-1 !== e.content.indexOf("user-scalable=no") || document.documentElement.scrollWidth <= window.outerWidth)) ? !0 : "none" === t.style.touchAction || "manipulation" === t.style.touchAction ? !0 : !1);
+			}, e.attach = function (t, n) {
+				return new e(t, n);
+			}, "function" == typeof n && "object" == _typeof(n.amd) && n.amd ? n(function () {
+				return e;
+			}) : "undefined" != typeof t && t.exports ? (t.exports = e.attach, t.exports.FastClick = e) : window.FastClick = e;
+		})();
+	}, function (t, e, n) {
+		t.exports = n(5);
+	}, function (t, e) {
+		"use strict";
+		function n(t) {
+			t in o || (o[t] = !0, document.dispatchEvent(new CustomEvent("o." + t)));
+		}var o = {};if ((window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
+			"complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded");
+		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent)) {
+			var i = !1,
+			    r = 50;try {
+				i = null == window.frameElement && document.documentElement;
+			} catch (a) {}i && i.doScroll && !(function c() {
+				if (!("DOMContentLoaded" in o)) {
+					try {
+						i.doScroll("left");
+					} catch (t) {
+						return 5e3 > r ? setTimeout(c, r *= 1.2) : void 0;
+					}n("DOMContentLoaded");
+				}
+			})();
+		}
+	}]);
 
 /***/ }
 /******/ ]);
