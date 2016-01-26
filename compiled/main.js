@@ -58,13 +58,13 @@
 
 	var _b4 = _interopRequireDefault(_b3);
 
-	var _fastclickMin = __webpack_require__(13);
+	var _fastclickMin = __webpack_require__(11);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(11);
+	__webpack_require__(12);
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
@@ -355,8 +355,6 @@
 	    event.preventDefault();
 	    mouse.x = event.clientX / window.innerWidth * 2 - 1;
 	    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-	    console.log(mouse.x + ' ' + mouse.y);
 	  },
 	  onWindowResize: function onWindowResize(usefulThings) {
 	    var camera = usefulThings.camera;
@@ -36962,15 +36960,16 @@
 
 	    var camera = undefined,
 	        scene = undefined,
-	        raycaster = undefined,
 	        renderer = undefined;
 	    var mouse = new _three2.default.Vector2(),
 	        INTERSECTED = undefined;
 	    var objects = new Object();
 	    var usefulThings = new Object();
+	    var raycasterObj = new Object();
 	    var cubeCount = 5;
 	    var counters = new Object();
 	    counters.cameraMoveY = 0;
+	    counters.frame = 0;
 	    var lights = [];
 
 	    var manager = new _three2.default.LoadingManager();
@@ -36995,39 +36994,29 @@
 
 	    scene = new _three2.default.Scene();
 
+	    raycasterObj.raycaster = new _three2.default.Raycaster();
+	    raycasterObj.intersection = false;
+
 	    renderer = new _three2.default.WebGLRenderer();
 	    renderer.setClearColor(0x222222);
 	    renderer.setPixelRatio(window.devicePixelRatio);
 	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
 	    container.appendChild(renderer.domElement);
 
-	    // const lightParameters = [
-	    //   [0xff0000, 0.5, [-100, 0, 900]],
-	    //   [0x7700FF, 0.5, [100, 0, 900]],
-	    // ]
-	    //
-	    // for (let i = 0; i < lightParameters.length; i++) {
-	    //   let light = new THREE.PointLight(
-	    //     lightParameters[i][0],
-	    //     lightParameters[i][1],
-	    //     2000
-	    //   );
-	    //
-	    //   light.position.set(
-	    //     lightParameters[i][2][0],
-	    //     lightParameters[i][2][1],
-	    //     lightParameters[i][2][2]
-	    //   );
-	    //
-	    //   lights.push(light);
-	    //   scene.add(light);
-	    // }
+	    var lightParameters = [[0xff0000, 0.5, [-100, 0, 900]], [0x7700FF, 0.5, [100, 0, 900]]];
+
+	    for (var i = 0; i < lightParameters.length; i++) {
+	      var _light = new _three2.default.PointLight(lightParameters[i][0], lightParameters[i][1], 2000);
+
+	      _light.position.set(lightParameters[i][2][0], lightParameters[i][2][1], lightParameters[i][2][2]);
+
+	      lights.push(_light);
+	      scene.add(_light);
+	    }
 
 	    var light = new _three2.default.PointLight(0xffffff, 1, 2000);
 	    light.position.set(0, 0, 900);
 	    scene.add(light);
-
-	    window.lights = lights;
 
 	    objects.cubes = [];
 	    objects.crystals = [];
@@ -37060,11 +37049,14 @@
 	      scene.add(cube);
 	    }
 
-	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lights: lights };
+	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lights: lights, raycasterObj: raycasterObj };
 
 	    var self = this;
 	    window.addEventListener('resize', function () {
 	      self.onWindowResize(usefulThings);
+	    }, false);
+	    window.addEventListener('mousemove', function () {
+	      self.onMouseMove(usefulThings);
 	    }, false);
 
 	    return usefulThings;
@@ -37077,6 +37069,14 @@
 	    camera.updateProjectionMatrix();
 
 	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+	  },
+	  onMouseMove: function onMouseMove(usefulThings) {
+	    var mouse = usefulThings.mouse;
+
+	    event.preventDefault();
+
+	    mouse.x = event.clientX / window.innerWidth * 2 - 1;
+	    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 	  },
 	  animate: function animate(usefulThings) {
 	    var self = this;
@@ -37097,6 +37097,7 @@
 	    var scene = usefulThings.scene;
 	    var mouse = usefulThings.mouse;
 	    var lights = usefulThings.lights;
+	    var raycasterObj = usefulThings.raycasterObj;
 
 	    for (var i = 0; i < objects.cubes.length; i++) {
 	      objects.cubes[i].rotation.x += Math.random() * .05;
@@ -37108,16 +37109,64 @@
 	      crystal.rotation.y += 0.05;
 	    }
 
-	    // for (let i = 0; i < lights.length; i++) {
-	    //   lights[i].intensity = Math.abs(Math.cos(counters.cameraMoveY + i));
-	    // }
+	    for (var i = 0; i < lights.length; i++) {
+	      var intensities = Math.abs(Math.cos(counters.cameraMoveY * 10 + i));
+	      lights[i].intensity = intensities * (1 - Math.abs(mouse.x));;
+	    }
 
 	    camera.position.y += Math.cos(counters.cameraMoveY) * .2;
 	    counters.cameraMoveY += 0.02;
+	    counters.frame++;
+
+	    raycasterObj.raycaster.setFromCamera(mouse, camera);
+
+	    var intersects = raycasterObj.raycaster.intersectObjects(scene.children);
+
+	    var tempIntersection = false;
+	    var self = this;
+	    if (intersects.length > 0) {
+	      for (var i = 0; i < objects.crystals.length; i++) {
+	        if (objects.crystals[i] === intersects[0].object) {
+	          tempIntersection = true;
+	        }
+	      }
+	      raycasterObj.intersection = tempIntersection;
+	      if (raycasterObj.intersection === false) {
+	        self.mouseleaveCrystal(usefulThings);
+	      } else {
+	        self.mouseenterCrystal(usefulThings);
+	      }
+	    } else {
+	      raycasterObj.intersection = tempIntersection;
+	      if (raycasterObj.intersection === false) {
+	        self.mouseleaveCrystal(usefulThings);
+	      }
+	    }
+
+	    if (raycasterObj.intersection) {
+	      var val = counters.frame % 2 === 0 ? Math.cos(counters.cameraMoveY) * 2 : -(Math.cos(counters.cameraMoveY) * 2);
+	      objects.crystals[0].position.x += val;
+	      console.log(objects.crystals[0].position.x);
+	    }
 
 	    renderer.render(scene, camera);
 
-	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lights: lights };
+	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lights: lights, raycasterObj: raycasterObj };
+	  },
+	  mouseenterCrystal: function mouseenterCrystal(usefulThings) {
+	    var raycasterObj = usefulThings.raycasterObj;
+	    var objects = usefulThings.objects;
+
+	    document.body.style.cursor = "pointer";
+	  },
+	  mouseleaveCrystal: function mouseleaveCrystal(usefulThings) {
+	    var raycasterObj = usefulThings.raycasterObj;
+	    var objects = usefulThings.objects;
+
+	    if (objects.crystals[0] && raycasterObj.intersection === false) {
+	      objects.crystals[0].position.x = 0;
+	      document.body.style.cursor = "initial";
+	    }
 	  }
 	};
 
@@ -37450,13 +37499,6 @@
 /* 11 */
 /***/ function(module, exports) {
 
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 12 */,
-/* 13 */
-/***/ function(module, exports) {
-
 	"use strict";
 
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
@@ -37607,6 +37649,12 @@
 			})();
 		}
 	}]);
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);
