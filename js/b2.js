@@ -23,21 +23,21 @@ const b2 = {
     let lights = [];
 
     const manager = new THREE.LoadingManager();
-		manager.onProgress = function ( item, loaded, total ) {
-			console.log( item, loaded, total );
-		};
+    manager.onProgress = function ( item, loaded, total ) {
+      console.log( item, loaded, total );
+    };
 
-		let texture = new THREE.Texture();
+    let texture = new THREE.Texture();
 
-		var onProgress = function ( xhr ) {
-			if ( xhr.lengthComputable ) {
-				var percentComplete = xhr.loaded / xhr.total * 100;
-				console.log( Math.round(percentComplete, 2) + '% downloaded' );
-			}
-		};
+    var onProgress = function ( xhr ) {
+      if ( xhr.lengthComputable ) {
+        var percentComplete = xhr.loaded / xhr.total * 100;
+        console.log( Math.round(percentComplete, 2) + '% downloaded' );
+      }
+    };
 
-		var onError = function ( xhr ) {
-		};
+    var onError = function ( xhr ) {
+    };
 
     camera = new THREE.PerspectiveCamera(
       70,
@@ -184,7 +184,9 @@ const b2 = {
 
     for (let i = 0; i < lights.length; i++) {
       let intensities = Math.abs(Math.cos((counters.cameraMoveY * 10) + i));
-      lights[i].intensity = (intensities * (1 - Math.abs(mouse.x)));;
+      let calculation = (1 - Math.abs(mouse.x));
+      let intensity = (calculation > .3 ? ((calculation - 0.3) * 2) : 0);
+      lights[i].intensity = (intensities * (intensity));
     }
 
     camera.position.y += (Math.cos(counters.cameraMoveY) * .2);
