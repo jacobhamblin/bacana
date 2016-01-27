@@ -91,44 +91,63 @@
 	  }
 	}
 
-	var demos = _demos2.default.demos;
+	function hasClass(el, className) {
+	  var classes = el.className.split(' ');
+	  var existingIndex = classes.indexOf(className);
 
-	var _loop = function _loop() {
-	  var demo = demos[i];
-	  var previewContainer = document.createElement('div');
-	  previewContainer.className = 'preview-container';
-	  var preview = document.createElement('div');
-	  var prevOverlay = document.createElement('div');
-	  var prevOverlay1 = document.createElement('div');
-	  prevOverlay.className = "preview-overlay";
-	  prevOverlay1.className = "preview-overlay";
-	  preview.className = 'preview';
-	  preview.style.backgroundImage = 'url(' + demo.preview + ')';
-	  var num = i;
-	  preview.addEventListener('click', function (e) {
-	    event.preventDefault();
-	    // move css
-	    var divFullscreen = document.querySelectorAll('div.fullscreen')[0];
-	    toggleClass(divFullscreen, "active");
-	    demosCode['b' + (num + 1).toString()].init(divFullscreen);
-	  });
-	  previewContainer.appendChild(preview);
-	  previewContainer.appendChild(prevOverlay);
-	  previewContainer.appendChild(prevOverlay1);
-	  document.querySelectorAll('.previews-container')[0].appendChild(previewContainer);
-	};
-
-	for (var i = 0; i < demos.length; i++) {
-	  _loop();
+	  if (existingIndex >= 0) return true;else return false;
 	}
 
+	(function prepareDemos() {
+	  var demos = _demos2.default.demos;
+
+	  var _loop = function _loop() {
+	    var demo = demos[i];
+	    var previewContainer = document.createElement('div');
+	    previewContainer.className = 'preview-container';
+	    var preview = document.createElement('div');
+	    var prevOverlay = document.createElement('div');
+	    var prevOverlay1 = document.createElement('div');
+	    prevOverlay.className = "preview-overlay";
+	    prevOverlay1.className = "preview-overlay";
+	    preview.className = 'preview';
+	    preview.style.backgroundImage = 'url(' + demo.preview + ')';
+	    var num = i;
+	    preview.addEventListener('click', function (e) {
+	      event.preventDefault();
+	      // move css
+	      var divFullscreen = document.querySelectorAll('div.fullscreen')[0];
+	      toggleClass(divFullscreen, "active");
+	      demosCode['b' + (num + 1).toString()].init(divFullscreen);
+	    });
+	    previewContainer.appendChild(preview);
+	    previewContainer.appendChild(prevOverlay);
+	    previewContainer.appendChild(prevOverlay1);
+	    document.querySelectorAll('.previews-container')[0].appendChild(previewContainer);
+	  };
+
+	  for (var i = 0; i < demos.length; i++) {
+	    _loop();
+	  }
+	})();
+
 	document.querySelectorAll('div.fullscreen div.close-container')[0].addEventListener('click', function () {
-	  var divFullscreen = document.querySelectorAll('div.fullscreen')[0];
-	  toggleClass(divFullscreen, "active");
-	  setTimeout(function () {
-	    divFullscreen.removeChild(document.querySelectorAll('canvas')[0]);
-	  }, 500);
+	  closeDemo(document.querySelectorAll('div.fullscreen')[0]);
 	});
+
+	window.addEventListener('keydown', function (e) {
+	  var divFullscreen = document.querySelectorAll('div.fullscreen')[0];
+	  if (hasClass(divFullscreen, "active") && e.keyCode === 27) {
+	    closeDemo(divFullscreen);
+	  }
+	});
+
+	function closeDemo(demo) {
+	  toggleClass(demo, "active");
+	  setTimeout(function () {
+	    demo.removeChild(document.querySelectorAll('canvas')[0]);
+	  }, 500);
+	};
 
 	var prevsNodeList = document.querySelectorAll('div.preview-container');
 	var prevsArray = Array.prototype.slice.call(prevsNodeList, 0);
@@ -37184,8 +37203,8 @@
 	      objects.crystals[objects.activeCrystal].position.x += val;
 	    }
 
-	    objects.icosahedron.rotation.y += mouse.x * 0.01;
-	    objects.icosahedron.rotation.x += mouse.y * 0.01;
+	    objects.icosahedron.rotation.y += mouse.x * 0.0025;
+	    objects.icosahedron.rotation.x += mouse.y * 0.0025;
 
 	    renderer.render(scene, camera);
 

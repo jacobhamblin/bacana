@@ -253,8 +253,8 @@ const b2 = {
       objects.crystals[objects.activeCrystal].position.x += val;
     }
 
-    objects.icosahedron.rotation.y += (mouse.x * 0.01);
-    objects.icosahedron.rotation.x += (mouse.y * 0.01);
+    objects.icosahedron.rotation.y += (mouse.x * 0.0025);
+    objects.icosahedron.rotation.x += (mouse.y * 0.0025);
 
     renderer.render(scene, camera);
 

@@ -32,41 +32,64 @@ function toggleClass(el, className) {
   }
 }
 
-const demos = demosJson.demos;
-for (var i =  0; i < demos.length; i++) {
-  let demo = demos[i];
-  let previewContainer = document.createElement('div');
-  previewContainer.className = 'preview-container';
-  let preview = document.createElement('div');
-  let prevOverlay = document.createElement('div');
-  let prevOverlay1 = document.createElement('div');
-  prevOverlay.className = "preview-overlay";
-  prevOverlay1.className = "preview-overlay";
-  preview.className = 'preview';
-  preview.style.backgroundImage = 'url(' + demo.preview + ')';
-  let num = i;
-  preview.addEventListener('click', function (e) {
-    event.preventDefault();
-    // move css
-    const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
-    toggleClass(divFullscreen, "active");
-    demosCode['b' + (num + 1).toString()].init(divFullscreen);
-  })
-  previewContainer.appendChild(preview);
-  previewContainer.appendChild(prevOverlay);
-  previewContainer.appendChild(prevOverlay1);
-  document.querySelectorAll('.previews-container')[0].appendChild(previewContainer);
+function hasClass(el, className) {
+  var classes = el.className.split(' ');
+  var existingIndex = classes.indexOf(className);
+
+  if (existingIndex >= 0)
+  return true;
+  else
+  return false;
 }
+
+(function prepareDemos() {
+  const demos = demosJson.demos;
+  for (var i =  0; i < demos.length; i++) {
+    let demo = demos[i];
+    let previewContainer = document.createElement('div');
+    previewContainer.className = 'preview-container';
+    let preview = document.createElement('div');
+    let prevOverlay = document.createElement('div');
+    let prevOverlay1 = document.createElement('div');
+    prevOverlay.className = "preview-overlay";
+    prevOverlay1.className = "preview-overlay";
+    preview.className = 'preview';
+    preview.style.backgroundImage = 'url(' + demo.preview + ')';
+    let num = i;
+    preview.addEventListener('click', function (e) {
+      event.preventDefault();
+      // move css
+      const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
+      toggleClass(divFullscreen, "active");
+      demosCode['b' + (num + 1).toString()].init(divFullscreen);
+    })
+    previewContainer.appendChild(preview);
+    previewContainer.appendChild(prevOverlay);
+    previewContainer.appendChild(prevOverlay1);
+    document.querySelectorAll('.previews-container')[0].appendChild(previewContainer);
+  }
+})();
+
 
 
 document.querySelectorAll('div.fullscreen div.close-container')[0]
   .addEventListener('click', function () {
-    const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
-    toggleClass(divFullscreen, "active");
-    setTimeout(function () {
-      divFullscreen.removeChild(document.querySelectorAll('canvas')[0]);
-    }, 500)
-  })
+    closeDemo(document.querySelectorAll('div.fullscreen')[0]);
+  });
+
+window.addEventListener('keydown', function (e) {
+  const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
+  if (hasClass(divFullscreen, "active") && e.keyCode === 27) {
+    closeDemo(divFullscreen);
+  }
+});
+
+function closeDemo(demo) {
+  toggleClass(demo, "active");
+  setTimeout(function () {
+    demo.removeChild(document.querySelectorAll('canvas')[0]);
+  }, 500);
+};
 
 const prevsNodeList = document.querySelectorAll('div.preview-container');
 const prevsArray = Array.prototype.slice.call(prevsNodeList, 0);
