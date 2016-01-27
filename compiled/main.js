@@ -37007,7 +37007,7 @@
 
 	    var lightParameters = [[0xff0000, 0.5, [-100, 0, 900]], [0x7700FF, 0.5, [100, 0, 900]]];
 
-	    lightsObj.colors = [[0xff0000, 0x7700ff], [0x0000ff, 0x00FFCC], [0xffff00, 0xff0000]];
+	    lightsObj.colors = [[0xff0000, 0x7700ff], [0xee0050, 0x3300ff], [0xcc00ff, 0x00aaff]];
 
 	    for (var i = 0; i < lightParameters.length; i++) {
 	      var _light = new _three2.default.PointLight(lightParameters[i][0], lightParameters[i][1], 2000);
@@ -37027,12 +37027,14 @@
 
 	    var loadedCount = 0;
 	    var crystalObjects = ['./obj/b2_1.obj', './obj/b2_2.obj', './obj/b2_3.obj'];
+	    var colors = [0xaaaaaa, 0x777777, 0xaaaaaa];
 	    var loader = new _three2.default.OBJLoader(manager);
-	    for (var i = 0; i < crystalObjects.length; i++) {
+
+	    var _loop = function _loop(i) {
 	      loader.load(crystalObjects[i], function (object) {
 	        object.traverse(function (child) {
 	          if (child instanceof _three2.default.Mesh) {
-	            child = self.applyMaterial(child);
+	            child = self.applyMaterial(child, colors[i]);
 	            child.position.set(0, 0, 700);
 	            child.scale.set(0.15, 0.15, 0.15);
 	            objects.crystals.push(child);
@@ -37045,6 +37047,10 @@
 	          scene.add(objects.crystals[objects.activeCrystal]);
 	        }
 	      }, onProgress, onError);
+	    };
+
+	    for (var i = 0; i < crystalObjects.length; i++) {
+	      _loop(i);
 	    }
 
 	    for (var i = 0; i < cubeCount; i++) {
@@ -37070,10 +37076,10 @@
 
 	    return usefulThings;
 	  },
-	  applyMaterial: function applyMaterial(object) {
+	  applyMaterial: function applyMaterial(object, color) {
 	    var material = new _three2.default.MeshPhongMaterial({
 	      shading: _three2.default.FlatShading,
-	      color: 0xaaaaaa
+	      color: color
 	    });
 
 	    object.material = material;

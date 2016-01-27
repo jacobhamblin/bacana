@@ -68,8 +68,8 @@ const b2 = {
 
     lightsObj.colors = [
       [0xff0000, 0x7700ff],
-      [0x0000ff, 0x00FFCC],
-      [0xffff00, 0xff0000]
+      [0xee0050, 0x3300ff],
+      [0xcc00ff, 0x00aaff]
     ];
 
     for (let i = 0; i < lightParameters.length; i++) {
@@ -98,12 +98,13 @@ const b2 = {
 
     let loadedCount = 0;
     let crystalObjects = ['./obj/b2_1.obj', './obj/b2_2.obj', './obj/b2_3.obj'];
+    let colors = [0xaaaaaa, 0x777777, 0xaaaaaa];
     const loader = new THREE.OBJLoader(manager);
     for (let i = 0; i < crystalObjects.length; i++) {
       loader.load(crystalObjects[i], function (object) {
         object.traverse(function (child) {
           if (child instanceof THREE.Mesh) {
-            child = self.applyMaterial(child);
+            child = self.applyMaterial(child, colors[i]);
             child.position.set(0, 0, 700);
             child.scale.set(0.15, 0.15, 0.15);
             objects.crystals.push(child);
@@ -152,10 +153,10 @@ const b2 = {
 
     return usefulThings;
   },
-  applyMaterial: function(object) {
+  applyMaterial: function(object, color) {
     let material = new THREE.MeshPhongMaterial({
       shading: THREE.FlatShading,
-      color: 0xaaaaaa
+      color: color
     });
 
     object.material = material;
