@@ -154,7 +154,8 @@ const b1 = {
         shading: THREE.FlatShading,
         fragmentShader: FragmentShader,
         vertexShader: VertexShader,
-        uniforms: uniforms[i]
+        uniforms: uniforms[i],
+        side: THREE.DoubleSide
 			});
 
       const object = new THREE.Mesh(newGeometry, shaderMaterial);

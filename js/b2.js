@@ -18,11 +18,12 @@ const b2 = {
     let raycasterObj = new Object;
     let cubeCount = 5;
     const counters = new Object;
-    counters.cameraMoveY = 0;
+    counters.cosY = 0;
     counters.frame = 0;
     let lightsObj = new Object;
     lightsObj.lights = [];
     let self = this;
+    counters.floatingCrystalPos = 0;
 
     const manager = new THREE.LoadingManager();
     manager.onProgress = function ( item, loaded, total ) {
@@ -68,8 +69,8 @@ const b2 = {
 
     lightsObj.colors = [
       [0xff0000, 0x7700ff],
-      [0xee0050, 0x3300ff],
-      [0xcc00ff, 0x00aaff]
+      [0xcc00ff, 0x00aaff],
+      [0x0000ff, 0x00ff00]
     ];
 
     for (let i = 0; i < lightParameters.length; i++) {
@@ -96,6 +97,15 @@ const b2 = {
     objects.cubes = [];
     objects.crystals = [];
 
+    const icosahedronGeom = new THREE.IcosahedronGeometry(250, 3);
+    const icosahedronMat = new THREE.MeshDepthMaterial({
+      wireframe: true
+    });
+    let icosahedron = new THREE.Mesh(icosahedronGeom, icosahedronMat);
+    icosahedron.position.set(0,0,700);
+    scene.add(icosahedron);
+    objects.icosahedron = icosahedron;
+
     let loadedCount = 0;
     let crystalObjects = ['./obj/b2_1.obj', './obj/b2_2.obj', './obj/b2_3.obj'];
     let colors = [0xaaaaaa, 0x777777, 0xaaaaaa];
@@ -117,20 +127,6 @@ const b2 = {
           scene.add(objects.crystals[objects.activeCrystal]);
         }
       }, onProgress, onError);
-    }
-
-
-
-    for (let i = 0; i < cubeCount; i++) {
-      let geometry = new THREE.BoxGeometry(10, 10, 10);
-      let material = new THREE.MeshDepthMaterial({wireframe: true});
-      let cube = new THREE.Mesh(geometry, material);
-      cube.position.set(
-        Math.random() * 200 - 100,
-        Math.random() * 200 - 100,
-        (Math.random() * 200 - 100) + 600);
-      objects.cubes.push(cube);
-      scene.add(cube);
     }
 
     usefulThings = {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj};
@@ -213,18 +209,19 @@ const b2 = {
 
     if (typeof objects.activeCrystal === typeof 1) {
       objects.crystals[objects.activeCrystal].rotation.y += 0.05;
+      objects.crystals[objects.activeCrystal].position.y = counters.floatingCrystalPos;
     }
 
+    counters.floatingCrystalPos += (Math.cos(counters.cosY) * .2);
+    counters.cosY += 0.02;
+    counters.frame++;
+
     for (let i = 0; i < lightsObj.lights.length; i++) {
-      let intensities = Math.abs(Math.cos((counters.cameraMoveY * 10) + i));
+      let intensities = Math.abs(Math.cos((counters.cosY * 10) + i));
       let calculation = (1 - Math.abs(mouse.x));
       let intensity = (calculation > .3 ? ((calculation - 0.3) * 2) : 0);
       lightsObj.lights[i].intensity = (intensities * (intensity));
     }
-
-    camera.position.y += (Math.cos(counters.cameraMoveY) * .2);
-    counters.cameraMoveY += 0.02;
-    counters.frame++;
 
     raycasterObj.raycaster.setFromCamera(mouse, camera);
 
@@ -252,9 +249,12 @@ const b2 = {
     }
 
     if (raycasterObj.intersection) {
-      let val = counters.frame % 2 === 0 ? (Math.cos(counters.cameraMoveY) * 2) : -(Math.cos(counters.cameraMoveY) * 2);
+      let val = counters.frame % 2 === 0 ? (Math.cos(counters.cosY) * 2) : -(Math.cos(counters.cosY) * 2);
       objects.crystals[objects.activeCrystal].position.x += val;
     }
+
+    objects.icosahedron.rotation.y += (mouse.x * 0.01);
+    objects.icosahedron.rotation.x += (mouse.y * 0.01);
 
     renderer.render(scene, camera);
 
@@ -264,9 +264,9 @@ const b2 = {
     let { lightsObj, scene, objects } = usefulThings;
     let self = this;
 
+    objects.crystals[objects.activeCrystal].position.x = 0;
     scene.remove(objects.crystals[objects.activeCrystal]);
     objects.activeCrystal = (objects.activeCrystal + 1) % objects.crystals.length;
-    self.applyMaterial(objects.crystals[objects.activeCrystal]);
     scene.add(objects.crystals[objects.activeCrystal]);
 
     for (let i = 0; i < lightsObj.lights.length; i++) {

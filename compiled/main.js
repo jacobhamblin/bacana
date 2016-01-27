@@ -326,7 +326,8 @@
 	        shading: _three2.default.FlatShading,
 	        fragmentShader: _fragment2.default,
 	        vertexShader: _vertex2.default,
-	        uniforms: uniforms[i]
+	        uniforms: uniforms[i],
+	        side: _three2.default.DoubleSide
 	      });
 
 	      var object = new _three2.default.Mesh(newGeometry, shaderMaterial);
@@ -36938,6 +36939,8 @@
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; // b2.js
+
 	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
@@ -36947,8 +36950,6 @@
 	var _OBJLoader2 = _interopRequireDefault(_OBJLoader);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; } // b2.js
 
 	var b2 = {
 	  init: function init(container) {
@@ -36968,11 +36969,12 @@
 	    var raycasterObj = new Object();
 	    var cubeCount = 5;
 	    var counters = new Object();
-	    counters.cameraMoveY = 0;
+	    counters.cosY = 0;
 	    counters.frame = 0;
 	    var lightsObj = new Object();
 	    lightsObj.lights = [];
 	    var self = this;
+	    counters.floatingCrystalPos = 0;
 
 	    var manager = new _three2.default.LoadingManager();
 	    manager.onProgress = function (item, loaded, total) {
@@ -37007,7 +37009,7 @@
 
 	    var lightParameters = [[0xff0000, 0.5, [-100, 0, 900]], [0x7700FF, 0.5, [100, 0, 900]]];
 
-	    lightsObj.colors = [[0xff0000, 0x7700ff], [0xee0050, 0x3300ff], [0xcc00ff, 0x00aaff]];
+	    lightsObj.colors = [[0xff0000, 0x7700ff], [0xcc00ff, 0x00aaff], [0x0000ff, 0x00ff00]];
 
 	    for (var i = 0; i < lightParameters.length; i++) {
 	      var _light = new _three2.default.PointLight(lightParameters[i][0], lightParameters[i][1], 2000);
@@ -37024,6 +37026,15 @@
 
 	    objects.cubes = [];
 	    objects.crystals = [];
+
+	    var icosahedronGeom = new _three2.default.IcosahedronGeometry(250, 3);
+	    var icosahedronMat = new _three2.default.MeshDepthMaterial({
+	      wireframe: true
+	    });
+	    var icosahedron = new _three2.default.Mesh(icosahedronGeom, icosahedronMat);
+	    icosahedron.position.set(0, 0, 700);
+	    scene.add(icosahedron);
+	    objects.icosahedron = icosahedron;
 
 	    var loadedCount = 0;
 	    var crystalObjects = ['./obj/b2_1.obj', './obj/b2_2.obj', './obj/b2_3.obj'];
@@ -37051,15 +37062,6 @@
 
 	    for (var i = 0; i < crystalObjects.length; i++) {
 	      _loop(i);
-	    }
-
-	    for (var i = 0; i < cubeCount; i++) {
-	      var geometry = new _three2.default.BoxGeometry(10, 10, 10);
-	      var material = new _three2.default.MeshDepthMaterial({ wireframe: true });
-	      var cube = new _three2.default.Mesh(geometry, material);
-	      cube.position.set(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100 + 600);
-	      objects.cubes.push(cube);
-	      scene.add(cube);
 	    }
 
 	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj };
@@ -37138,18 +37140,19 @@
 
 	    if (_typeof(objects.activeCrystal) === _typeof(1)) {
 	      objects.crystals[objects.activeCrystal].rotation.y += 0.05;
+	      objects.crystals[objects.activeCrystal].position.y = counters.floatingCrystalPos;
 	    }
 
+	    counters.floatingCrystalPos += Math.cos(counters.cosY) * .2;
+	    counters.cosY += 0.02;
+	    counters.frame++;
+
 	    for (var i = 0; i < lightsObj.lights.length; i++) {
-	      var intensities = Math.abs(Math.cos(counters.cameraMoveY * 10 + i));
+	      var intensities = Math.abs(Math.cos(counters.cosY * 10 + i));
 	      var calculation = 1 - Math.abs(mouse.x);
 	      var intensity = calculation > .3 ? (calculation - 0.3) * 2 : 0;
 	      lightsObj.lights[i].intensity = intensities * intensity;
 	    }
-
-	    camera.position.y += Math.cos(counters.cameraMoveY) * .2;
-	    counters.cameraMoveY += 0.02;
-	    counters.frame++;
 
 	    raycasterObj.raycaster.setFromCamera(mouse, camera);
 
@@ -37177,9 +37180,12 @@
 	    }
 
 	    if (raycasterObj.intersection) {
-	      var val = counters.frame % 2 === 0 ? Math.cos(counters.cameraMoveY) * 2 : -(Math.cos(counters.cameraMoveY) * 2);
+	      var val = counters.frame % 2 === 0 ? Math.cos(counters.cosY) * 2 : -(Math.cos(counters.cosY) * 2);
 	      objects.crystals[objects.activeCrystal].position.x += val;
 	    }
+
+	    objects.icosahedron.rotation.y += mouse.x * 0.01;
+	    objects.icosahedron.rotation.x += mouse.y * 0.01;
 
 	    renderer.render(scene, camera);
 
@@ -37192,9 +37198,9 @@
 
 	    var self = this;
 
+	    objects.crystals[objects.activeCrystal].position.x = 0;
 	    scene.remove(objects.crystals[objects.activeCrystal]);
 	    objects.activeCrystal = (objects.activeCrystal + 1) % objects.crystals.length;
-	    self.applyMaterial(objects.crystals[objects.activeCrystal]);
 	    scene.add(objects.crystals[objects.activeCrystal]);
 
 	    for (var i = 0; i < lightsObj.lights.length; i++) {
@@ -37549,16 +37555,16 @@
 
 	"use strict";
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	/** Shrinkwrap URL:
 	 *      /v2/bundles/js?modules=fastclick%401.0.6%2Co-autoinit%401.2.0&shrinkwrap=
 	 */
-	!(function (t) {
+	!function (t) {
 		function e(o) {
 			if (n[o]) return n[o].exports;var i = n[o] = { exports: {}, id: o, loaded: !1 };return t[o].call(i.exports, i, i.exports, e), i.loaded = !0, i.exports;
 		}var n = {};return e.m = t, e.c = n, e.p = "", e(0);
-	})([function (t, e, n) {
+	}([function (t, e, n) {
 		"use strict";
 		n(1), window.Origami = { fastclick: n(2), "o-autoinit": n(4) };
 	}, function (t, e) {
@@ -37567,7 +37573,7 @@
 		t.exports = n(3);
 	}, function (t, e) {
 		"use strict";
-		var n = !1;!(function () {
+		var n = !1;!function () {
 			/**
 	  * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.
 	  *
@@ -37580,7 +37586,7 @@
 					return function () {
 						return t.apply(e, arguments);
 					};
-				}var r;if ((n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t))) {
+				}var r;if (n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t)) {
 					for (var a = ["onMouse", "onClick", "onTouchStart", "onTouchMove", "onTouchEnd", "onTouchCancel"], c = this, s = 0, u = a.length; u > s; s++) {
 						c[a[s]] = o(c[a[s]], c);
 					}i && (t.addEventListener("mouseover", this.onMouse, !0), t.addEventListener("mousedown", this.onMouse, !0), t.addEventListener("mouseup", this.onMouse, !0)), t.addEventListener("click", this.onClick, !0), t.addEventListener("touchstart", this.onTouchStart, !1), t.addEventListener("touchmove", this.onTouchMove, !1), t.addEventListener("touchend", this.onTouchEnd, !1), t.addEventListener("touchcancel", this.onTouchCancel, !1), Event.prototype.stopImmediatePropagation || (t.removeEventListener = function (e, n, o) {
@@ -37619,7 +37625,7 @@
 			}, e.prototype.focus = function (t) {
 				var e;r && t.setSelectionRange && 0 !== t.type.indexOf("date") && "time" !== t.type && "month" !== t.type ? (e = t.value.length, t.setSelectionRange(e, e)) : t.focus();
 			}, e.prototype.updateScrollParent = function (t) {
-				var e, n;if ((e = t.fastClickScrollParent, !e || !e.contains(t))) {
+				var e, n;if (e = t.fastClickScrollParent, !e || !e.contains(t)) {
 					n = t;do {
 						if (n.scrollHeight > n.offsetHeight) {
 							e = n, t.fastClickScrollParent = n;break;
@@ -37629,8 +37635,8 @@
 			}, e.prototype.getTargetElementFromEventTarget = function (t) {
 				return t.nodeType === Node.TEXT_NODE ? t.parentNode : t;
 			}, e.prototype.onTouchStart = function (t) {
-				var e, n, o;if (t.targetTouches.length > 1) return !0;if ((e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r)) {
-					if ((o = window.getSelection(), o.rangeCount && !o.isCollapsed)) return !0;if (!a) {
+				var e, n, o;if (t.targetTouches.length > 1) return !0;if (e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r) {
+					if (o = window.getSelection(), o.rangeCount && !o.isCollapsed) return !0;if (!a) {
 						if (n.identifier && n.identifier === this.lastTouchIdentifier) return t.preventDefault(), !1;this.lastTouchIdentifier = n.identifier, this.updateScrollParent(e);
 					}
 				}return this.trackingClick = !0, this.trackingClickStart = t.timeStamp, this.targetElement = e, this.touchStartX = n.pageX, this.touchStartY = n.pageY, t.timeStamp - this.lastClickTime < this.tapDelay && t.preventDefault(), !0;
@@ -37647,9 +37653,9 @@
 				    o,
 				    s,
 				    u,
-				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if ((this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o)) {
+				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if (this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o) {
 					if (e = this.findControl(l)) {
-						if ((this.focus(l), i)) return !1;l = e;
+						if (this.focus(l), i) return !1;l = e;
 					}
 				} else if (this.needsFocus(l)) return t.timeStamp - n > 100 || r && window.top !== window && "input" === o ? (this.targetElement = null, !1) : (this.focus(l), this.sendClick(l, t), r && "select" === o || (this.targetElement = null, t.preventDefault()), !1);return r && !a && (s = l.fastClickScrollParent, s && s.fastClickLastScrollTop !== s.scrollTop) ? !0 : (this.needsClick(l) || (t.preventDefault(), this.sendClick(l, t)), !1);
 			}, e.prototype.onTouchCancel = function () {
@@ -37673,20 +37679,20 @@
 			}, "function" == typeof n && "object" == _typeof(n.amd) && n.amd ? n(function () {
 				return e;
 			}) : "undefined" != typeof t && t.exports ? (t.exports = e.attach, t.exports.FastClick = e) : window.FastClick = e;
-		})();
+		}();
 	}, function (t, e, n) {
 		t.exports = n(5);
 	}, function (t, e) {
 		"use strict";
 		function n(t) {
 			t in o || (o[t] = !0, document.dispatchEvent(new CustomEvent("o." + t)));
-		}var o = {};if ((window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
+		}var o = {};if (window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
 			"complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded");
-		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent)) {
+		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent) {
 			var i = !1,
 			    r = 50;try {
 				i = null == window.frameElement && document.documentElement;
-			} catch (a) {}i && i.doScroll && !(function c() {
+			} catch (a) {}i && i.doScroll && !function c() {
 				if (!("DOMContentLoaded" in o)) {
 					try {
 						i.doScroll("left");
@@ -37694,7 +37700,7 @@
 						return 5e3 > r ? setTimeout(c, r *= 1.2) : void 0;
 					}n("DOMContentLoaded");
 				}
-			})();
+			}();
 		}
 	}]);
 
