@@ -37026,19 +37026,28 @@
 	      color: 0xaaaaaa
 	    });
 
+	    var loadedCount = 0;
+	    var crystalObjects = ['./obj/b2.obj'];
 	    var loader = new _three2.default.OBJLoader(manager);
-	    loader.load('./obj/b2.obj', function (object) {
-	      object.traverse(function (child) {
-	        if (child instanceof _three2.default.Mesh) {
-	          child.material = material;
-	          child.position.set(0, 0, 700);
-	          child.scale.set(0.15, 0.15, 0.15);
-	          objects.crystals.push(child);
-	        }
-	      });
+	    for (var i = 0; i < crystalObjects.length; i++) {
+	      loader.load(crystalObjects[i], function (object) {
+	        object.traverse(function (child) {
+	          if (child instanceof _three2.default.Mesh) {
+	            child.material = material;
+	            child.position.set(0, 0, 700);
+	            child.scale.set(0.15, 0.15, 0.15);
+	            objects.crystals.push(child);
+	            loadedCount++;
+	          }
+	        });
 
-	      scene.add(objects.crystals[0]);
-	    }, onProgress, onError);
+	        if (loadedCount === crystalObjects.length) {
+	          scene.add(objects.crystals[0]);
+	          objects.activeCrystal = objects.crystals[0];
+	          console.log(objects.activeCrystal);
+	        }
+	      }, onProgress, onError);
+	    }
 
 	    for (var i = 0; i < cubeCount; i++) {
 	      var geometry = new _three2.default.BoxGeometry(10, 10, 10);
@@ -37104,10 +37113,7 @@
 	      objects.cubes[i].rotation.y += Math.random() * .05;
 	    }
 
-	    for (var i = 0; i < objects.crystals.length; i++) {
-	      var crystal = objects.crystals[i];
-	      crystal.rotation.y += 0.05;
-	    }
+	    objects.activeCrystal ? objects.activeCrystal.rotation.y += 0.05 : null;
 
 	    for (var i = 0; i < lights.length; i++) {
 	      var intensities = Math.abs(Math.cos(counters.cameraMoveY * 10 + i));
@@ -37147,14 +37153,14 @@
 
 	    if (raycasterObj.intersection) {
 	      var val = counters.frame % 2 === 0 ? Math.cos(counters.cameraMoveY) * 2 : -(Math.cos(counters.cameraMoveY) * 2);
-	      objects.crystals[0].position.x += val;
-	      console.log(objects.crystals[0].position.x);
+	      objects.activeCrystal.position.x += val;
 	    }
 
 	    renderer.render(scene, camera);
 
 	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lights: lights, raycasterObj: raycasterObj };
 	  },
+	  switchActiveCrystal: function switchActiveCrystal(usefulThings) {},
 	  mouseenterCrystal: function mouseenterCrystal(usefulThings) {
 	    var raycasterObj = usefulThings.raycasterObj;
 	    var objects = usefulThings.objects;
