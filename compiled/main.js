@@ -58,13 +58,13 @@
 
 	var _b4 = _interopRequireDefault(_b3);
 
-	var _fastclickMin = __webpack_require__(10);
+	var _fastclickMin = __webpack_require__(11);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(11);
+	__webpack_require__(12);
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
@@ -36942,13 +36942,13 @@
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _OBJLoader = __webpack_require__(13);
+	var _OBJLoader = __webpack_require__(10);
 
 	var _OBJLoader2 = _interopRequireDefault(_OBJLoader);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// b2.js
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; } // b2.js
 
 	var b2 = {
 	  init: function init(container) {
@@ -36970,7 +36970,9 @@
 	    var counters = new Object();
 	    counters.cameraMoveY = 0;
 	    counters.frame = 0;
-	    var lights = [];
+	    var lightsObj = new Object();
+	    lightsObj.lights = [];
+	    var self = this;
 
 	    var manager = new _three2.default.LoadingManager();
 	    manager.onProgress = function (item, loaded, total) {
@@ -37005,12 +37007,14 @@
 
 	    var lightParameters = [[0xff0000, 0.5, [-100, 0, 900]], [0x7700FF, 0.5, [100, 0, 900]]];
 
+	    lightsObj.colors = [[0xff0000, 0x7700ff], [0x0000ff, 0x00FFCC], [0xffff00, 0xff0000]];
+
 	    for (var i = 0; i < lightParameters.length; i++) {
 	      var _light = new _three2.default.PointLight(lightParameters[i][0], lightParameters[i][1], 2000);
 
 	      _light.position.set(lightParameters[i][2][0], lightParameters[i][2][1], lightParameters[i][2][2]);
 
-	      lights.push(_light);
+	      lightsObj.lights.push(_light);
 	      scene.add(_light);
 	    }
 
@@ -37021,19 +37025,14 @@
 	    objects.cubes = [];
 	    objects.crystals = [];
 
-	    var material = new _three2.default.MeshPhongMaterial({
-	      shading: _three2.default.FlatShading,
-	      color: 0xaaaaaa
-	    });
-
 	    var loadedCount = 0;
-	    var crystalObjects = ['./obj/b2.obj'];
+	    var crystalObjects = ['./obj/b2_1.obj', './obj/b2_2.obj', './obj/b2_3.obj'];
 	    var loader = new _three2.default.OBJLoader(manager);
 	    for (var i = 0; i < crystalObjects.length; i++) {
 	      loader.load(crystalObjects[i], function (object) {
 	        object.traverse(function (child) {
 	          if (child instanceof _three2.default.Mesh) {
-	            child.material = material;
+	            child = self.applyMaterial(child);
 	            child.position.set(0, 0, 700);
 	            child.scale.set(0.15, 0.15, 0.15);
 	            objects.crystals.push(child);
@@ -37042,33 +37041,43 @@
 	        });
 
 	        if (loadedCount === crystalObjects.length) {
-	          scene.add(objects.crystals[0]);
-	          objects.activeCrystal = objects.crystals[0];
-	          console.log(objects.activeCrystal);
+	          objects.activeCrystal = 0;
+	          scene.add(objects.crystals[objects.activeCrystal]);
 	        }
 	      }, onProgress, onError);
 	    }
 
 	    for (var i = 0; i < cubeCount; i++) {
 	      var geometry = new _three2.default.BoxGeometry(10, 10, 10);
-	      var _material = new _three2.default.MeshDepthMaterial({ wireframe: true });
-	      var cube = new _three2.default.Mesh(geometry, _material);
+	      var material = new _three2.default.MeshDepthMaterial({ wireframe: true });
+	      var cube = new _three2.default.Mesh(geometry, material);
 	      cube.position.set(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100 + 600);
 	      objects.cubes.push(cube);
 	      scene.add(cube);
 	    }
 
-	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lights: lights, raycasterObj: raycasterObj };
+	    usefulThings = { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj };
 
-	    var self = this;
 	    window.addEventListener('resize', function () {
 	      self.onWindowResize(usefulThings);
 	    }, false);
 	    window.addEventListener('mousemove', function () {
 	      self.onMouseMove(usefulThings);
 	    }, false);
+	    window.addEventListener('click', function () {
+	      self.onMouseClick(usefulThings);
+	    }, false);
 
 	    return usefulThings;
+	  },
+	  applyMaterial: function applyMaterial(object) {
+	    var material = new _three2.default.MeshPhongMaterial({
+	      shading: _three2.default.FlatShading,
+	      color: 0xaaaaaa
+	    });
+
+	    object.material = material;
+	    return object;
 	  },
 	  onWindowResize: function onWindowResize(usefulThings) {
 	    var camera = usefulThings.camera;
@@ -37086,6 +37095,14 @@
 
 	    mouse.x = event.clientX / window.innerWidth * 2 - 1;
 	    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+	  },
+	  onMouseClick: function onMouseClick(usefulThings) {
+	    var raycasterObj = usefulThings.raycasterObj;
+
+	    var self = this;
+	    if (raycasterObj.intersection) {
+	      self.switchActiveCrystal(usefulThings);
+	    }
 	  },
 	  animate: function animate(usefulThings) {
 	    var self = this;
@@ -37105,7 +37122,7 @@
 	    var renderer = usefulThings.renderer;
 	    var scene = usefulThings.scene;
 	    var mouse = usefulThings.mouse;
-	    var lights = usefulThings.lights;
+	    var lightsObj = usefulThings.lightsObj;
 	    var raycasterObj = usefulThings.raycasterObj;
 
 	    for (var i = 0; i < objects.cubes.length; i++) {
@@ -37113,13 +37130,15 @@
 	      objects.cubes[i].rotation.y += Math.random() * .05;
 	    }
 
-	    objects.activeCrystal ? objects.activeCrystal.rotation.y += 0.05 : null;
+	    if (_typeof(objects.activeCrystal) === _typeof(1)) {
+	      objects.crystals[objects.activeCrystal].rotation.y += 0.05;
+	    }
 
-	    for (var i = 0; i < lights.length; i++) {
+	    for (var i = 0; i < lightsObj.lights.length; i++) {
 	      var intensities = Math.abs(Math.cos(counters.cameraMoveY * 10 + i));
 	      var calculation = 1 - Math.abs(mouse.x);
 	      var intensity = calculation > .3 ? (calculation - 0.3) * 2 : 0;
-	      lights[i].intensity = intensities * intensity;
+	      lightsObj.lights[i].intensity = intensities * intensity;
 	    }
 
 	    camera.position.y += Math.cos(counters.cameraMoveY) * .2;
@@ -37153,14 +37172,29 @@
 
 	    if (raycasterObj.intersection) {
 	      var val = counters.frame % 2 === 0 ? Math.cos(counters.cameraMoveY) * 2 : -(Math.cos(counters.cameraMoveY) * 2);
-	      objects.activeCrystal.position.x += val;
+	      objects.crystals[objects.activeCrystal].position.x += val;
 	    }
 
 	    renderer.render(scene, camera);
 
-	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lights: lights, raycasterObj: raycasterObj };
+	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj };
 	  },
-	  switchActiveCrystal: function switchActiveCrystal(usefulThings) {},
+	  switchActiveCrystal: function switchActiveCrystal(usefulThings) {
+	    var lightsObj = usefulThings.lightsObj;
+	    var scene = usefulThings.scene;
+	    var objects = usefulThings.objects;
+
+	    var self = this;
+
+	    scene.remove(objects.crystals[objects.activeCrystal]);
+	    objects.activeCrystal = (objects.activeCrystal + 1) % objects.crystals.length;
+	    self.applyMaterial(objects.crystals[objects.activeCrystal]);
+	    scene.add(objects.crystals[objects.activeCrystal]);
+
+	    for (var i = 0; i < lightsObj.lights.length; i++) {
+	      lightsObj.lights[i].color = new _three2.default.Color(lightsObj.colors[objects.activeCrystal][i]);
+	    }
+	  },
 	  mouseenterCrystal: function mouseenterCrystal(usefulThings) {
 	    var raycasterObj = usefulThings.raycasterObj;
 	    var objects = usefulThings.objects;
@@ -37171,8 +37205,8 @@
 	    var raycasterObj = usefulThings.raycasterObj;
 	    var objects = usefulThings.objects;
 
-	    if (objects.crystals[0] && raycasterObj.intersection === false) {
-	      objects.crystals[0].position.x = 0;
+	    if (objects.crystals[objects.activeCrystal] && raycasterObj.intersection === false) {
+	      objects.crystals[objects.activeCrystal].position.x = 0;
 	      document.body.style.cursor = "initial";
 	    }
 	  }
@@ -37182,168 +37216,6 @@
 
 /***/ },
 /* 10 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
-
-	/** Shrinkwrap URL:
-	 *      /v2/bundles/js?modules=fastclick%401.0.6%2Co-autoinit%401.2.0&shrinkwrap=
-	 */
-	!(function (t) {
-		function e(o) {
-			if (n[o]) return n[o].exports;var i = n[o] = { exports: {}, id: o, loaded: !1 };return t[o].call(i.exports, i, i.exports, e), i.loaded = !0, i.exports;
-		}var n = {};return e.m = t, e.c = n, e.p = "", e(0);
-	})([function (t, e, n) {
-		"use strict";
-		n(1), window.Origami = { fastclick: n(2), "o-autoinit": n(4) };
-	}, function (t, e) {
-		t.exports = { name: "__MAIN__", dependencies: { fastclick: "fastclick#*", "o-autoinit": "o-autoinit#^1.0.0" } };
-	}, function (t, e, n) {
-		t.exports = n(3);
-	}, function (t, e) {
-		"use strict";
-		var n = !1;!(function () {
-			/**
-	  * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.
-	  *
-	  * @codingstandard ftlabs-jsv2
-	  * @copyright The Financial Times Limited [All Rights Reserved]
-	  * @license MIT License (see LICENSE.txt)
-	  */
-			function e(t, n) {
-				function o(t, e) {
-					return function () {
-						return t.apply(e, arguments);
-					};
-				}var r;if ((n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t))) {
-					for (var a = ["onMouse", "onClick", "onTouchStart", "onTouchMove", "onTouchEnd", "onTouchCancel"], c = this, s = 0, u = a.length; u > s; s++) {
-						c[a[s]] = o(c[a[s]], c);
-					}i && (t.addEventListener("mouseover", this.onMouse, !0), t.addEventListener("mousedown", this.onMouse, !0), t.addEventListener("mouseup", this.onMouse, !0)), t.addEventListener("click", this.onClick, !0), t.addEventListener("touchstart", this.onTouchStart, !1), t.addEventListener("touchmove", this.onTouchMove, !1), t.addEventListener("touchend", this.onTouchEnd, !1), t.addEventListener("touchcancel", this.onTouchCancel, !1), Event.prototype.stopImmediatePropagation || (t.removeEventListener = function (e, n, o) {
-						var i = Node.prototype.removeEventListener;"click" === e ? i.call(t, e, n.hijacked || n, o) : i.call(t, e, n, o);
-					}, t.addEventListener = function (e, n, o) {
-						var i = Node.prototype.addEventListener;"click" === e ? i.call(t, e, n.hijacked || (n.hijacked = function (t) {
-							t.propagationStopped || n(t);
-						}), o) : i.call(t, e, n, o);
-					}), "function" == typeof t.onclick && (r = t.onclick, t.addEventListener("click", function (t) {
-						r(t);
-					}, !1), t.onclick = null);
-				}
-			}var o = navigator.userAgent.indexOf("Windows Phone") >= 0,
-			    i = navigator.userAgent.indexOf("Android") > 0 && !o,
-			    r = /iP(ad|hone|od)/.test(navigator.userAgent) && !o,
-			    a = r && /OS 4_\d(_\d)?/.test(navigator.userAgent),
-			    c = r && /OS [6-7]_\d/.test(navigator.userAgent),
-			    s = navigator.userAgent.indexOf("BB10") > 0;e.prototype.needsClick = function (t) {
-				switch (t.nodeName.toLowerCase()) {case "button":case "select":case "textarea":
-						if (t.disabled) return !0;break;case "input":
-						if (r && "file" === t.type || t.disabled) return !0;break;case "label":case "iframe":case "video":
-						return !0;}return (/\bneedsclick\b/.test(t.className)
-				);
-			}, e.prototype.needsFocus = function (t) {
-				switch (t.nodeName.toLowerCase()) {case "textarea":
-						return !0;case "select":
-						return !i;case "input":
-						switch (t.type) {case "button":case "checkbox":case "file":case "image":case "radio":case "submit":
-								return !1;}return !t.disabled && !t.readOnly;default:
-						return (/\bneedsfocus\b/.test(t.className)
-						);}
-			}, e.prototype.sendClick = function (t, e) {
-				var n, o;document.activeElement && document.activeElement !== t && document.activeElement.blur(), o = e.changedTouches[0], n = document.createEvent("MouseEvents"), n.initMouseEvent(this.determineEventType(t), !0, !0, window, 1, o.screenX, o.screenY, o.clientX, o.clientY, !1, !1, !1, !1, 0, null), n.forwardedTouchEvent = !0, t.dispatchEvent(n);
-			}, e.prototype.determineEventType = function (t) {
-				return i && "select" === t.tagName.toLowerCase() ? "mousedown" : "click";
-			}, e.prototype.focus = function (t) {
-				var e;r && t.setSelectionRange && 0 !== t.type.indexOf("date") && "time" !== t.type && "month" !== t.type ? (e = t.value.length, t.setSelectionRange(e, e)) : t.focus();
-			}, e.prototype.updateScrollParent = function (t) {
-				var e, n;if ((e = t.fastClickScrollParent, !e || !e.contains(t))) {
-					n = t;do {
-						if (n.scrollHeight > n.offsetHeight) {
-							e = n, t.fastClickScrollParent = n;break;
-						}n = n.parentElement;
-					} while (n);
-				}e && (e.fastClickLastScrollTop = e.scrollTop);
-			}, e.prototype.getTargetElementFromEventTarget = function (t) {
-				return t.nodeType === Node.TEXT_NODE ? t.parentNode : t;
-			}, e.prototype.onTouchStart = function (t) {
-				var e, n, o;if (t.targetTouches.length > 1) return !0;if ((e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r)) {
-					if ((o = window.getSelection(), o.rangeCount && !o.isCollapsed)) return !0;if (!a) {
-						if (n.identifier && n.identifier === this.lastTouchIdentifier) return t.preventDefault(), !1;this.lastTouchIdentifier = n.identifier, this.updateScrollParent(e);
-					}
-				}return this.trackingClick = !0, this.trackingClickStart = t.timeStamp, this.targetElement = e, this.touchStartX = n.pageX, this.touchStartY = n.pageY, t.timeStamp - this.lastClickTime < this.tapDelay && t.preventDefault(), !0;
-			}, e.prototype.touchHasMoved = function (t) {
-				var e = t.changedTouches[0],
-				    n = this.touchBoundary;return Math.abs(e.pageX - this.touchStartX) > n || Math.abs(e.pageY - this.touchStartY) > n ? !0 : !1;
-			}, e.prototype.onTouchMove = function (t) {
-				return this.trackingClick ? ((this.targetElement !== this.getTargetElementFromEventTarget(t.target) || this.touchHasMoved(t)) && (this.trackingClick = !1, this.targetElement = null), !0) : !0;
-			}, e.prototype.findControl = function (t) {
-				return void 0 !== t.control ? t.control : t.htmlFor ? document.getElementById(t.htmlFor) : t.querySelector("button, input:not([type=hidden]), keygen, meter, output, progress, select, textarea");
-			}, e.prototype.onTouchEnd = function (t) {
-				var e,
-				    n,
-				    o,
-				    s,
-				    u,
-				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if ((this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o)) {
-					if (e = this.findControl(l)) {
-						if ((this.focus(l), i)) return !1;l = e;
-					}
-				} else if (this.needsFocus(l)) return t.timeStamp - n > 100 || r && window.top !== window && "input" === o ? (this.targetElement = null, !1) : (this.focus(l), this.sendClick(l, t), r && "select" === o || (this.targetElement = null, t.preventDefault()), !1);return r && !a && (s = l.fastClickScrollParent, s && s.fastClickLastScrollTop !== s.scrollTop) ? !0 : (this.needsClick(l) || (t.preventDefault(), this.sendClick(l, t)), !1);
-			}, e.prototype.onTouchCancel = function () {
-				this.trackingClick = !1, this.targetElement = null;
-			}, e.prototype.onMouse = function (t) {
-				return this.targetElement ? t.forwardedTouchEvent ? !0 : t.cancelable && (!this.needsClick(this.targetElement) || this.cancelNextClick) ? (t.stopImmediatePropagation ? t.stopImmediatePropagation() : t.propagationStopped = !0, t.stopPropagation(), t.preventDefault(), !1) : !0 : !0;
-			}, e.prototype.onClick = function (t) {
-				var e;return this.trackingClick ? (this.targetElement = null, this.trackingClick = !1, !0) : "submit" === t.target.type && 0 === t.detail ? !0 : (e = this.onMouse(t), e || (this.targetElement = null), e);
-			}, e.prototype.destroy = function () {
-				var t = this.layer;i && (t.removeEventListener("mouseover", this.onMouse, !0), t.removeEventListener("mousedown", this.onMouse, !0), t.removeEventListener("mouseup", this.onMouse, !0)), t.removeEventListener("click", this.onClick, !0), t.removeEventListener("touchstart", this.onTouchStart, !1), t.removeEventListener("touchmove", this.onTouchMove, !1), t.removeEventListener("touchend", this.onTouchEnd, !1), t.removeEventListener("touchcancel", this.onTouchCancel, !1);
-			}, e.notNeeded = function (t) {
-				var e, n, o, r;if ("undefined" == typeof window.ontouchstart) return !0;if (n = +(/Chrome\/([0-9]+)/.exec(navigator.userAgent) || [, 0])[1]) {
-					if (!i) return !0;if (e = document.querySelector("meta[name=viewport]")) {
-						if (-1 !== e.content.indexOf("user-scalable=no")) return !0;if (n > 31 && document.documentElement.scrollWidth <= window.outerWidth) return !0;
-					}
-				}if (s && (o = navigator.userAgent.match(/Version\/([0-9]*)\.([0-9]*)/), o[1] >= 10 && o[2] >= 3 && (e = document.querySelector("meta[name=viewport]")))) {
-					if (-1 !== e.content.indexOf("user-scalable=no")) return !0;if (document.documentElement.scrollWidth <= window.outerWidth) return !0;
-				}return "none" === t.style.msTouchAction || "manipulation" === t.style.touchAction ? !0 : (r = +(/Firefox\/([0-9]+)/.exec(navigator.userAgent) || [, 0])[1], r >= 27 && (e = document.querySelector("meta[name=viewport]"), e && (-1 !== e.content.indexOf("user-scalable=no") || document.documentElement.scrollWidth <= window.outerWidth)) ? !0 : "none" === t.style.touchAction || "manipulation" === t.style.touchAction ? !0 : !1);
-			}, e.attach = function (t, n) {
-				return new e(t, n);
-			}, "function" == typeof n && "object" == _typeof(n.amd) && n.amd ? n(function () {
-				return e;
-			}) : "undefined" != typeof t && t.exports ? (t.exports = e.attach, t.exports.FastClick = e) : window.FastClick = e;
-		})();
-	}, function (t, e, n) {
-		t.exports = n(5);
-	}, function (t, e) {
-		"use strict";
-		function n(t) {
-			t in o || (o[t] = !0, document.dispatchEvent(new CustomEvent("o." + t)));
-		}var o = {};if ((window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
-			"complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded");
-		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent)) {
-			var i = !1,
-			    r = 50;try {
-				i = null == window.frameElement && document.documentElement;
-			} catch (a) {}i && i.doScroll && !(function c() {
-				if (!("DOMContentLoaded" in o)) {
-					try {
-						i.doScroll("left");
-					} catch (t) {
-						return 5e3 > r ? setTimeout(c, r *= 1.2) : void 0;
-					}n("DOMContentLoaded");
-				}
-			})();
-		}
-	}]);
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 12 */,
-/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37664,6 +37536,167 @@
 		}
 
 	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+
+	/** Shrinkwrap URL:
+	 *      /v2/bundles/js?modules=fastclick%401.0.6%2Co-autoinit%401.2.0&shrinkwrap=
+	 */
+	!(function (t) {
+		function e(o) {
+			if (n[o]) return n[o].exports;var i = n[o] = { exports: {}, id: o, loaded: !1 };return t[o].call(i.exports, i, i.exports, e), i.loaded = !0, i.exports;
+		}var n = {};return e.m = t, e.c = n, e.p = "", e(0);
+	})([function (t, e, n) {
+		"use strict";
+		n(1), window.Origami = { fastclick: n(2), "o-autoinit": n(4) };
+	}, function (t, e) {
+		t.exports = { name: "__MAIN__", dependencies: { fastclick: "fastclick#*", "o-autoinit": "o-autoinit#^1.0.0" } };
+	}, function (t, e, n) {
+		t.exports = n(3);
+	}, function (t, e) {
+		"use strict";
+		var n = !1;!(function () {
+			/**
+	  * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.
+	  *
+	  * @codingstandard ftlabs-jsv2
+	  * @copyright The Financial Times Limited [All Rights Reserved]
+	  * @license MIT License (see LICENSE.txt)
+	  */
+			function e(t, n) {
+				function o(t, e) {
+					return function () {
+						return t.apply(e, arguments);
+					};
+				}var r;if ((n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t))) {
+					for (var a = ["onMouse", "onClick", "onTouchStart", "onTouchMove", "onTouchEnd", "onTouchCancel"], c = this, s = 0, u = a.length; u > s; s++) {
+						c[a[s]] = o(c[a[s]], c);
+					}i && (t.addEventListener("mouseover", this.onMouse, !0), t.addEventListener("mousedown", this.onMouse, !0), t.addEventListener("mouseup", this.onMouse, !0)), t.addEventListener("click", this.onClick, !0), t.addEventListener("touchstart", this.onTouchStart, !1), t.addEventListener("touchmove", this.onTouchMove, !1), t.addEventListener("touchend", this.onTouchEnd, !1), t.addEventListener("touchcancel", this.onTouchCancel, !1), Event.prototype.stopImmediatePropagation || (t.removeEventListener = function (e, n, o) {
+						var i = Node.prototype.removeEventListener;"click" === e ? i.call(t, e, n.hijacked || n, o) : i.call(t, e, n, o);
+					}, t.addEventListener = function (e, n, o) {
+						var i = Node.prototype.addEventListener;"click" === e ? i.call(t, e, n.hijacked || (n.hijacked = function (t) {
+							t.propagationStopped || n(t);
+						}), o) : i.call(t, e, n, o);
+					}), "function" == typeof t.onclick && (r = t.onclick, t.addEventListener("click", function (t) {
+						r(t);
+					}, !1), t.onclick = null);
+				}
+			}var o = navigator.userAgent.indexOf("Windows Phone") >= 0,
+			    i = navigator.userAgent.indexOf("Android") > 0 && !o,
+			    r = /iP(ad|hone|od)/.test(navigator.userAgent) && !o,
+			    a = r && /OS 4_\d(_\d)?/.test(navigator.userAgent),
+			    c = r && /OS [6-7]_\d/.test(navigator.userAgent),
+			    s = navigator.userAgent.indexOf("BB10") > 0;e.prototype.needsClick = function (t) {
+				switch (t.nodeName.toLowerCase()) {case "button":case "select":case "textarea":
+						if (t.disabled) return !0;break;case "input":
+						if (r && "file" === t.type || t.disabled) return !0;break;case "label":case "iframe":case "video":
+						return !0;}return (/\bneedsclick\b/.test(t.className)
+				);
+			}, e.prototype.needsFocus = function (t) {
+				switch (t.nodeName.toLowerCase()) {case "textarea":
+						return !0;case "select":
+						return !i;case "input":
+						switch (t.type) {case "button":case "checkbox":case "file":case "image":case "radio":case "submit":
+								return !1;}return !t.disabled && !t.readOnly;default:
+						return (/\bneedsfocus\b/.test(t.className)
+						);}
+			}, e.prototype.sendClick = function (t, e) {
+				var n, o;document.activeElement && document.activeElement !== t && document.activeElement.blur(), o = e.changedTouches[0], n = document.createEvent("MouseEvents"), n.initMouseEvent(this.determineEventType(t), !0, !0, window, 1, o.screenX, o.screenY, o.clientX, o.clientY, !1, !1, !1, !1, 0, null), n.forwardedTouchEvent = !0, t.dispatchEvent(n);
+			}, e.prototype.determineEventType = function (t) {
+				return i && "select" === t.tagName.toLowerCase() ? "mousedown" : "click";
+			}, e.prototype.focus = function (t) {
+				var e;r && t.setSelectionRange && 0 !== t.type.indexOf("date") && "time" !== t.type && "month" !== t.type ? (e = t.value.length, t.setSelectionRange(e, e)) : t.focus();
+			}, e.prototype.updateScrollParent = function (t) {
+				var e, n;if ((e = t.fastClickScrollParent, !e || !e.contains(t))) {
+					n = t;do {
+						if (n.scrollHeight > n.offsetHeight) {
+							e = n, t.fastClickScrollParent = n;break;
+						}n = n.parentElement;
+					} while (n);
+				}e && (e.fastClickLastScrollTop = e.scrollTop);
+			}, e.prototype.getTargetElementFromEventTarget = function (t) {
+				return t.nodeType === Node.TEXT_NODE ? t.parentNode : t;
+			}, e.prototype.onTouchStart = function (t) {
+				var e, n, o;if (t.targetTouches.length > 1) return !0;if ((e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r)) {
+					if ((o = window.getSelection(), o.rangeCount && !o.isCollapsed)) return !0;if (!a) {
+						if (n.identifier && n.identifier === this.lastTouchIdentifier) return t.preventDefault(), !1;this.lastTouchIdentifier = n.identifier, this.updateScrollParent(e);
+					}
+				}return this.trackingClick = !0, this.trackingClickStart = t.timeStamp, this.targetElement = e, this.touchStartX = n.pageX, this.touchStartY = n.pageY, t.timeStamp - this.lastClickTime < this.tapDelay && t.preventDefault(), !0;
+			}, e.prototype.touchHasMoved = function (t) {
+				var e = t.changedTouches[0],
+				    n = this.touchBoundary;return Math.abs(e.pageX - this.touchStartX) > n || Math.abs(e.pageY - this.touchStartY) > n ? !0 : !1;
+			}, e.prototype.onTouchMove = function (t) {
+				return this.trackingClick ? ((this.targetElement !== this.getTargetElementFromEventTarget(t.target) || this.touchHasMoved(t)) && (this.trackingClick = !1, this.targetElement = null), !0) : !0;
+			}, e.prototype.findControl = function (t) {
+				return void 0 !== t.control ? t.control : t.htmlFor ? document.getElementById(t.htmlFor) : t.querySelector("button, input:not([type=hidden]), keygen, meter, output, progress, select, textarea");
+			}, e.prototype.onTouchEnd = function (t) {
+				var e,
+				    n,
+				    o,
+				    s,
+				    u,
+				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if ((this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o)) {
+					if (e = this.findControl(l)) {
+						if ((this.focus(l), i)) return !1;l = e;
+					}
+				} else if (this.needsFocus(l)) return t.timeStamp - n > 100 || r && window.top !== window && "input" === o ? (this.targetElement = null, !1) : (this.focus(l), this.sendClick(l, t), r && "select" === o || (this.targetElement = null, t.preventDefault()), !1);return r && !a && (s = l.fastClickScrollParent, s && s.fastClickLastScrollTop !== s.scrollTop) ? !0 : (this.needsClick(l) || (t.preventDefault(), this.sendClick(l, t)), !1);
+			}, e.prototype.onTouchCancel = function () {
+				this.trackingClick = !1, this.targetElement = null;
+			}, e.prototype.onMouse = function (t) {
+				return this.targetElement ? t.forwardedTouchEvent ? !0 : t.cancelable && (!this.needsClick(this.targetElement) || this.cancelNextClick) ? (t.stopImmediatePropagation ? t.stopImmediatePropagation() : t.propagationStopped = !0, t.stopPropagation(), t.preventDefault(), !1) : !0 : !0;
+			}, e.prototype.onClick = function (t) {
+				var e;return this.trackingClick ? (this.targetElement = null, this.trackingClick = !1, !0) : "submit" === t.target.type && 0 === t.detail ? !0 : (e = this.onMouse(t), e || (this.targetElement = null), e);
+			}, e.prototype.destroy = function () {
+				var t = this.layer;i && (t.removeEventListener("mouseover", this.onMouse, !0), t.removeEventListener("mousedown", this.onMouse, !0), t.removeEventListener("mouseup", this.onMouse, !0)), t.removeEventListener("click", this.onClick, !0), t.removeEventListener("touchstart", this.onTouchStart, !1), t.removeEventListener("touchmove", this.onTouchMove, !1), t.removeEventListener("touchend", this.onTouchEnd, !1), t.removeEventListener("touchcancel", this.onTouchCancel, !1);
+			}, e.notNeeded = function (t) {
+				var e, n, o, r;if ("undefined" == typeof window.ontouchstart) return !0;if (n = +(/Chrome\/([0-9]+)/.exec(navigator.userAgent) || [, 0])[1]) {
+					if (!i) return !0;if (e = document.querySelector("meta[name=viewport]")) {
+						if (-1 !== e.content.indexOf("user-scalable=no")) return !0;if (n > 31 && document.documentElement.scrollWidth <= window.outerWidth) return !0;
+					}
+				}if (s && (o = navigator.userAgent.match(/Version\/([0-9]*)\.([0-9]*)/), o[1] >= 10 && o[2] >= 3 && (e = document.querySelector("meta[name=viewport]")))) {
+					if (-1 !== e.content.indexOf("user-scalable=no")) return !0;if (document.documentElement.scrollWidth <= window.outerWidth) return !0;
+				}return "none" === t.style.msTouchAction || "manipulation" === t.style.touchAction ? !0 : (r = +(/Firefox\/([0-9]+)/.exec(navigator.userAgent) || [, 0])[1], r >= 27 && (e = document.querySelector("meta[name=viewport]"), e && (-1 !== e.content.indexOf("user-scalable=no") || document.documentElement.scrollWidth <= window.outerWidth)) ? !0 : "none" === t.style.touchAction || "manipulation" === t.style.touchAction ? !0 : !1);
+			}, e.attach = function (t, n) {
+				return new e(t, n);
+			}, "function" == typeof n && "object" == _typeof(n.amd) && n.amd ? n(function () {
+				return e;
+			}) : "undefined" != typeof t && t.exports ? (t.exports = e.attach, t.exports.FastClick = e) : window.FastClick = e;
+		})();
+	}, function (t, e, n) {
+		t.exports = n(5);
+	}, function (t, e) {
+		"use strict";
+		function n(t) {
+			t in o || (o[t] = !0, document.dispatchEvent(new CustomEvent("o." + t)));
+		}var o = {};if ((window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
+			"complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded");
+		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent)) {
+			var i = !1,
+			    r = 50;try {
+				i = null == window.frameElement && document.documentElement;
+			} catch (a) {}i && i.doScroll && !(function c() {
+				if (!("DOMContentLoaded" in o)) {
+					try {
+						i.doScroll("left");
+					} catch (t) {
+						return 5e3 > r ? setTimeout(c, r *= 1.2) : void 0;
+					}n("DOMContentLoaded");
+				}
+			})();
+		}
+	}]);
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);

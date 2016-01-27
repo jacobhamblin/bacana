@@ -20,7 +20,9 @@ const b2 = {
     const counters = new Object;
     counters.cameraMoveY = 0;
     counters.frame = 0;
-    let lights = [];
+    let lightsObj = new Object;
+    lightsObj.lights = [];
+    let self = this;
 
     const manager = new THREE.LoadingManager();
     manager.onProgress = function ( item, loaded, total ) {
@@ -64,6 +66,12 @@ const b2 = {
       [0x7700FF, 0.5, [100, 0, 900]],
     ]
 
+    lightsObj.colors = [
+      [0xff0000, 0x7700ff],
+      [0x0000ff, 0x00FFCC],
+      [0xffff00, 0xff0000]
+    ];
+
     for (let i = 0; i < lightParameters.length; i++) {
       let light = new THREE.PointLight(
         lightParameters[i][0],
@@ -77,7 +85,7 @@ const b2 = {
         lightParameters[i][2][2]
       );
 
-      lights.push(light);
+      lightsObj.lights.push(light);
       scene.add(light);
     }
 
@@ -88,19 +96,14 @@ const b2 = {
     objects.cubes = [];
     objects.crystals = [];
 
-    let material = new THREE.MeshPhongMaterial({
-      shading: THREE.FlatShading,
-      color: 0xaaaaaa
-    });
-
     let loadedCount = 0;
-    let crystalObjects = ['./obj/b2.obj'];
+    let crystalObjects = ['./obj/b2_1.obj', './obj/b2_2.obj', './obj/b2_3.obj'];
     const loader = new THREE.OBJLoader(manager);
     for (let i = 0; i < crystalObjects.length; i++) {
       loader.load(crystalObjects[i], function (object) {
         object.traverse(function (child) {
           if (child instanceof THREE.Mesh) {
-            child.material = material;
+            child = self.applyMaterial(child);
             child.position.set(0, 0, 700);
             child.scale.set(0.15, 0.15, 0.15);
             objects.crystals.push(child);
@@ -109,9 +112,8 @@ const b2 = {
         });
 
         if (loadedCount === crystalObjects.length) {
-          scene.add(objects.crystals[0]);
-          objects.activeCrystal = objects.crystals[0];
-          console.log(objects.activeCrystal);
+          objects.activeCrystal = 0;
+          scene.add(objects.crystals[objects.activeCrystal]);
         }
       }, onProgress, onError);
     }
@@ -130,9 +132,8 @@ const b2 = {
       scene.add(cube);
     }
 
-    usefulThings = {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lights: lights, raycasterObj: raycasterObj};
+    usefulThings = {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj};
 
-    let self = this;
     window.addEventListener(
       'resize',
       function() {self.onWindowResize(usefulThings)},
@@ -143,8 +144,22 @@ const b2 = {
       function() {self.onMouseMove(usefulThings)},
       false
     );
+    window.addEventListener(
+      'click',
+      function() {self.onMouseClick(usefulThings)},
+      false
+    );
 
     return usefulThings;
+  },
+  applyMaterial: function(object) {
+    let material = new THREE.MeshPhongMaterial({
+      shading: THREE.FlatShading,
+      color: 0xaaaaaa
+    });
+
+    object.material = material;
+    return object;
   },
   onWindowResize: function(usefulThings) {
     let { camera, renderer } = usefulThings;
@@ -160,6 +175,14 @@ const b2 = {
 
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
 		mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  },
+  onMouseClick: function(usefulThings) {
+    let { raycasterObj } = usefulThings;
+
+    let self = this;
+    if (raycasterObj.intersection) {
+      self.switchActiveCrystal(usefulThings);
+    }
   },
   animate: function(usefulThings) {
     let self = this;
@@ -178,7 +201,7 @@ const b2 = {
       renderer,
       scene,
       mouse,
-      lights,
+      lightsObj,
       raycasterObj
     } = usefulThings;
 
@@ -187,13 +210,15 @@ const b2 = {
       objects.cubes[i].rotation.y += Math.random() * .05;
     }
 
-    objects.activeCrystal ? objects.activeCrystal.rotation.y += 0.05 : null;
+    if (typeof objects.activeCrystal === typeof 1) {
+      objects.crystals[objects.activeCrystal].rotation.y += 0.05;
+    }
 
-    for (let i = 0; i < lights.length; i++) {
+    for (let i = 0; i < lightsObj.lights.length; i++) {
       let intensities = Math.abs(Math.cos((counters.cameraMoveY * 10) + i));
       let calculation = (1 - Math.abs(mouse.x));
       let intensity = (calculation > .3 ? ((calculation - 0.3) * 2) : 0);
-      lights[i].intensity = (intensities * (intensity));
+      lightsObj.lights[i].intensity = (intensities * (intensity));
     }
 
     camera.position.y += (Math.cos(counters.cameraMoveY) * .2);
@@ -227,15 +252,25 @@ const b2 = {
 
     if (raycasterObj.intersection) {
       let val = counters.frame % 2 === 0 ? (Math.cos(counters.cameraMoveY) * 2) : -(Math.cos(counters.cameraMoveY) * 2);
-      objects.activeCrystal.position.x += val;
+      objects.crystals[objects.activeCrystal].position.x += val;
     }
 
     renderer.render(scene, camera);
 
-    return {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lights: lights, raycasterObj: raycasterObj};
+    return {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj};
   },
   switchActiveCrystal: function (usefulThings) {
+    let { lightsObj, scene, objects } = usefulThings;
+    let self = this;
 
+    scene.remove(objects.crystals[objects.activeCrystal]);
+    objects.activeCrystal = (objects.activeCrystal + 1) % objects.crystals.length;
+    self.applyMaterial(objects.crystals[objects.activeCrystal]);
+    scene.add(objects.crystals[objects.activeCrystal]);
+
+    for (let i = 0; i < lightsObj.lights.length; i++) {
+      lightsObj.lights[i].color = new THREE.Color(lightsObj.colors[objects.activeCrystal][i]);
+    }
   },
   mouseenterCrystal: function (usefulThings) {
     let { raycasterObj, objects } = usefulThings;
@@ -243,8 +278,11 @@ const b2 = {
   },
   mouseleaveCrystal: function (usefulThings) {
     let { raycasterObj, objects } = usefulThings;
-    if (objects.crystals[0] && raycasterObj.intersection === false) {
-      objects.crystals[0].position.x = 0;
+    if (
+      objects.crystals[objects.activeCrystal] &&
+      raycasterObj.intersection === false
+    ) {
+      objects.crystals[objects.activeCrystal].position.x = 0;
       document.body.style.cursor = "initial";
     }
   }
