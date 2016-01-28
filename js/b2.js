@@ -24,6 +24,7 @@ const b2 = {
     lightsObj.lights = [];
     let self = this;
     counters.floatingCrystalPos = 0;
+    counters.clicked = -4;
 
     const manager = new THREE.LoadingManager();
     manager.onProgress = function ( item, loaded, total ) {
@@ -178,7 +179,7 @@ const b2 = {
 
     let self = this;
     if (raycasterObj.intersection) {
-      self.switchActiveCrystal(usefulThings);
+      self.crystalClicked(usefulThings);
     }
   },
   animate: function(usefulThings) {
@@ -201,6 +202,7 @@ const b2 = {
       lightsObj,
       raycasterObj
     } = usefulThings;
+    let self = this;
 
     for (let i = 0; i < objects.cubes.length; i++) {
       objects.cubes[i].rotation.x += Math.random() * .05;
@@ -210,11 +212,21 @@ const b2 = {
     if (typeof objects.activeCrystal === typeof 1) {
       objects.crystals[objects.activeCrystal].rotation.y += 0.05;
       objects.crystals[objects.activeCrystal].position.y = counters.floatingCrystalPos;
+      if (
+        (counters.frame <= counters.clicked + 7) &&
+        (counters.frame > counters.clicked)
+      ) {
+        objects.crystals[objects.activeCrystal]
+          .position.x += (Math.random() * 10) - 5;
+        objects.crystals[objects.activeCrystal]
+          .position.y += (Math.random() * 10) - 5;
+      } else if (counters.frame === (counters.clicked + 8)) {
+        self.switchActiveCrystal(usefulThings);
+      }
     }
 
     counters.floatingCrystalPos += (Math.cos(counters.cosY) * .2);
     counters.cosY += 0.02;
-    counters.frame++;
 
     for (let i = 0; i < lightsObj.lights.length; i++) {
       let intensities = Math.abs(Math.cos((counters.cosY * 10) + i));
@@ -228,7 +240,6 @@ const b2 = {
     let intersects = raycasterObj.raycaster.intersectObjects(scene.children);
 
     let tempIntersection = false;
-    let self = this;
     if (intersects.length > 0) {
       for (let i = 0; i < objects.crystals.length; i++) {
         if (objects.crystals[i] === intersects[0].object) {
@@ -257,8 +268,14 @@ const b2 = {
     objects.icosahedron.rotation.x += (mouse.y * 0.0025);
 
     renderer.render(scene, camera);
+    counters.frame++;
 
     return {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj};
+  },
+  crystalClicked: function(usefulThings) {
+    let { counters } = usefulThings;
+    counters.clicked = counters.frame;
+    // render method calls switchActiveCrystal when three frames have passed
   },
   switchActiveCrystal: function (usefulThings) {
     let { lightsObj, scene, objects } = usefulThings;
