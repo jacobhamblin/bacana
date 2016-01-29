@@ -878,32 +878,32 @@ div.previews-container {
     margin-left: -12rem;
     margin-top: -12rem; }
   to {
-    margin-left: -8rem;
-    margin-top: -8rem; } }
+    margin-left: -11.5rem;
+    margin-top: -11.5rem; } }
 
 @keyframes retract1 {
   from {
     margin-left: -12rem;
     margin-top: -12rem; }
   to {
-    margin-left: -8rem;
-    margin-top: -8rem; } }
+    margin-left: -11.5rem;
+    margin-top: -11.5rem; } }
 
 @-webkit-keyframes retract2 {
   from {
     margin-left: 12rem;
     margin-top: 12rem; }
   to {
-    margin-left: 8rem;
-    margin-top: 8rem; } }
+    margin-left: 11.5rem;
+    margin-top: 11.5rem; } }
 
 @keyframes retract2 {
   from {
     margin-left: 12rem;
     margin-top: 12rem; }
   to {
-    margin-left: 8rem;
-    margin-top: 8rem; } }
+    margin-left: 11.5rem;
+    margin-top: 11.5rem; } }
 
 html body {
   margin: 0;
