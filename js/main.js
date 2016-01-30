@@ -3,11 +3,13 @@ import demosJson from './demos.json';
 import b1 from './b1.js';
 import b2 from './b2.js';
 import FastClick from './vendor/fastclick.min.js';
+import Three from 'three';
 
 const demosCode = new Object;
 demosCode.b1 = b1;
 demosCode.b2 = b2;
 
+let bannerCounter = 0;
 (function attachFastClick() {
   if ('addEventListener' in document) {
     document.addEventListener('DOMContentLoaded', function() {
@@ -44,6 +46,8 @@ function hasClass(el, className) {
 
 (function prepareDemos() {
   const demos = demosJson.demos;
+
+  let renderer = initThreeRenderer();
   for (var i =  0; i < demos.length; i++) {
     let demo = demos[i];
     let previewContainer = document.createElement('div');
@@ -61,7 +65,7 @@ function hasClass(el, className) {
       // move css
       const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
       toggleClass(divFullscreen, "active");
-      demosCode['b' + (num + 1).toString()].init(divFullscreen);
+      demosCode['b' + (num + 1).toString()].init(divFullscreen, renderer);
     })
     previewContainer.appendChild(preview);
     previewContainer.appendChild(prevOverlay);
@@ -70,7 +74,14 @@ function hasClass(el, className) {
   }
 })();
 
+function initThreeRenderer() {
+  let renderer = new Three.WebGLRenderer();
+  renderer.setClearColor(0x222222);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight - 3);
 
+  return renderer;
+};
 
 document.querySelectorAll('div.fullscreen div.close-container')[0]
   .addEventListener('click', function () {
@@ -102,3 +113,13 @@ prevsArray.forEach(p => {
     toggleClass(e.target, "hovered");
   })
 });
+
+document.querySelectorAll('div.box')[0].addEventListener('click', function (e) {
+  bannerCounter++;
+  toggleClass(document.body, "two");
+  toggleClass(document.body, "one");
+  toggleClass(document.querySelectorAll('div.previews-container')[0], "two");
+  toggleClass(document.querySelectorAll('div.previews-container')[0], "one");
+  toggleClass(e.target, "two");
+  toggleClass(e.target, "one");
+})

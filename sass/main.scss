@@ -1,15 +1,22 @@
 $slateblu: #6a7989;
-$lightgray: #d0d6d6;
+$lightgrayOne: #d0d6d6;
+$lightgrayTwo: #eee;
 $maxWidth: 960px;
 
-@import './headerBox.scss';
+@import './headerBoxOne.scss';
+@import './headerBoxTwo.scss';
 @import './previewContainer.scss';
 
 html {
+  body.one {
+    background-color: $lightgrayOne;
+  }
+  body.two {
+    background-color: $lightgrayTwo;
+  }
   body {
     margin: 0;
     padding: 0;
-    background-color: #d0d6d6;
     color: #DDE2E2;
     overflow-x: hidden;
     a {
@@ -70,6 +77,13 @@ html {
       max-width: $maxWidth;
       height: 17rem;
       margin: 2rem auto 0 auto;
+      div.box {
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        position: relative;
+        cursor: pointer;
+      }
     }
     section.content {
       width: 90%;

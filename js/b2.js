@@ -4,14 +4,14 @@ import THREE from 'three';
 import OBJLoader from './vendor/OBJLoader.js';
 
 const b2 = {
-  init: function (container) {
-    let usefulThings = this.setup(container);
+  init: function (container, renderer) {
+    let usefulThings = this.setup(container, renderer);
     this.animate(usefulThings);
   },
-  setup: function (container) {
+  setup: function (container, renderer) {
     console.log('initialized b2!');
 
-    let camera, scene, renderer;
+    let camera, scene;
     let mouse = new THREE.Vector2(), INTERSECTED;
     let objects = new Object;
     let usefulThings = new Object;
@@ -57,10 +57,6 @@ const b2 = {
     raycasterObj.raycaster = new THREE.Raycaster();
     raycasterObj.intersection = false;
 
-    renderer = new THREE.WebGLRenderer();
-    renderer.setClearColor(0x222222);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight - 3);
     container.appendChild(renderer.domElement);
 
     const lightParameters = [

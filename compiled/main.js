@@ -62,6 +62,10 @@
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
+	var _three = __webpack_require__(3);
+
+	var _three2 = _interopRequireDefault(_three);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	__webpack_require__(12);
@@ -70,6 +74,7 @@
 	demosCode.b1 = _b2.default;
 	demosCode.b2 = _b4.default;
 
+	var bannerCounter = 0;
 	(function attachFastClick() {
 	  if ('addEventListener' in document) {
 	    document.addEventListener('DOMContentLoaded', function () {
@@ -101,6 +106,8 @@
 	(function prepareDemos() {
 	  var demos = _demos2.default.demos;
 
+	  var renderer = initThreeRenderer();
+
 	  var _loop = function _loop() {
 	    var demo = demos[i];
 	    var previewContainer = document.createElement('div');
@@ -118,7 +125,7 @@
 	      // move css
 	      var divFullscreen = document.querySelectorAll('div.fullscreen')[0];
 	      toggleClass(divFullscreen, "active");
-	      demosCode['b' + (num + 1).toString()].init(divFullscreen);
+	      demosCode['b' + (num + 1).toString()].init(divFullscreen, renderer);
 	    });
 	    previewContainer.appendChild(preview);
 	    previewContainer.appendChild(prevOverlay);
@@ -130,6 +137,15 @@
 	    _loop();
 	  }
 	})();
+
+	function initThreeRenderer() {
+	  var renderer = new _three2.default.WebGLRenderer();
+	  renderer.setClearColor(0x222222);
+	  renderer.setPixelRatio(window.devicePixelRatio);
+	  renderer.setSize(window.innerWidth, window.innerHeight - 3);
+
+	  return renderer;
+	};
 
 	document.querySelectorAll('div.fullscreen div.close-container')[0].addEventListener('click', function () {
 	  closeDemo(document.querySelectorAll('div.fullscreen')[0]);
@@ -159,6 +175,16 @@
 	  p.addEventListener('mouseleave', function (e) {
 	    toggleClass(e.target, "hovered");
 	  });
+	});
+
+	document.querySelectorAll('div.box')[0].addEventListener('click', function (e) {
+	  bannerCounter++;
+	  toggleClass(document.body, "two");
+	  toggleClass(document.body, "one");
+	  toggleClass(document.querySelectorAll('div.previews-container')[0], "two");
+	  toggleClass(document.querySelectorAll('div.previews-container')[0], "one");
+	  toggleClass(e.target, "two");
+	  toggleClass(e.target, "one");
 	});
 
 /***/ },
@@ -213,19 +239,16 @@
 	// b1.js
 
 	var b1 = {
-	  init: function init(container) {
-	    var usefulThings = this.setup(container);
+	  init: function init(container, renderer) {
+	    var usefulThings = this.setup(container, renderer);
 	    this.animate(usefulThings);
 	  },
-	  setup: function setup(container) {
+	  setup: function setup(container, renderer) {
 	    console.log('initialized b1!');
 
 	    var camera = undefined,
-	        scene = undefined,
-	        raycaster = undefined,
-	        renderer = undefined;
-	    var mouse = new _three2.default.Vector2(),
-	        INTERSECTED = undefined;
+	        scene = undefined;
+	    var mouse = new _three2.default.Vector2();
 	    var objects = new Object();
 	    var usefulThings = new Object();
 	    var uniforms = [];
@@ -241,10 +264,6 @@
 
 	    scene = new _three2.default.Scene();
 
-	    renderer = new _three2.default.WebGLRenderer();
-	    renderer.setClearColor(0x222222);
-	    renderer.setPixelRatio(window.devicePixelRatio);
-	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
 	    container.appendChild(renderer.domElement);
 
 	    var light = new _three2.default.PointLight(0xffffff, 1, 2000);
@@ -36971,16 +36990,15 @@
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; } // b2.js
 
 	var b2 = {
-	  init: function init(container) {
-	    var usefulThings = this.setup(container);
+	  init: function init(container, renderer) {
+	    var usefulThings = this.setup(container, renderer);
 	    this.animate(usefulThings);
 	  },
-	  setup: function setup(container) {
+	  setup: function setup(container, renderer) {
 	    console.log('initialized b2!');
 
 	    var camera = undefined,
-	        scene = undefined,
-	        renderer = undefined;
+	        scene = undefined;
 	    var mouse = new _three2.default.Vector2(),
 	        INTERSECTED = undefined;
 	    var objects = new Object();
@@ -37021,10 +37039,6 @@
 	    raycasterObj.raycaster = new _three2.default.Raycaster();
 	    raycasterObj.intersection = false;
 
-	    renderer = new _three2.default.WebGLRenderer();
-	    renderer.setClearColor(0x222222);
-	    renderer.setPixelRatio(window.devicePixelRatio);
-	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
 	    container.appendChild(renderer.domElement);
 
 	    var lightParameters = [[0xff0000, 0.5, [-100, 0, 900]], [0x7700FF, 0.5, [100, 0, 900]]];

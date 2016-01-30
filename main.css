@@ -1,784 +1,776 @@
-header div.box {
-  width: 100%;
-  height: 100%;
+header div.box.one {
   background-color: #777;
-  z-index: 1;
-  position: relative;
   opacity: 0.7;
-  -webkit-transition: opacity 1s ease;
-  transition: opacity 1s ease;
   background-image: linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
   background-image: -webkit-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
   background-image: -ms-linear-gradient(45deg, #333, rgba(255, 255, 255, 0)); }
-  header div.box:hover {
-    opacity: 0.0; }
-  header div.box div.prisms-container {
+  header div.box.one div.prisms-container {
     width: 105%;
     height: 100%;
     margin-left: -.25rem;
     pointer-events: none; }
-    header div.box div.prisms-container div.prism-group {
+    header div.box.one div.prisms-container div.prism-group {
       height: 100%;
       width: 2rem;
       margin: 0;
       display: inline-block; }
-      header div.box div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(1) {
         -webkit-animation-delay: 0s, 0s;
                 animation-delay: 0s, 0s; }
-      header div.box div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(2) {
         -webkit-animation-delay: 0.44444s, 0.44444s;
                 animation-delay: 0.44444s, 0.44444s; }
-      header div.box div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(3) {
         -webkit-animation-delay: 0.88889s, 0.88889s;
                 animation-delay: 0.88889s, 0.88889s; }
-      header div.box div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(4) {
         -webkit-animation-delay: 1.33333s, 1.33333s;
                 animation-delay: 1.33333s, 1.33333s; }
-      header div.box div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(5) {
         -webkit-animation-delay: 1.77778s, 1.77778s;
                 animation-delay: 1.77778s, 1.77778s; }
-      header div.box div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(6) {
         -webkit-animation-delay: 2.22222s, 2.22222s;
                 animation-delay: 2.22222s, 2.22222s; }
-      header div.box div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(7) {
         -webkit-animation-delay: 2.66667s, 2.66667s;
                 animation-delay: 2.66667s, 2.66667s; }
-      header div.box div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(8) {
         -webkit-animation-delay: 3.11111s, 3.11111s;
                 animation-delay: 3.11111s, 3.11111s; }
-      header div.box div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(1) div.prism:nth-child(9) {
         -webkit-animation-delay: 3.55556s, 3.55556s;
                 animation-delay: 3.55556s, 3.55556s; }
-      header div.box div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(1) {
         -webkit-animation-delay: 0.14286s, 0.14286s;
                 animation-delay: 0.14286s, 0.14286s; }
-      header div.box div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(2) {
         -webkit-animation-delay: 0.5873s, 0.5873s;
                 animation-delay: 0.5873s, 0.5873s; }
-      header div.box div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(3) {
         -webkit-animation-delay: 1.03175s, 1.03175s;
                 animation-delay: 1.03175s, 1.03175s; }
-      header div.box div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(4) {
         -webkit-animation-delay: 1.47619s, 1.47619s;
                 animation-delay: 1.47619s, 1.47619s; }
-      header div.box div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(5) {
         -webkit-animation-delay: 1.92063s, 1.92063s;
                 animation-delay: 1.92063s, 1.92063s; }
-      header div.box div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(6) {
         -webkit-animation-delay: 2.36508s, 2.36508s;
                 animation-delay: 2.36508s, 2.36508s; }
-      header div.box div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(7) {
         -webkit-animation-delay: 2.80952s, 2.80952s;
                 animation-delay: 2.80952s, 2.80952s; }
-      header div.box div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(8) {
         -webkit-animation-delay: 3.25397s, 3.25397s;
                 animation-delay: 3.25397s, 3.25397s; }
-      header div.box div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(2) div.prism:nth-child(9) {
         -webkit-animation-delay: 3.69841s, 3.69841s;
                 animation-delay: 3.69841s, 3.69841s; }
-      header div.box div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(1) {
         -webkit-animation-delay: 0.28571s, 0.28571s;
                 animation-delay: 0.28571s, 0.28571s; }
-      header div.box div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(2) {
         -webkit-animation-delay: 0.73016s, 0.73016s;
                 animation-delay: 0.73016s, 0.73016s; }
-      header div.box div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(3) {
         -webkit-animation-delay: 1.1746s, 1.1746s;
                 animation-delay: 1.1746s, 1.1746s; }
-      header div.box div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(4) {
         -webkit-animation-delay: 1.61905s, 1.61905s;
                 animation-delay: 1.61905s, 1.61905s; }
-      header div.box div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(5) {
         -webkit-animation-delay: 2.06349s, 2.06349s;
                 animation-delay: 2.06349s, 2.06349s; }
-      header div.box div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(6) {
         -webkit-animation-delay: 2.50794s, 2.50794s;
                 animation-delay: 2.50794s, 2.50794s; }
-      header div.box div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(7) {
         -webkit-animation-delay: 2.95238s, 2.95238s;
                 animation-delay: 2.95238s, 2.95238s; }
-      header div.box div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(8) {
         -webkit-animation-delay: 3.39683s, 3.39683s;
                 animation-delay: 3.39683s, 3.39683s; }
-      header div.box div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(3) div.prism:nth-child(9) {
         -webkit-animation-delay: 3.84127s, 3.84127s;
                 animation-delay: 3.84127s, 3.84127s; }
-      header div.box div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(1) {
         -webkit-animation-delay: 0.42857s, 0.42857s;
                 animation-delay: 0.42857s, 0.42857s; }
-      header div.box div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(2) {
         -webkit-animation-delay: 0.87302s, 0.87302s;
                 animation-delay: 0.87302s, 0.87302s; }
-      header div.box div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(3) {
         -webkit-animation-delay: 1.31746s, 1.31746s;
                 animation-delay: 1.31746s, 1.31746s; }
-      header div.box div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(4) {
         -webkit-animation-delay: 1.7619s, 1.7619s;
                 animation-delay: 1.7619s, 1.7619s; }
-      header div.box div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(5) {
         -webkit-animation-delay: 2.20635s, 2.20635s;
                 animation-delay: 2.20635s, 2.20635s; }
-      header div.box div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(6) {
         -webkit-animation-delay: 2.65079s, 2.65079s;
                 animation-delay: 2.65079s, 2.65079s; }
-      header div.box div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(7) {
         -webkit-animation-delay: 3.09524s, 3.09524s;
                 animation-delay: 3.09524s, 3.09524s; }
-      header div.box div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(8) {
         -webkit-animation-delay: 3.53968s, 3.53968s;
                 animation-delay: 3.53968s, 3.53968s; }
-      header div.box div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(4) div.prism:nth-child(9) {
         -webkit-animation-delay: 3.98413s, 3.98413s;
                 animation-delay: 3.98413s, 3.98413s; }
-      header div.box div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(1) {
         -webkit-animation-delay: 0.57143s, 0.57143s;
                 animation-delay: 0.57143s, 0.57143s; }
-      header div.box div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(2) {
         -webkit-animation-delay: 1.01587s, 1.01587s;
                 animation-delay: 1.01587s, 1.01587s; }
-      header div.box div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(3) {
         -webkit-animation-delay: 1.46032s, 1.46032s;
                 animation-delay: 1.46032s, 1.46032s; }
-      header div.box div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(4) {
         -webkit-animation-delay: 1.90476s, 1.90476s;
                 animation-delay: 1.90476s, 1.90476s; }
-      header div.box div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(5) {
         -webkit-animation-delay: 2.34921s, 2.34921s;
                 animation-delay: 2.34921s, 2.34921s; }
-      header div.box div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(6) {
         -webkit-animation-delay: 2.79365s, 2.79365s;
                 animation-delay: 2.79365s, 2.79365s; }
-      header div.box div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(7) {
         -webkit-animation-delay: 3.2381s, 3.2381s;
                 animation-delay: 3.2381s, 3.2381s; }
-      header div.box div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(8) {
         -webkit-animation-delay: 3.68254s, 3.68254s;
                 animation-delay: 3.68254s, 3.68254s; }
-      header div.box div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(5) div.prism:nth-child(9) {
         -webkit-animation-delay: 4.12698s, 4.12698s;
                 animation-delay: 4.12698s, 4.12698s; }
-      header div.box div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(1) {
         -webkit-animation-delay: 0.71429s, 0.71429s;
                 animation-delay: 0.71429s, 0.71429s; }
-      header div.box div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(2) {
         -webkit-animation-delay: 1.15873s, 1.15873s;
                 animation-delay: 1.15873s, 1.15873s; }
-      header div.box div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(3) {
         -webkit-animation-delay: 1.60317s, 1.60317s;
                 animation-delay: 1.60317s, 1.60317s; }
-      header div.box div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(4) {
         -webkit-animation-delay: 2.04762s, 2.04762s;
                 animation-delay: 2.04762s, 2.04762s; }
-      header div.box div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(5) {
         -webkit-animation-delay: 2.49206s, 2.49206s;
                 animation-delay: 2.49206s, 2.49206s; }
-      header div.box div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(6) {
         -webkit-animation-delay: 2.93651s, 2.93651s;
                 animation-delay: 2.93651s, 2.93651s; }
-      header div.box div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(7) {
         -webkit-animation-delay: 3.38095s, 3.38095s;
                 animation-delay: 3.38095s, 3.38095s; }
-      header div.box div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(8) {
         -webkit-animation-delay: 3.8254s, 3.8254s;
                 animation-delay: 3.8254s, 3.8254s; }
-      header div.box div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(6) div.prism:nth-child(9) {
         -webkit-animation-delay: 4.26984s, 4.26984s;
                 animation-delay: 4.26984s, 4.26984s; }
-      header div.box div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(1) {
         -webkit-animation-delay: 0.85714s, 0.85714s;
                 animation-delay: 0.85714s, 0.85714s; }
-      header div.box div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(2) {
         -webkit-animation-delay: 1.30159s, 1.30159s;
                 animation-delay: 1.30159s, 1.30159s; }
-      header div.box div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(3) {
         -webkit-animation-delay: 1.74603s, 1.74603s;
                 animation-delay: 1.74603s, 1.74603s; }
-      header div.box div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(4) {
         -webkit-animation-delay: 2.19048s, 2.19048s;
                 animation-delay: 2.19048s, 2.19048s; }
-      header div.box div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(5) {
         -webkit-animation-delay: 2.63492s, 2.63492s;
                 animation-delay: 2.63492s, 2.63492s; }
-      header div.box div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(6) {
         -webkit-animation-delay: 3.07937s, 3.07937s;
                 animation-delay: 3.07937s, 3.07937s; }
-      header div.box div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(7) {
         -webkit-animation-delay: 3.52381s, 3.52381s;
                 animation-delay: 3.52381s, 3.52381s; }
-      header div.box div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(8) {
         -webkit-animation-delay: 3.96825s, 3.96825s;
                 animation-delay: 3.96825s, 3.96825s; }
-      header div.box div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(7) div.prism:nth-child(9) {
         -webkit-animation-delay: 4.4127s, 4.4127s;
                 animation-delay: 4.4127s, 4.4127s; }
-      header div.box div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(1) {
         -webkit-animation-delay: 1s, 1s;
                 animation-delay: 1s, 1s; }
-      header div.box div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(2) {
         -webkit-animation-delay: 1.44444s, 1.44444s;
                 animation-delay: 1.44444s, 1.44444s; }
-      header div.box div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(3) {
         -webkit-animation-delay: 1.88889s, 1.88889s;
                 animation-delay: 1.88889s, 1.88889s; }
-      header div.box div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(4) {
         -webkit-animation-delay: 2.33333s, 2.33333s;
                 animation-delay: 2.33333s, 2.33333s; }
-      header div.box div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(5) {
         -webkit-animation-delay: 2.77778s, 2.77778s;
                 animation-delay: 2.77778s, 2.77778s; }
-      header div.box div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(6) {
         -webkit-animation-delay: 3.22222s, 3.22222s;
                 animation-delay: 3.22222s, 3.22222s; }
-      header div.box div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(7) {
         -webkit-animation-delay: 3.66667s, 3.66667s;
                 animation-delay: 3.66667s, 3.66667s; }
-      header div.box div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(8) {
         -webkit-animation-delay: 4.11111s, 4.11111s;
                 animation-delay: 4.11111s, 4.11111s; }
-      header div.box div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(8) div.prism:nth-child(9) {
         -webkit-animation-delay: 4.55556s, 4.55556s;
                 animation-delay: 4.55556s, 4.55556s; }
-      header div.box div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(1) {
         -webkit-animation-delay: 1.14286s, 1.14286s;
                 animation-delay: 1.14286s, 1.14286s; }
-      header div.box div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(2) {
         -webkit-animation-delay: 1.5873s, 1.5873s;
                 animation-delay: 1.5873s, 1.5873s; }
-      header div.box div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(3) {
         -webkit-animation-delay: 2.03175s, 2.03175s;
                 animation-delay: 2.03175s, 2.03175s; }
-      header div.box div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(4) {
         -webkit-animation-delay: 2.47619s, 2.47619s;
                 animation-delay: 2.47619s, 2.47619s; }
-      header div.box div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(5) {
         -webkit-animation-delay: 2.92063s, 2.92063s;
                 animation-delay: 2.92063s, 2.92063s; }
-      header div.box div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(6) {
         -webkit-animation-delay: 3.36508s, 3.36508s;
                 animation-delay: 3.36508s, 3.36508s; }
-      header div.box div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(7) {
         -webkit-animation-delay: 3.80952s, 3.80952s;
                 animation-delay: 3.80952s, 3.80952s; }
-      header div.box div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(8) {
         -webkit-animation-delay: 4.25397s, 4.25397s;
                 animation-delay: 4.25397s, 4.25397s; }
-      header div.box div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(9) div.prism:nth-child(9) {
         -webkit-animation-delay: 4.69841s, 4.69841s;
                 animation-delay: 4.69841s, 4.69841s; }
-      header div.box div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(1) {
         -webkit-animation-delay: 1.28571s, 1.28571s;
                 animation-delay: 1.28571s, 1.28571s; }
-      header div.box div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(2) {
         -webkit-animation-delay: 1.73016s, 1.73016s;
                 animation-delay: 1.73016s, 1.73016s; }
-      header div.box div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(3) {
         -webkit-animation-delay: 2.1746s, 2.1746s;
                 animation-delay: 2.1746s, 2.1746s; }
-      header div.box div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(4) {
         -webkit-animation-delay: 2.61905s, 2.61905s;
                 animation-delay: 2.61905s, 2.61905s; }
-      header div.box div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(5) {
         -webkit-animation-delay: 3.06349s, 3.06349s;
                 animation-delay: 3.06349s, 3.06349s; }
-      header div.box div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(6) {
         -webkit-animation-delay: 3.50794s, 3.50794s;
                 animation-delay: 3.50794s, 3.50794s; }
-      header div.box div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(7) {
         -webkit-animation-delay: 3.95238s, 3.95238s;
                 animation-delay: 3.95238s, 3.95238s; }
-      header div.box div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(8) {
         -webkit-animation-delay: 4.39683s, 4.39683s;
                 animation-delay: 4.39683s, 4.39683s; }
-      header div.box div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(10) div.prism:nth-child(9) {
         -webkit-animation-delay: 4.84127s, 4.84127s;
                 animation-delay: 4.84127s, 4.84127s; }
-      header div.box div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(1) {
         -webkit-animation-delay: 1.42857s, 1.42857s;
                 animation-delay: 1.42857s, 1.42857s; }
-      header div.box div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(2) {
         -webkit-animation-delay: 1.87302s, 1.87302s;
                 animation-delay: 1.87302s, 1.87302s; }
-      header div.box div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(3) {
         -webkit-animation-delay: 2.31746s, 2.31746s;
                 animation-delay: 2.31746s, 2.31746s; }
-      header div.box div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(4) {
         -webkit-animation-delay: 2.7619s, 2.7619s;
                 animation-delay: 2.7619s, 2.7619s; }
-      header div.box div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(5) {
         -webkit-animation-delay: 3.20635s, 3.20635s;
                 animation-delay: 3.20635s, 3.20635s; }
-      header div.box div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(6) {
         -webkit-animation-delay: 3.65079s, 3.65079s;
                 animation-delay: 3.65079s, 3.65079s; }
-      header div.box div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(7) {
         -webkit-animation-delay: 4.09524s, 4.09524s;
                 animation-delay: 4.09524s, 4.09524s; }
-      header div.box div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(8) {
         -webkit-animation-delay: 4.53968s, 4.53968s;
                 animation-delay: 4.53968s, 4.53968s; }
-      header div.box div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(11) div.prism:nth-child(9) {
         -webkit-animation-delay: 4.98413s, 4.98413s;
                 animation-delay: 4.98413s, 4.98413s; }
-      header div.box div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(1) {
         -webkit-animation-delay: 1.57143s, 1.57143s;
                 animation-delay: 1.57143s, 1.57143s; }
-      header div.box div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(2) {
         -webkit-animation-delay: 2.01587s, 2.01587s;
                 animation-delay: 2.01587s, 2.01587s; }
-      header div.box div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(3) {
         -webkit-animation-delay: 2.46032s, 2.46032s;
                 animation-delay: 2.46032s, 2.46032s; }
-      header div.box div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(4) {
         -webkit-animation-delay: 2.90476s, 2.90476s;
                 animation-delay: 2.90476s, 2.90476s; }
-      header div.box div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(5) {
         -webkit-animation-delay: 3.34921s, 3.34921s;
                 animation-delay: 3.34921s, 3.34921s; }
-      header div.box div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(6) {
         -webkit-animation-delay: 3.79365s, 3.79365s;
                 animation-delay: 3.79365s, 3.79365s; }
-      header div.box div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(7) {
         -webkit-animation-delay: 4.2381s, 4.2381s;
                 animation-delay: 4.2381s, 4.2381s; }
-      header div.box div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(8) {
         -webkit-animation-delay: 4.68254s, 4.68254s;
                 animation-delay: 4.68254s, 4.68254s; }
-      header div.box div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(12) div.prism:nth-child(9) {
         -webkit-animation-delay: 5.12698s, 5.12698s;
                 animation-delay: 5.12698s, 5.12698s; }
-      header div.box div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(1) {
         -webkit-animation-delay: 1.71429s, 1.71429s;
                 animation-delay: 1.71429s, 1.71429s; }
-      header div.box div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(2) {
         -webkit-animation-delay: 2.15873s, 2.15873s;
                 animation-delay: 2.15873s, 2.15873s; }
-      header div.box div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(3) {
         -webkit-animation-delay: 2.60317s, 2.60317s;
                 animation-delay: 2.60317s, 2.60317s; }
-      header div.box div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(4) {
         -webkit-animation-delay: 3.04762s, 3.04762s;
                 animation-delay: 3.04762s, 3.04762s; }
-      header div.box div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(5) {
         -webkit-animation-delay: 3.49206s, 3.49206s;
                 animation-delay: 3.49206s, 3.49206s; }
-      header div.box div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(6) {
         -webkit-animation-delay: 3.93651s, 3.93651s;
                 animation-delay: 3.93651s, 3.93651s; }
-      header div.box div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(7) {
         -webkit-animation-delay: 4.38095s, 4.38095s;
                 animation-delay: 4.38095s, 4.38095s; }
-      header div.box div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(8) {
         -webkit-animation-delay: 4.8254s, 4.8254s;
                 animation-delay: 4.8254s, 4.8254s; }
-      header div.box div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(13) div.prism:nth-child(9) {
         -webkit-animation-delay: 5.26984s, 5.26984s;
                 animation-delay: 5.26984s, 5.26984s; }
-      header div.box div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(1) {
         -webkit-animation-delay: 1.85714s, 1.85714s;
                 animation-delay: 1.85714s, 1.85714s; }
-      header div.box div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(2) {
         -webkit-animation-delay: 2.30159s, 2.30159s;
                 animation-delay: 2.30159s, 2.30159s; }
-      header div.box div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(3) {
         -webkit-animation-delay: 2.74603s, 2.74603s;
                 animation-delay: 2.74603s, 2.74603s; }
-      header div.box div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(4) {
         -webkit-animation-delay: 3.19048s, 3.19048s;
                 animation-delay: 3.19048s, 3.19048s; }
-      header div.box div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(5) {
         -webkit-animation-delay: 3.63492s, 3.63492s;
                 animation-delay: 3.63492s, 3.63492s; }
-      header div.box div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(6) {
         -webkit-animation-delay: 4.07937s, 4.07937s;
                 animation-delay: 4.07937s, 4.07937s; }
-      header div.box div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(7) {
         -webkit-animation-delay: 4.52381s, 4.52381s;
                 animation-delay: 4.52381s, 4.52381s; }
-      header div.box div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(8) {
         -webkit-animation-delay: 4.96825s, 4.96825s;
                 animation-delay: 4.96825s, 4.96825s; }
-      header div.box div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(14) div.prism:nth-child(9) {
         -webkit-animation-delay: 5.4127s, 5.4127s;
                 animation-delay: 5.4127s, 5.4127s; }
-      header div.box div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(1) {
         -webkit-animation-delay: 2s, 2s;
                 animation-delay: 2s, 2s; }
-      header div.box div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(2) {
         -webkit-animation-delay: 2.44444s, 2.44444s;
                 animation-delay: 2.44444s, 2.44444s; }
-      header div.box div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(3) {
         -webkit-animation-delay: 2.88889s, 2.88889s;
                 animation-delay: 2.88889s, 2.88889s; }
-      header div.box div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(4) {
         -webkit-animation-delay: 3.33333s, 3.33333s;
                 animation-delay: 3.33333s, 3.33333s; }
-      header div.box div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(5) {
         -webkit-animation-delay: 3.77778s, 3.77778s;
                 animation-delay: 3.77778s, 3.77778s; }
-      header div.box div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(6) {
         -webkit-animation-delay: 4.22222s, 4.22222s;
                 animation-delay: 4.22222s, 4.22222s; }
-      header div.box div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(7) {
         -webkit-animation-delay: 4.66667s, 4.66667s;
                 animation-delay: 4.66667s, 4.66667s; }
-      header div.box div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(8) {
         -webkit-animation-delay: 5.11111s, 5.11111s;
                 animation-delay: 5.11111s, 5.11111s; }
-      header div.box div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(15) div.prism:nth-child(9) {
         -webkit-animation-delay: 5.55556s, 5.55556s;
                 animation-delay: 5.55556s, 5.55556s; }
-      header div.box div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(1) {
         -webkit-animation-delay: 2.14286s, 2.14286s;
                 animation-delay: 2.14286s, 2.14286s; }
-      header div.box div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(2) {
         -webkit-animation-delay: 2.5873s, 2.5873s;
                 animation-delay: 2.5873s, 2.5873s; }
-      header div.box div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(3) {
         -webkit-animation-delay: 3.03175s, 3.03175s;
                 animation-delay: 3.03175s, 3.03175s; }
-      header div.box div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(4) {
         -webkit-animation-delay: 3.47619s, 3.47619s;
                 animation-delay: 3.47619s, 3.47619s; }
-      header div.box div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(5) {
         -webkit-animation-delay: 3.92063s, 3.92063s;
                 animation-delay: 3.92063s, 3.92063s; }
-      header div.box div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(6) {
         -webkit-animation-delay: 4.36508s, 4.36508s;
                 animation-delay: 4.36508s, 4.36508s; }
-      header div.box div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(7) {
         -webkit-animation-delay: 4.80952s, 4.80952s;
                 animation-delay: 4.80952s, 4.80952s; }
-      header div.box div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(8) {
         -webkit-animation-delay: 5.25397s, 5.25397s;
                 animation-delay: 5.25397s, 5.25397s; }
-      header div.box div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(16) div.prism:nth-child(9) {
         -webkit-animation-delay: 5.69841s, 5.69841s;
                 animation-delay: 5.69841s, 5.69841s; }
-      header div.box div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(1) {
         -webkit-animation-delay: 2.28571s, 2.28571s;
                 animation-delay: 2.28571s, 2.28571s; }
-      header div.box div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(2) {
         -webkit-animation-delay: 2.73016s, 2.73016s;
                 animation-delay: 2.73016s, 2.73016s; }
-      header div.box div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(3) {
         -webkit-animation-delay: 3.1746s, 3.1746s;
                 animation-delay: 3.1746s, 3.1746s; }
-      header div.box div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(4) {
         -webkit-animation-delay: 3.61905s, 3.61905s;
                 animation-delay: 3.61905s, 3.61905s; }
-      header div.box div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(5) {
         -webkit-animation-delay: 4.06349s, 4.06349s;
                 animation-delay: 4.06349s, 4.06349s; }
-      header div.box div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(6) {
         -webkit-animation-delay: 4.50794s, 4.50794s;
                 animation-delay: 4.50794s, 4.50794s; }
-      header div.box div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(7) {
         -webkit-animation-delay: 4.95238s, 4.95238s;
                 animation-delay: 4.95238s, 4.95238s; }
-      header div.box div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(8) {
         -webkit-animation-delay: 5.39683s, 5.39683s;
                 animation-delay: 5.39683s, 5.39683s; }
-      header div.box div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(17) div.prism:nth-child(9) {
         -webkit-animation-delay: 5.84127s, 5.84127s;
                 animation-delay: 5.84127s, 5.84127s; }
-      header div.box div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(1) {
         -webkit-animation-delay: 2.42857s, 2.42857s;
                 animation-delay: 2.42857s, 2.42857s; }
-      header div.box div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(2) {
         -webkit-animation-delay: 2.87302s, 2.87302s;
                 animation-delay: 2.87302s, 2.87302s; }
-      header div.box div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(3) {
         -webkit-animation-delay: 3.31746s, 3.31746s;
                 animation-delay: 3.31746s, 3.31746s; }
-      header div.box div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(4) {
         -webkit-animation-delay: 3.7619s, 3.7619s;
                 animation-delay: 3.7619s, 3.7619s; }
-      header div.box div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(5) {
         -webkit-animation-delay: 4.20635s, 4.20635s;
                 animation-delay: 4.20635s, 4.20635s; }
-      header div.box div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(6) {
         -webkit-animation-delay: 4.65079s, 4.65079s;
                 animation-delay: 4.65079s, 4.65079s; }
-      header div.box div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(7) {
         -webkit-animation-delay: 5.09524s, 5.09524s;
                 animation-delay: 5.09524s, 5.09524s; }
-      header div.box div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(8) {
         -webkit-animation-delay: 5.53968s, 5.53968s;
                 animation-delay: 5.53968s, 5.53968s; }
-      header div.box div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(18) div.prism:nth-child(9) {
         -webkit-animation-delay: 5.98413s, 5.98413s;
                 animation-delay: 5.98413s, 5.98413s; }
-      header div.box div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(1) {
         -webkit-animation-delay: 2.57143s, 2.57143s;
                 animation-delay: 2.57143s, 2.57143s; }
-      header div.box div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(2) {
         -webkit-animation-delay: 3.01587s, 3.01587s;
                 animation-delay: 3.01587s, 3.01587s; }
-      header div.box div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(3) {
         -webkit-animation-delay: 3.46032s, 3.46032s;
                 animation-delay: 3.46032s, 3.46032s; }
-      header div.box div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(4) {
         -webkit-animation-delay: 3.90476s, 3.90476s;
                 animation-delay: 3.90476s, 3.90476s; }
-      header div.box div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(5) {
         -webkit-animation-delay: 4.34921s, 4.34921s;
                 animation-delay: 4.34921s, 4.34921s; }
-      header div.box div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(6) {
         -webkit-animation-delay: 4.79365s, 4.79365s;
                 animation-delay: 4.79365s, 4.79365s; }
-      header div.box div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(7) {
         -webkit-animation-delay: 5.2381s, 5.2381s;
                 animation-delay: 5.2381s, 5.2381s; }
-      header div.box div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(8) {
         -webkit-animation-delay: 5.68254s, 5.68254s;
                 animation-delay: 5.68254s, 5.68254s; }
-      header div.box div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(19) div.prism:nth-child(9) {
         -webkit-animation-delay: 6.12698s, 6.12698s;
                 animation-delay: 6.12698s, 6.12698s; }
-      header div.box div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(1) {
         -webkit-animation-delay: 2.71429s, 2.71429s;
                 animation-delay: 2.71429s, 2.71429s; }
-      header div.box div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(2) {
         -webkit-animation-delay: 3.15873s, 3.15873s;
                 animation-delay: 3.15873s, 3.15873s; }
-      header div.box div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(3) {
         -webkit-animation-delay: 3.60317s, 3.60317s;
                 animation-delay: 3.60317s, 3.60317s; }
-      header div.box div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(4) {
         -webkit-animation-delay: 4.04762s, 4.04762s;
                 animation-delay: 4.04762s, 4.04762s; }
-      header div.box div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(5) {
         -webkit-animation-delay: 4.49206s, 4.49206s;
                 animation-delay: 4.49206s, 4.49206s; }
-      header div.box div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(6) {
         -webkit-animation-delay: 4.93651s, 4.93651s;
                 animation-delay: 4.93651s, 4.93651s; }
-      header div.box div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(7) {
         -webkit-animation-delay: 5.38095s, 5.38095s;
                 animation-delay: 5.38095s, 5.38095s; }
-      header div.box div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(8) {
         -webkit-animation-delay: 5.8254s, 5.8254s;
                 animation-delay: 5.8254s, 5.8254s; }
-      header div.box div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(20) div.prism:nth-child(9) {
         -webkit-animation-delay: 6.26984s, 6.26984s;
                 animation-delay: 6.26984s, 6.26984s; }
-      header div.box div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(1) {
         -webkit-animation-delay: 2.85714s, 2.85714s;
                 animation-delay: 2.85714s, 2.85714s; }
-      header div.box div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(2) {
         -webkit-animation-delay: 3.30159s, 3.30159s;
                 animation-delay: 3.30159s, 3.30159s; }
-      header div.box div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(3) {
         -webkit-animation-delay: 3.74603s, 3.74603s;
                 animation-delay: 3.74603s, 3.74603s; }
-      header div.box div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(4) {
         -webkit-animation-delay: 4.19048s, 4.19048s;
                 animation-delay: 4.19048s, 4.19048s; }
-      header div.box div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(5) {
         -webkit-animation-delay: 4.63492s, 4.63492s;
                 animation-delay: 4.63492s, 4.63492s; }
-      header div.box div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(6) {
         -webkit-animation-delay: 5.07937s, 5.07937s;
                 animation-delay: 5.07937s, 5.07937s; }
-      header div.box div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(7) {
         -webkit-animation-delay: 5.52381s, 5.52381s;
                 animation-delay: 5.52381s, 5.52381s; }
-      header div.box div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(8) {
         -webkit-animation-delay: 5.96825s, 5.96825s;
                 animation-delay: 5.96825s, 5.96825s; }
-      header div.box div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(21) div.prism:nth-child(9) {
         -webkit-animation-delay: 6.4127s, 6.4127s;
                 animation-delay: 6.4127s, 6.4127s; }
-      header div.box div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(1) {
         -webkit-animation-delay: 3s, 3s;
                 animation-delay: 3s, 3s; }
-      header div.box div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(2) {
         -webkit-animation-delay: 3.44444s, 3.44444s;
                 animation-delay: 3.44444s, 3.44444s; }
-      header div.box div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(3) {
         -webkit-animation-delay: 3.88889s, 3.88889s;
                 animation-delay: 3.88889s, 3.88889s; }
-      header div.box div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(4) {
         -webkit-animation-delay: 4.33333s, 4.33333s;
                 animation-delay: 4.33333s, 4.33333s; }
-      header div.box div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(5) {
         -webkit-animation-delay: 4.77778s, 4.77778s;
                 animation-delay: 4.77778s, 4.77778s; }
-      header div.box div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(6) {
         -webkit-animation-delay: 5.22222s, 5.22222s;
                 animation-delay: 5.22222s, 5.22222s; }
-      header div.box div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(7) {
         -webkit-animation-delay: 5.66667s, 5.66667s;
                 animation-delay: 5.66667s, 5.66667s; }
-      header div.box div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(8) {
         -webkit-animation-delay: 6.11111s, 6.11111s;
                 animation-delay: 6.11111s, 6.11111s; }
-      header div.box div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(22) div.prism:nth-child(9) {
         -webkit-animation-delay: 6.55556s, 6.55556s;
                 animation-delay: 6.55556s, 6.55556s; }
-      header div.box div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(1) {
         -webkit-animation-delay: 3.14286s, 3.14286s;
                 animation-delay: 3.14286s, 3.14286s; }
-      header div.box div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(2) {
         -webkit-animation-delay: 3.5873s, 3.5873s;
                 animation-delay: 3.5873s, 3.5873s; }
-      header div.box div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(3) {
         -webkit-animation-delay: 4.03175s, 4.03175s;
                 animation-delay: 4.03175s, 4.03175s; }
-      header div.box div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(4) {
         -webkit-animation-delay: 4.47619s, 4.47619s;
                 animation-delay: 4.47619s, 4.47619s; }
-      header div.box div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(5) {
         -webkit-animation-delay: 4.92063s, 4.92063s;
                 animation-delay: 4.92063s, 4.92063s; }
-      header div.box div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(6) {
         -webkit-animation-delay: 5.36508s, 5.36508s;
                 animation-delay: 5.36508s, 5.36508s; }
-      header div.box div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(7) {
         -webkit-animation-delay: 5.80952s, 5.80952s;
                 animation-delay: 5.80952s, 5.80952s; }
-      header div.box div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(8) {
         -webkit-animation-delay: 6.25397s, 6.25397s;
                 animation-delay: 6.25397s, 6.25397s; }
-      header div.box div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(23) div.prism:nth-child(9) {
         -webkit-animation-delay: 6.69841s, 6.69841s;
                 animation-delay: 6.69841s, 6.69841s; }
-      header div.box div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(1) {
         -webkit-animation-delay: 3.28571s, 3.28571s;
                 animation-delay: 3.28571s, 3.28571s; }
-      header div.box div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(2) {
         -webkit-animation-delay: 3.73016s, 3.73016s;
                 animation-delay: 3.73016s, 3.73016s; }
-      header div.box div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(3) {
         -webkit-animation-delay: 4.1746s, 4.1746s;
                 animation-delay: 4.1746s, 4.1746s; }
-      header div.box div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(4) {
         -webkit-animation-delay: 4.61905s, 4.61905s;
                 animation-delay: 4.61905s, 4.61905s; }
-      header div.box div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(5) {
         -webkit-animation-delay: 5.06349s, 5.06349s;
                 animation-delay: 5.06349s, 5.06349s; }
-      header div.box div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(6) {
         -webkit-animation-delay: 5.50794s, 5.50794s;
                 animation-delay: 5.50794s, 5.50794s; }
-      header div.box div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(7) {
         -webkit-animation-delay: 5.95238s, 5.95238s;
                 animation-delay: 5.95238s, 5.95238s; }
-      header div.box div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(8) {
         -webkit-animation-delay: 6.39683s, 6.39683s;
                 animation-delay: 6.39683s, 6.39683s; }
-      header div.box div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(24) div.prism:nth-child(9) {
         -webkit-animation-delay: 6.84127s, 6.84127s;
                 animation-delay: 6.84127s, 6.84127s; }
-      header div.box div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(1) {
         -webkit-animation-delay: 3.42857s, 3.42857s;
                 animation-delay: 3.42857s, 3.42857s; }
-      header div.box div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(2) {
         -webkit-animation-delay: 3.87302s, 3.87302s;
                 animation-delay: 3.87302s, 3.87302s; }
-      header div.box div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(3) {
         -webkit-animation-delay: 4.31746s, 4.31746s;
                 animation-delay: 4.31746s, 4.31746s; }
-      header div.box div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(4) {
         -webkit-animation-delay: 4.7619s, 4.7619s;
                 animation-delay: 4.7619s, 4.7619s; }
-      header div.box div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(5) {
         -webkit-animation-delay: 5.20635s, 5.20635s;
                 animation-delay: 5.20635s, 5.20635s; }
-      header div.box div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(6) {
         -webkit-animation-delay: 5.65079s, 5.65079s;
                 animation-delay: 5.65079s, 5.65079s; }
-      header div.box div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(7) {
         -webkit-animation-delay: 6.09524s, 6.09524s;
                 animation-delay: 6.09524s, 6.09524s; }
-      header div.box div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(8) {
         -webkit-animation-delay: 6.53968s, 6.53968s;
                 animation-delay: 6.53968s, 6.53968s; }
-      header div.box div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(25) div.prism:nth-child(9) {
         -webkit-animation-delay: 6.98413s, 6.98413s;
                 animation-delay: 6.98413s, 6.98413s; }
-      header div.box div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(1) {
         -webkit-animation-delay: 3.57143s, 3.57143s;
                 animation-delay: 3.57143s, 3.57143s; }
-      header div.box div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(2) {
         -webkit-animation-delay: 4.01587s, 4.01587s;
                 animation-delay: 4.01587s, 4.01587s; }
-      header div.box div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(3) {
         -webkit-animation-delay: 4.46032s, 4.46032s;
                 animation-delay: 4.46032s, 4.46032s; }
-      header div.box div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(4) {
         -webkit-animation-delay: 4.90476s, 4.90476s;
                 animation-delay: 4.90476s, 4.90476s; }
-      header div.box div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(5) {
         -webkit-animation-delay: 5.34921s, 5.34921s;
                 animation-delay: 5.34921s, 5.34921s; }
-      header div.box div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(6) {
         -webkit-animation-delay: 5.79365s, 5.79365s;
                 animation-delay: 5.79365s, 5.79365s; }
-      header div.box div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(7) {
         -webkit-animation-delay: 6.2381s, 6.2381s;
                 animation-delay: 6.2381s, 6.2381s; }
-      header div.box div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(8) {
         -webkit-animation-delay: 6.68254s, 6.68254s;
                 animation-delay: 6.68254s, 6.68254s; }
-      header div.box div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(26) div.prism:nth-child(9) {
         -webkit-animation-delay: 7.12698s, 7.12698s;
                 animation-delay: 7.12698s, 7.12698s; }
-      header div.box div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(1) {
         -webkit-animation-delay: 3.71429s, 3.71429s;
                 animation-delay: 3.71429s, 3.71429s; }
-      header div.box div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(2) {
         -webkit-animation-delay: 4.15873s, 4.15873s;
                 animation-delay: 4.15873s, 4.15873s; }
-      header div.box div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(3) {
         -webkit-animation-delay: 4.60317s, 4.60317s;
                 animation-delay: 4.60317s, 4.60317s; }
-      header div.box div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(4) {
         -webkit-animation-delay: 5.04762s, 5.04762s;
                 animation-delay: 5.04762s, 5.04762s; }
-      header div.box div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(5) {
         -webkit-animation-delay: 5.49206s, 5.49206s;
                 animation-delay: 5.49206s, 5.49206s; }
-      header div.box div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(6) {
         -webkit-animation-delay: 5.93651s, 5.93651s;
                 animation-delay: 5.93651s, 5.93651s; }
-      header div.box div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(7) {
         -webkit-animation-delay: 6.38095s, 6.38095s;
                 animation-delay: 6.38095s, 6.38095s; }
-      header div.box div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(8) {
         -webkit-animation-delay: 6.8254s, 6.8254s;
                 animation-delay: 6.8254s, 6.8254s; }
-      header div.box div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(27) div.prism:nth-child(9) {
         -webkit-animation-delay: 7.26984s, 7.26984s;
                 animation-delay: 7.26984s, 7.26984s; }
-      header div.box div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(1) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(1) {
         -webkit-animation-delay: 3.85714s, 3.85714s;
                 animation-delay: 3.85714s, 3.85714s; }
-      header div.box div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(2) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(2) {
         -webkit-animation-delay: 4.30159s, 4.30159s;
                 animation-delay: 4.30159s, 4.30159s; }
-      header div.box div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(3) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(3) {
         -webkit-animation-delay: 4.74603s, 4.74603s;
                 animation-delay: 4.74603s, 4.74603s; }
-      header div.box div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(4) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(4) {
         -webkit-animation-delay: 5.19048s, 5.19048s;
                 animation-delay: 5.19048s, 5.19048s; }
-      header div.box div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(5) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(5) {
         -webkit-animation-delay: 5.63492s, 5.63492s;
                 animation-delay: 5.63492s, 5.63492s; }
-      header div.box div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(6) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(6) {
         -webkit-animation-delay: 6.07937s, 6.07937s;
                 animation-delay: 6.07937s, 6.07937s; }
-      header div.box div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(7) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(7) {
         -webkit-animation-delay: 6.52381s, 6.52381s;
                 animation-delay: 6.52381s, 6.52381s; }
-      header div.box div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(8) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(8) {
         -webkit-animation-delay: 6.96825s, 6.96825s;
                 animation-delay: 6.96825s, 6.96825s; }
-      header div.box div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(9) {
+      header div.box.one div.prisms-container div.prism-group:nth-child(28) div.prism:nth-child(9) {
         -webkit-animation-delay: 7.4127s, 7.4127s;
                 animation-delay: 7.4127s, 7.4127s; }
-      header div.box div.prisms-container div.prism-group div.prism {
+      header div.box.one div.prisms-container div.prism-group div.prism {
         -webkit-transform: rotate(45deg);
                 transform: rotate(45deg);
         width: 2rem;
@@ -810,6 +802,23 @@ header div.box {
     width: 3rem;
     height: 3rem; } }
 
+header div.box.two {
+  background-color: #777;
+  opacity: 0.7;
+  background-image: linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
+  background-image: -webkit-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
+  background-image: -ms-linear-gradient(45deg, #333, rgba(255, 255, 255, 0)); }
+
+div.previews-container.one {
+  background-color: #d0d6d6; }
+  div.previews-container.one div.preview-container div.preview-overlay {
+    background-color: #d0d6d6; }
+
+div.previews-container.two {
+  background-color: #fff; }
+  div.previews-container.two div.preview-container div.preview-overlay {
+    background-color: #fff; }
+
 div.previews-container {
   display: -webkit-box;
   display: flex;
@@ -828,7 +837,6 @@ div.previews-container {
       position: absolute;
       width: 15rem;
       height: 15rem;
-      background-color: #d0d6d6;
       -webkit-transform: rotate(45deg);
               transform: rotate(45deg);
       z-index: 1;
@@ -905,10 +913,15 @@ div.previews-container {
     margin-left: 11.5rem;
     margin-top: 11.5rem; } }
 
+html body.one {
+  background-color: #d0d6d6; }
+
+html body.two {
+  background-color: #eee; }
+
 html body {
   margin: 0;
   padding: 0;
-  background-color: #d0d6d6;
   color: #DDE2E2;
   overflow-x: hidden; }
   html body a {
@@ -960,6 +973,12 @@ html body {
     max-width: 960px;
     height: 17rem;
     margin: 2rem auto 0 auto; }
+    html body header div.box {
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      position: relative;
+      cursor: pointer; }
   html body section.content {
     width: 90%;
     max-width: 960px;

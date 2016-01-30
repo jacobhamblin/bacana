@@ -1,9 +1,26 @@
 $previewSize: 15rem;
 $slateblu: #6a7989;
-$lightgray: #d0d6d6;
+$lightgrayOne: #d0d6d6;
+$lightgrayTwo: #eee;
 $time: 4s;
 $animDur: 2s;
 
+div.previews-container.one {
+  background-color: $lightgrayOne;
+  div.preview-container {
+    div.preview-overlay {
+      background-color: $lightgrayOne;
+    }
+  }
+}
+div.previews-container.two {
+  background-color: #fff;
+  div.preview-container {
+    div.preview-overlay {
+      background-color: #fff;
+    }
+  }
+}
 div.previews-container {
   display: flex;
   flex-wrap: wrap;
@@ -33,7 +50,6 @@ div.previews-container {
       position: absolute;
       width: 15rem;
       height: 15rem;
-      background-color: $lightgray;
       transform: rotate(45deg);
       z-index: 1;
       top: 0;

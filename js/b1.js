@@ -8,15 +8,15 @@ import VertexShader from './vendor/shaders/vertex.txt';
 import FresnelShader from './vendor/shaders/FresnelShader.js';
 
 const b1 = {
-  init: function (container) {
-    let usefulThings = this.setup(container);
+  init: function (container, renderer) {
+    let usefulThings = this.setup(container, renderer);
     this.animate(usefulThings);
   },
-  setup: function (container) {
+  setup: function (container, renderer) {
     console.log('initialized b1!');
 
-    let camera, scene, raycaster, renderer;
-    let mouse = new THREE.Vector2(), INTERSECTED;
+    let camera, scene;
+    let mouse = new THREE.Vector2();
     let objects = new Object;
     let usefulThings = new Object;
     let uniforms = [];
@@ -37,10 +37,6 @@ const b1 = {
 
     scene = new THREE.Scene();
 
-    renderer = new THREE.WebGLRenderer();
-    renderer.setClearColor(0x222222);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight - 3);
     container.appendChild(renderer.domElement);
 
     const light = new THREE.PointLight(0xffffff, 1, 2000);
