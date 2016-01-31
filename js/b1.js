@@ -37,6 +37,9 @@ const b1 = {
 
     scene = new THREE.Scene();
 
+    renderer.setClearColor(0x222222);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight - 3);
     container.appendChild(renderer.domElement);
 
     const light = new THREE.PointLight(0xffffff, 1, 2000);

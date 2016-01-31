@@ -3,7 +3,7 @@ import demosJson from './demos.json';
 import b1 from './b1.js';
 import b2 from './b2.js';
 import FastClick from './vendor/fastclick.min.js';
-import Three from 'three';
+import THREE from 'three';
 
 const demosCode = new Object;
 demosCode.b1 = b1;
@@ -75,10 +75,7 @@ function hasClass(el, className) {
 })();
 
 function initThreeRenderer() {
-  let renderer = new Three.WebGLRenderer();
-  renderer.setClearColor(0x222222);
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight - 3);
+  let renderer = new THREE.WebGLRenderer();
 
   return renderer;
 };

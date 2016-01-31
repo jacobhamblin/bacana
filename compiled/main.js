@@ -140,9 +140,6 @@
 
 	function initThreeRenderer() {
 	  var renderer = new _three2.default.WebGLRenderer();
-	  renderer.setClearColor(0x222222);
-	  renderer.setPixelRatio(window.devicePixelRatio);
-	  renderer.setSize(window.innerWidth, window.innerHeight - 3);
 
 	  return renderer;
 	};
@@ -264,6 +261,9 @@
 
 	    scene = new _three2.default.Scene();
 
+	    renderer.setClearColor(0x222222);
+	    renderer.setPixelRatio(window.devicePixelRatio);
+	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
 	    container.appendChild(renderer.domElement);
 
 	    var light = new _three2.default.PointLight(0xffffff, 1, 2000);
@@ -37039,6 +37039,9 @@
 	    raycasterObj.raycaster = new _three2.default.Raycaster();
 	    raycasterObj.intersection = false;
 
+	    renderer.setClearColor(0x222222);
+	    renderer.setPixelRatio(window.devicePixelRatio);
+	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
 	    container.appendChild(renderer.domElement);
 
 	    var lightParameters = [[0xff0000, 0.5, [-100, 0, 900]], [0x7700FF, 0.5, [100, 0, 900]]];

@@ -1,6 +1,7 @@
 $slateblu: #6a7989;
 $lightgray: #d0d6d6;
 $accent: #777;
+$animDur: 2s;
 
 header {
   div.box.two {
@@ -11,5 +12,13 @@ header {
     background-image: -moz-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
     background-image: -o-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
     background-image: -ms-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
+    animation-iteration-count: infinite;
+    animation-duration: $animDur;
+    animation-direction: alternate;
+    animation-name: changeOpacity;
+  }
+  @keyframes changeOpacity {
+    from { opacity: 0.7 }
+    to { opacity: 0.8 }
   }
 }

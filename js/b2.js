@@ -57,6 +57,9 @@ const b2 = {
     raycasterObj.raycaster = new THREE.Raycaster();
     raycasterObj.intersection = false;
 
+    renderer.setClearColor(0x222222);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight - 3);
     container.appendChild(renderer.domElement);
 
     const lightParameters = [
