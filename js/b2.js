@@ -59,7 +59,7 @@ const b2 = {
 
     renderer.setClearColor(0x222222);
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+    renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
     const lightParameters = [

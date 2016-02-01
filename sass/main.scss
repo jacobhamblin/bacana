@@ -31,6 +31,9 @@ html {
       background-color: #222;
       z-index: 2;
       transition: all .5s ease;
+      canvas {
+        display: block;
+      }
       &.active {
         left: 0;
         div.close-container {

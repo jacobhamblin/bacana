@@ -263,7 +263,7 @@
 
 	    renderer.setClearColor(0x222222);
 	    renderer.setPixelRatio(window.devicePixelRatio);
-	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+	    renderer.setSize(window.innerWidth, window.innerHeight);
 	    container.appendChild(renderer.domElement);
 
 	    var light = new _three2.default.PointLight(0xffffff, 1, 2000);
@@ -36977,6 +36977,8 @@
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; // b2.js
+
 	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
@@ -36986,8 +36988,6 @@
 	var _OBJLoader2 = _interopRequireDefault(_OBJLoader);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; } // b2.js
 
 	var b2 = {
 	  init: function init(container, renderer) {
@@ -37041,7 +37041,7 @@
 
 	    renderer.setClearColor(0x222222);
 	    renderer.setPixelRatio(window.devicePixelRatio);
-	    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+	    renderer.setSize(window.innerWidth, window.innerHeight);
 	    container.appendChild(renderer.domElement);
 
 	    var lightParameters = [[0xff0000, 0.5, [-100, 0, 900]], [0x7700FF, 0.5, [100, 0, 900]]];
@@ -37605,16 +37605,16 @@
 
 	"use strict";
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	/** Shrinkwrap URL:
 	 *      /v2/bundles/js?modules=fastclick%401.0.6%2Co-autoinit%401.2.0&shrinkwrap=
 	 */
-	!(function (t) {
+	!function (t) {
 		function e(o) {
 			if (n[o]) return n[o].exports;var i = n[o] = { exports: {}, id: o, loaded: !1 };return t[o].call(i.exports, i, i.exports, e), i.loaded = !0, i.exports;
 		}var n = {};return e.m = t, e.c = n, e.p = "", e(0);
-	})([function (t, e, n) {
+	}([function (t, e, n) {
 		"use strict";
 		n(1), window.Origami = { fastclick: n(2), "o-autoinit": n(4) };
 	}, function (t, e) {
@@ -37623,7 +37623,7 @@
 		t.exports = n(3);
 	}, function (t, e) {
 		"use strict";
-		var n = !1;!(function () {
+		var n = !1;!function () {
 			/**
 	  * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.
 	  *
@@ -37636,7 +37636,7 @@
 					return function () {
 						return t.apply(e, arguments);
 					};
-				}var r;if ((n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t))) {
+				}var r;if (n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t)) {
 					for (var a = ["onMouse", "onClick", "onTouchStart", "onTouchMove", "onTouchEnd", "onTouchCancel"], c = this, s = 0, u = a.length; u > s; s++) {
 						c[a[s]] = o(c[a[s]], c);
 					}i && (t.addEventListener("mouseover", this.onMouse, !0), t.addEventListener("mousedown", this.onMouse, !0), t.addEventListener("mouseup", this.onMouse, !0)), t.addEventListener("click", this.onClick, !0), t.addEventListener("touchstart", this.onTouchStart, !1), t.addEventListener("touchmove", this.onTouchMove, !1), t.addEventListener("touchend", this.onTouchEnd, !1), t.addEventListener("touchcancel", this.onTouchCancel, !1), Event.prototype.stopImmediatePropagation || (t.removeEventListener = function (e, n, o) {
@@ -37675,7 +37675,7 @@
 			}, e.prototype.focus = function (t) {
 				var e;r && t.setSelectionRange && 0 !== t.type.indexOf("date") && "time" !== t.type && "month" !== t.type ? (e = t.value.length, t.setSelectionRange(e, e)) : t.focus();
 			}, e.prototype.updateScrollParent = function (t) {
-				var e, n;if ((e = t.fastClickScrollParent, !e || !e.contains(t))) {
+				var e, n;if (e = t.fastClickScrollParent, !e || !e.contains(t)) {
 					n = t;do {
 						if (n.scrollHeight > n.offsetHeight) {
 							e = n, t.fastClickScrollParent = n;break;
@@ -37685,8 +37685,8 @@
 			}, e.prototype.getTargetElementFromEventTarget = function (t) {
 				return t.nodeType === Node.TEXT_NODE ? t.parentNode : t;
 			}, e.prototype.onTouchStart = function (t) {
-				var e, n, o;if (t.targetTouches.length > 1) return !0;if ((e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r)) {
-					if ((o = window.getSelection(), o.rangeCount && !o.isCollapsed)) return !0;if (!a) {
+				var e, n, o;if (t.targetTouches.length > 1) return !0;if (e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r) {
+					if (o = window.getSelection(), o.rangeCount && !o.isCollapsed) return !0;if (!a) {
 						if (n.identifier && n.identifier === this.lastTouchIdentifier) return t.preventDefault(), !1;this.lastTouchIdentifier = n.identifier, this.updateScrollParent(e);
 					}
 				}return this.trackingClick = !0, this.trackingClickStart = t.timeStamp, this.targetElement = e, this.touchStartX = n.pageX, this.touchStartY = n.pageY, t.timeStamp - this.lastClickTime < this.tapDelay && t.preventDefault(), !0;
@@ -37703,9 +37703,9 @@
 				    o,
 				    s,
 				    u,
-				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if ((this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o)) {
+				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if (this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o) {
 					if (e = this.findControl(l)) {
-						if ((this.focus(l), i)) return !1;l = e;
+						if (this.focus(l), i) return !1;l = e;
 					}
 				} else if (this.needsFocus(l)) return t.timeStamp - n > 100 || r && window.top !== window && "input" === o ? (this.targetElement = null, !1) : (this.focus(l), this.sendClick(l, t), r && "select" === o || (this.targetElement = null, t.preventDefault()), !1);return r && !a && (s = l.fastClickScrollParent, s && s.fastClickLastScrollTop !== s.scrollTop) ? !0 : (this.needsClick(l) || (t.preventDefault(), this.sendClick(l, t)), !1);
 			}, e.prototype.onTouchCancel = function () {
@@ -37729,20 +37729,20 @@
 			}, "function" == typeof n && "object" == _typeof(n.amd) && n.amd ? n(function () {
 				return e;
 			}) : "undefined" != typeof t && t.exports ? (t.exports = e.attach, t.exports.FastClick = e) : window.FastClick = e;
-		})();
+		}();
 	}, function (t, e, n) {
 		t.exports = n(5);
 	}, function (t, e) {
 		"use strict";
 		function n(t) {
 			t in o || (o[t] = !0, document.dispatchEvent(new CustomEvent("o." + t)));
-		}var o = {};if ((window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
+		}var o = {};if (window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
 			"complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded");
-		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent)) {
+		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent) {
 			var i = !1,
 			    r = 50;try {
 				i = null == window.frameElement && document.documentElement;
-			} catch (a) {}i && i.doScroll && !(function c() {
+			} catch (a) {}i && i.doScroll && !function c() {
 				if (!("DOMContentLoaded" in o)) {
 					try {
 						i.doScroll("left");
@@ -37750,7 +37750,7 @@
 						return 5e3 > r ? setTimeout(c, r *= 1.2) : void 0;
 					}n("DOMContentLoaded");
 				}
-			})();
+			}();
 		}
 	}]);
 

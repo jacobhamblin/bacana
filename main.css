@@ -956,6 +956,8 @@ html body {
     z-index: 2;
     -webkit-transition: all .5s ease;
     transition: all .5s ease; }
+    html body div.fullscreen canvas {
+      display: block; }
     html body div.fullscreen.active {
       left: 0; }
       html body div.fullscreen.active div.close-container div.close div.line {

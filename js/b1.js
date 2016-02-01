@@ -39,7 +39,7 @@ const b1 = {
 
     renderer.setClearColor(0x222222);
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+    renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
     const light = new THREE.PointLight(0xffffff, 1, 2000);
