@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack -w --progress"
   },
-  "author": "jacob hamblin",
+  "author": "Jacob Hamblin",
   "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^6.1.2",
