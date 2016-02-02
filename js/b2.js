@@ -45,7 +45,7 @@ const b2 = {
 
     camera = new THREE.PerspectiveCamera(
       70,
-      window.innerWidth / (window.innerHeight - 3),
+      window.innerWidth / window.innerHeight,
       1,
       400
     );
@@ -129,7 +129,7 @@ const b2 = {
       }, onProgress, onError);
     }
 
-    usefulThings = {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj};
+    usefulThings = {camera, scene, renderer, mouse, objects, counters, lightsObj, raycasterObj};
 
     window.addEventListener(
       'resize',
@@ -161,10 +161,10 @@ const b2 = {
   onWindowResize: function(usefulThings) {
     let { camera, renderer } = usefulThings;
 
-    camera.aspect = window.innerWidth / (window.innerHeight - 3);
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+    renderer.setSize(window.innerWidth, window.innerHeight);
   },
   onMouseMove: function(usefulThings) {
     let { mouse } = usefulThings;
@@ -204,8 +204,8 @@ const b2 = {
     let self = this;
 
     for (let i = 0; i < objects.cubes.length; i++) {
-      objects.cubes[i].rotation.x += Math.random() * .05;
-      objects.cubes[i].rotation.y += Math.random() * .05;
+      objects.cubes[i].rotation.x += Math.random() * 0.05;
+      objects.cubes[i].rotation.y += Math.random() * 0.05;
     }
 
     if (typeof objects.activeCrystal === typeof 1) {
@@ -269,7 +269,7 @@ const b2 = {
     renderer.render(scene, camera);
     counters.frame++;
 
-    return {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj};
+    return {camera, scene, renderer, mouse, objects, counters, lightsObj, raycasterObj};
   },
   crystalClicked: function(usefulThings) {
     let { counters } = usefulThings;

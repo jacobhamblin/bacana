@@ -7,6 +7,10 @@
     {
       "preview": "./img/b2.jpg",
       "js": "b2.js"
+    },
+    {
+      "preview": "./img/b3.png",
+      "js": "b3.js"
     }
   ]
 }

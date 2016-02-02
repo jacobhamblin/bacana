@@ -28,7 +28,7 @@ const b1 = {
 
     camera = new THREE.PerspectiveCamera(
       70,
-      window.innerWidth / (window.innerHeight - 3),
+      window.innerWidth / window.innerHeight,
       1,
       400
     );
@@ -170,7 +170,7 @@ const b1 = {
     }
 
 
-    usefulThings = {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms};
+    usefulThings = {camera, scene, renderer, mouse, objects, counters, uniforms};
 
     let self = this;
     window.addEventListener(
@@ -195,10 +195,10 @@ const b1 = {
   onWindowResize: function(usefulThings) {
     let { camera, renderer } = usefulThings;
 
-    camera.aspect = window.innerWidth / (window.innerHeight - 3);
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize(window.innerWidth, window.innerHeight - 3);
+    renderer.setSize(window.innerWidth, window.innerHeight);
   },
   animate: function(usefulThings) {
     let self = this;
@@ -244,7 +244,7 @@ const b1 = {
 
     renderer.render(scene, camera);
 
-    return {camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms};
+    return {camera, scene, renderer, mouse, objects, counters, uniforms};
   }
 };
 
