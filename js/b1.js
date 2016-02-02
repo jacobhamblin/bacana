@@ -225,7 +225,7 @@ const b1 = {
     let altTime = Date.now() * 0.000025;
 
     for (let i = 0; i < objects.obj1.length; i++) {
-      objects.obj1[i].rotation.y += 0.05;
+      objects.obj1[i].rotation.x += 0.05;
       uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
     }
     for (let i = 0; i < objects.particles1.length; i++) {
