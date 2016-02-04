@@ -37,7 +37,7 @@ const b3 = {
     lightsObj.lights = [];
 
     const lightOne = new THREE.PointLight(0xffffff, 1, 2000);
-    lightOne.position.set(0, 0, 400);
+    lightOne.position.set(0, 0, 600);
     lightsObj.lights.push(lightOne);
     scene.add(lightOne);
 
@@ -46,9 +46,9 @@ const b3 = {
     lightsObj.lights.push(lightTwo);
     scene.add(lightTwo);
 
-    const bigSphereGeom = new THREE.SphereGeometry(100);
+    const bigSphereGeom = new THREE.SphereGeometry(50, 32, 32);
     const material = new THREE.MeshPhongMaterial({
-      color: 0xffffff
+      color: 0x777777
     });
     const bigSphere = new THREE.Mesh(bigSphereGeom, material);
     bigSphere.position.set(0,0,700);
