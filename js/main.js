@@ -98,7 +98,7 @@ function closeDemo(demo) {
   toggleClass(demo, "active");
   setTimeout(function () {
     demo.removeChild(document.querySelectorAll('canvas')[0]);
-  }, 500);
+  }, 100);
 };
 
 const prevsNodeList = document.querySelectorAll('div.preview-container');

@@ -164,7 +164,7 @@
 	  toggleClass(demo, "active");
 	  setTimeout(function () {
 	    demo.removeChild(document.querySelectorAll('canvas')[0]);
-	  }, 500);
+	  }, 100);
 	};
 
 	var prevsNodeList = document.querySelectorAll('div.preview-container');
