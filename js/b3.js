@@ -14,7 +14,9 @@ const b3 = {
     let mouse = new THREE.Vector2();
     const objects = new Object;
     let usefulThings = new Object;
-    const objectsInfo = {count: 1, radius: 15};
+    const objectsInfo = {
+      bubbles: {count: 50, radius: 10}
+    };
     const counters = new Object;
     let lightsObj = new Object;
 
@@ -46,14 +48,38 @@ const b3 = {
     lightsObj.lights.push(lightTwo);
     scene.add(lightTwo);
 
-    const bigSphereGeom = new THREE.SphereGeometry(100);
+    const bigSphereGeom = new THREE.SphereGeometry(50, 32, 32);
     const material = new THREE.MeshPhongMaterial({
-      color: 0xffffff
+      color: 0x333333
     });
     const bigSphere = new THREE.Mesh(bigSphereGeom, material);
     bigSphere.position.set(0,0,700);
     objects.bigSphere = bigSphere;
-    scene.add(bigSphere);
+
+    // let vertices = [];
+    // for (let i = 0; i < bigSphere.geometry.vertices.length; i+=6) {
+    //   let vertex = bigSphere.geometry.vertices[i].clone();
+    //   let realVertex = vertex.applyMatrix4(bigSphere.matrixWorld)
+    //   if (realVertex.x < 0) {
+    //     vertices.push(realVertex);
+    //   }
+    // }
+
+    // objects.bubbles = [];
+    // for (let i = 0; i < vertices.length; i++) {
+    //   const geom = new THREE.SphereGeometry(3, 8, 8);
+    //   const mat = new THREE.MeshPhongMaterial({
+    //     color: 0xffffff
+    //   });
+    //   const bubble = new THREE.Mesh(geom, mat);
+    //   bubble.position.set(
+    //     vertices[i][0],
+    //     vertices[i][1],
+    //     vertices[i][2] + 750
+    //   )
+    //   scene.add(bubble);
+    //   objects.bubbles.push(bubble);
+    // }
 
     usefulThings = {
       camera,
@@ -113,6 +139,7 @@ const b3 = {
       lightsObj
     } = usefulThings;
 
+    scene.updateMatrixWorld();
 
 
     renderer.render(scene, camera);

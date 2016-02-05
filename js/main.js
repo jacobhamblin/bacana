@@ -2,14 +2,14 @@ require('../sass/main.scss');
 import demosJson from './demos.json';
 import b1 from './b1.js';
 import b2 from './b2.js';
-import b3 from './b3.js';
+// import b3 from './b3.js';
 import FastClick from './vendor/fastclick.min.js';
 import THREE from 'three';
 
 const demosCode = new Object;
 demosCode.b1 = b1;
 demosCode.b2 = b2;
-demosCode.b3 = b3;
+// demosCode.b3 = b3;
 
 let bannerCounter = 0;
 (function attachFastClick() {

@@ -58,11 +58,7 @@
 
 	var _b4 = _interopRequireDefault(_b3);
 
-	var _b5 = __webpack_require__(11);
-
-	var _b6 = _interopRequireDefault(_b5);
-
-	var _fastclickMin = __webpack_require__(12);
+	var _fastclickMin = __webpack_require__(11);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
@@ -72,12 +68,13 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(13);
+	__webpack_require__(12);
+	// import b3 from './b3.js';
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
 	demosCode.b2 = _b4.default;
-	demosCode.b3 = _b6.default;
+	// demosCode.b3 = b3;
 
 	var bannerCounter = 0;
 	(function attachFastClick() {
@@ -202,10 +199,6 @@
 			{
 				"preview": "./img/b2.jpg",
 				"js": "b2.js"
-			},
-			{
-				"preview": "./img/b3.png",
-				"js": "b3.js"
 			}
 		]
 	};
@@ -37610,131 +37603,6 @@
 
 /***/ },
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _three = __webpack_require__(3);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var b3 = {
-	    init: function init(container, renderer) {
-	        var usefulThings = this.setup(container, renderer);
-	        this.animate(usefulThings);
-	    },
-	    setup: function setup(container, renderer) {
-	        console.log('initialized b3!');
-
-	        var camera = undefined,
-	            scene = undefined;
-	        var mouse = new _three2.default.Vector2();
-	        var objects = new Object();
-	        var usefulThings = new Object();
-	        var objectsInfo = { count: 1, radius: 15 };
-	        var counters = new Object();
-	        var lightsObj = new Object();
-
-	        camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
-	        camera.position.set(0, 0, 800);
-	        camera.lookAt(0, 0, 0);
-
-	        scene = new _three2.default.Scene();
-
-	        renderer.setClearColor(0x222222);
-	        renderer.setPixelRatio(window.devicePixelRatio);
-	        renderer.setSize(window.innerWidth, window.innerHeight);
-	        container.appendChild(renderer.domElement);
-
-	        lightsObj.lights = [];
-
-	        var lightOne = new _three2.default.PointLight(0xffffff, 1, 2000);
-	        lightOne.position.set(0, 0, 400);
-	        lightsObj.lights.push(lightOne);
-	        scene.add(lightOne);
-
-	        var lightTwo = new _three2.default.PointLight(0xffffff, 1, 2000);
-	        lightTwo.position.set(-100, -100, 900);
-	        lightsObj.lights.push(lightTwo);
-	        scene.add(lightTwo);
-
-	        var bigSphereGeom = new _three2.default.SphereGeometry(100);
-	        var material = new _three2.default.MeshPhongMaterial({
-	            color: 0xffffff
-	        });
-	        var bigSphere = new _three2.default.Mesh(bigSphereGeom, material);
-	        bigSphere.position.set(0, 0, 700);
-	        objects.bigSphere = bigSphere;
-	        scene.add(bigSphere);
-
-	        usefulThings = {
-	            camera: camera,
-	            scene: scene,
-	            renderer: renderer,
-	            mouse: mouse,
-	            objects: objects,
-	            counters: counters,
-	            lightsObj: lightsObj
-	        };
-
-	        var self = this;
-	        window.addEventListener('resize', function () {
-	            self.onWindowResize(usefulThings);
-	        }, false);
-	        window.addEventListener('mousemove', function () {
-	            self.onMouseMove(usefulThings);
-	        }, false);
-
-	        return usefulThings;
-	    },
-	    onMouseMove: function onMouseMove(usefulThings) {
-	        var mouse = usefulThings.mouse;
-
-	        event.preventDefault();
-	        mouse.x = event.clientX / window.innerWidth * 2 - 1;
-	        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-	    },
-	    onWindowResize: function onWindowResize(usefulThings) {
-	        var camera = usefulThings.camera;
-	        var renderer = usefulThings.renderer;
-
-	        camera.aspect = window.innerWidth / window.innerHeight;
-	        camera.updateProjectionMatrix();
-
-	        renderer.setSize(window.innerWidth, window.innerHeight);
-	    },
-	    animate: function animate(usefulThings) {
-	        var self = this;
-
-	        var newThings = this.render(usefulThings);
-
-	        if (document.querySelectorAll('canvas')[0]) {
-	            requestAnimationFrame(function () {
-	                self.animate(newThings);
-	            });
-	        }
-	    },
-	    render: function render(usefulThings) {
-	        var objects = usefulThings.objects;
-	        var camera = usefulThings.camera;
-	        var counters = usefulThings.counters;
-	        var renderer = usefulThings.renderer;
-	        var scene = usefulThings.scene;
-	        var mouse = usefulThings.mouse;
-	        var lightsObj = usefulThings.lightsObj;
-
-	        renderer.render(scene, camera);
-
-	        return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj };
-	    }
-	}; // b3.js
-
-	module.exports = b3;
-
-/***/ },
-/* 12 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -37889,7 +37757,7 @@
 	}]);
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
