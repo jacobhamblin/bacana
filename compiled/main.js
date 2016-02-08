@@ -58,7 +58,7 @@
 
 	var _b4 = _interopRequireDefault(_b3);
 
-	var _fastclickMin = __webpack_require__(12);
+	var _fastclickMin = __webpack_require__(11);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
@@ -68,7 +68,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(13);
+	__webpack_require__(12);
 	// import b3 from './b3.js';
 
 	var demosCode = new Object();
@@ -92,17 +92,20 @@
 	    var classes = el.className.split(' ');
 	    var existingIndex = classes.indexOf(className);
 
-	    if (existingIndex >= 0) classes.splice(existingIndex, 1);else classes.push(className);
+	    if (existingIndex >= 0) {
+	      classes.splice(existingIndex, 1);
+	    } else {
+	      classes.push(className);
+	    }
 
 	    el.className = classes.join(' ');
 	  }
 	}
 
 	function hasClass(el, className) {
-	  var classes = el.className.split(' ');
-	  var existingIndex = classes.indexOf(className);
-
-	  if (existingIndex >= 0) return true;else return false;
+	  var present = false;
+	  el.className.split(' ').indexOf(className) > 0 ? present = true : present = false;
+	  return present;
 	}
 
 	(function prepareDemos() {
@@ -161,7 +164,7 @@
 	  toggleClass(demo, "active");
 	  setTimeout(function () {
 	    demo.removeChild(document.querySelectorAll('canvas')[0]);
-	  }, 500);
+	  }, 100);
 	};
 
 	var prevsNodeList = document.querySelectorAll('div.preview-container');
@@ -37602,8 +37605,7 @@
 	};
 
 /***/ },
-/* 11 */,
-/* 12 */
+/* 11 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -37758,7 +37760,7 @@
 	}]);
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
