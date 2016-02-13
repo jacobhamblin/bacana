@@ -58,6 +58,10 @@
 
 	var _b4 = _interopRequireDefault(_b3);
 
+	var _b5 = __webpack_require__(14);
+
+	var _b6 = _interopRequireDefault(_b5);
+
 	var _fastclickMin = __webpack_require__(11);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
@@ -69,12 +73,11 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	__webpack_require__(12);
-	// import b3 from './b3.js';
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
 	demosCode.b2 = _b4.default;
-	// demosCode.b3 = b3;
+	demosCode.b3 = _b6.default;
 
 	var bannerCounter = 0;
 	(function attachFastClick() {
@@ -36982,8 +36985,6 @@
 
 	'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; // b2.js
-
 	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
@@ -36993,6 +36994,8 @@
 	var _OBJLoader2 = _interopRequireDefault(_OBJLoader);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; } // b2.js
 
 	var b2 = {
 	  init: function init(container, renderer) {
@@ -37610,16 +37613,16 @@
 
 	"use strict";
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 
 	/** Shrinkwrap URL:
 	 *      /v2/bundles/js?modules=fastclick%401.0.6%2Co-autoinit%401.2.0&shrinkwrap=
 	 */
-	!function (t) {
+	!(function (t) {
 		function e(o) {
 			if (n[o]) return n[o].exports;var i = n[o] = { exports: {}, id: o, loaded: !1 };return t[o].call(i.exports, i, i.exports, e), i.loaded = !0, i.exports;
 		}var n = {};return e.m = t, e.c = n, e.p = "", e(0);
-	}([function (t, e, n) {
+	})([function (t, e, n) {
 		"use strict";
 		n(1), window.Origami = { fastclick: n(2), "o-autoinit": n(4) };
 	}, function (t, e) {
@@ -37628,7 +37631,7 @@
 		t.exports = n(3);
 	}, function (t, e) {
 		"use strict";
-		var n = !1;!function () {
+		var n = !1;!(function () {
 			/**
 	  * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.
 	  *
@@ -37641,7 +37644,7 @@
 					return function () {
 						return t.apply(e, arguments);
 					};
-				}var r;if (n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t)) {
+				}var r;if ((n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t))) {
 					for (var a = ["onMouse", "onClick", "onTouchStart", "onTouchMove", "onTouchEnd", "onTouchCancel"], c = this, s = 0, u = a.length; u > s; s++) {
 						c[a[s]] = o(c[a[s]], c);
 					}i && (t.addEventListener("mouseover", this.onMouse, !0), t.addEventListener("mousedown", this.onMouse, !0), t.addEventListener("mouseup", this.onMouse, !0)), t.addEventListener("click", this.onClick, !0), t.addEventListener("touchstart", this.onTouchStart, !1), t.addEventListener("touchmove", this.onTouchMove, !1), t.addEventListener("touchend", this.onTouchEnd, !1), t.addEventListener("touchcancel", this.onTouchCancel, !1), Event.prototype.stopImmediatePropagation || (t.removeEventListener = function (e, n, o) {
@@ -37680,7 +37683,7 @@
 			}, e.prototype.focus = function (t) {
 				var e;r && t.setSelectionRange && 0 !== t.type.indexOf("date") && "time" !== t.type && "month" !== t.type ? (e = t.value.length, t.setSelectionRange(e, e)) : t.focus();
 			}, e.prototype.updateScrollParent = function (t) {
-				var e, n;if (e = t.fastClickScrollParent, !e || !e.contains(t)) {
+				var e, n;if ((e = t.fastClickScrollParent, !e || !e.contains(t))) {
 					n = t;do {
 						if (n.scrollHeight > n.offsetHeight) {
 							e = n, t.fastClickScrollParent = n;break;
@@ -37690,8 +37693,8 @@
 			}, e.prototype.getTargetElementFromEventTarget = function (t) {
 				return t.nodeType === Node.TEXT_NODE ? t.parentNode : t;
 			}, e.prototype.onTouchStart = function (t) {
-				var e, n, o;if (t.targetTouches.length > 1) return !0;if (e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r) {
-					if (o = window.getSelection(), o.rangeCount && !o.isCollapsed) return !0;if (!a) {
+				var e, n, o;if (t.targetTouches.length > 1) return !0;if ((e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r)) {
+					if ((o = window.getSelection(), o.rangeCount && !o.isCollapsed)) return !0;if (!a) {
 						if (n.identifier && n.identifier === this.lastTouchIdentifier) return t.preventDefault(), !1;this.lastTouchIdentifier = n.identifier, this.updateScrollParent(e);
 					}
 				}return this.trackingClick = !0, this.trackingClickStart = t.timeStamp, this.targetElement = e, this.touchStartX = n.pageX, this.touchStartY = n.pageY, t.timeStamp - this.lastClickTime < this.tapDelay && t.preventDefault(), !0;
@@ -37708,9 +37711,9 @@
 				    o,
 				    s,
 				    u,
-				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if (this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o) {
+				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if ((this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o)) {
 					if (e = this.findControl(l)) {
-						if (this.focus(l), i) return !1;l = e;
+						if ((this.focus(l), i)) return !1;l = e;
 					}
 				} else if (this.needsFocus(l)) return t.timeStamp - n > 100 || r && window.top !== window && "input" === o ? (this.targetElement = null, !1) : (this.focus(l), this.sendClick(l, t), r && "select" === o || (this.targetElement = null, t.preventDefault()), !1);return r && !a && (s = l.fastClickScrollParent, s && s.fastClickLastScrollTop !== s.scrollTop) ? !0 : (this.needsClick(l) || (t.preventDefault(), this.sendClick(l, t)), !1);
 			}, e.prototype.onTouchCancel = function () {
@@ -37734,20 +37737,20 @@
 			}, "function" == typeof n && "object" == _typeof(n.amd) && n.amd ? n(function () {
 				return e;
 			}) : "undefined" != typeof t && t.exports ? (t.exports = e.attach, t.exports.FastClick = e) : window.FastClick = e;
-		}();
+		})();
 	}, function (t, e, n) {
 		t.exports = n(5);
 	}, function (t, e) {
 		"use strict";
 		function n(t) {
 			t in o || (o[t] = !0, document.dispatchEvent(new CustomEvent("o." + t)));
-		}var o = {};if (window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
+		}var o = {};if ((window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
 			"complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded");
-		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent) {
+		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent)) {
 			var i = !1,
 			    r = 50;try {
 				i = null == window.frameElement && document.documentElement;
-			} catch (a) {}i && i.doScroll && !function c() {
+			} catch (a) {}i && i.doScroll && !(function c() {
 				if (!("DOMContentLoaded" in o)) {
 					try {
 						i.doScroll("left");
@@ -37755,7 +37758,7 @@
 						return 5e3 > r ? setTimeout(c, r *= 1.2) : void 0;
 					}n("DOMContentLoaded");
 				}
-			}();
+			})();
 		}
 	}]);
 
@@ -37764,6 +37767,179 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 13 */,
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(3);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var b3 = {
+	  init: function init(container, renderer) {
+	    var usefulThings = this.setup(container, renderer);
+	    this.animate(usefulThings);
+	  },
+	  setup: function setup(container, renderer) {
+	    console.log('initialized b3!');
+
+	    var camera = undefined,
+	        scene = undefined;
+	    var mouse = new _three2.default.Vector2();
+	    var objects = new Object();
+	    var usefulThings = new Object();
+	    var objectsInfo = {
+	      bubbles: { count: 50, radius: 10 }
+	    };
+	    var counters = new Object();
+	    var lightsObj = new Object();
+	    counters.a = 0;
+
+	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
+	    camera.position.set(0, 0, 800);
+	    camera.lookAt(0, 0, 0);
+
+	    scene = new _three2.default.Scene();
+
+	    renderer.setClearColor(0x222222);
+	    renderer.setPixelRatio(window.devicePixelRatio);
+	    renderer.setSize(window.innerWidth, window.innerHeight);
+	    container.appendChild(renderer.domElement);
+
+	    lightsObj.lights = [];
+
+	    var lightOne = new _three2.default.PointLight(0xffffff, 1, 2000);
+	    lightOne.position.set(0, 0, 600);
+	    lightsObj.lights.push(lightOne);
+	    scene.add(lightOne);
+
+	    var lightTwo = new _three2.default.PointLight(0xffffff, 1, 2000);
+	    lightTwo.position.set(-100, -100, 900);
+	    lightsObj.lights.push(lightTwo);
+	    scene.add(lightTwo);
+
+	    var bigSphereGeom = new _three2.default.SphereGeometry(50, 32, 32);
+	    var material = new _three2.default.MeshPhongMaterial({
+	      color: 0x333333
+	    });
+	    var bigSphere = new _three2.default.Mesh(bigSphereGeom, material);
+	    bigSphere.geometry.verticesNeedUpdate = true;
+	    bigSphere.geometry.dynamic = true;
+	    bigSphere.position.set(0, 0, 700);
+	    scene.add(bigSphere);
+	    objects.bigSphere = bigSphere;
+	    window.bigSphere = bigSphere;
+	    window.scene = scene;
+
+	    // let vertices = [];
+	    // for (let i = 0; i < bigSphere.geometry.vertices.length; i+=6) {
+	    //   let vertex = bigSphere.geometry.vertices[i].clone();
+	    //   let realVertex = vertex.applyMatrix4(bigSphere.matrixWorld)
+	    //   if (realVertex.x < 0) {
+	    //     vertices.push(realVertex);
+	    //   }
+	    // }
+
+	    // objects.bubbles = [];
+	    // for (let i = 0; i < vertices.length; i++) {
+	    //   const geom = new THREE.SphereGeometry(3, 8, 8);
+	    //   const mat = new THREE.MeshPhongMaterial({
+	    //     color: 0xffffff
+	    //   });
+	    //   const bubble = new THREE.Mesh(geom, mat);
+	    //   bubble.position.set(
+	    //     vertices[i][0],
+	    //     vertices[i][1],
+	    //     vertices[i][2] + 750
+	    //   )
+	    //   scene.add(bubble);
+	    //   objects.bubbles.push(bubble);
+	    // }
+
+	    usefulThings = {
+	      camera: camera,
+	      scene: scene,
+	      renderer: renderer,
+	      mouse: mouse,
+	      objects: objects,
+	      counters: counters,
+	      lightsObj: lightsObj
+	    };
+
+	    var self = this;
+	    window.addEventListener('resize', function () {
+	      self.onWindowResize(usefulThings);
+	    }, false);
+	    window.addEventListener('mousemove', function () {
+	      self.onMouseMove(usefulThings);
+	    }, false);
+
+	    return usefulThings;
+	  },
+	  onMouseMove: function onMouseMove(usefulThings) {
+	    var mouse = usefulThings.mouse;
+
+	    event.preventDefault();
+	    mouse.x = event.clientX / window.innerWidth * 2 - 1;
+	    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+	  },
+	  onWindowResize: function onWindowResize(usefulThings) {
+	    var camera = usefulThings.camera;
+	    var renderer = usefulThings.renderer;
+
+	    camera.aspect = window.innerWidth / window.innerHeight;
+	    camera.updateProjectionMatrix();
+
+	    renderer.setSize(window.innerWidth, window.innerHeight);
+	  },
+	  animate: function animate(usefulThings) {
+	    var self = this;
+
+	    var newThings = this.render(usefulThings);
+
+	    if (document.querySelector('canvas')) {
+	      requestAnimationFrame(function () {
+	        self.animate(newThings);
+	      });
+	    }
+	  },
+	  render: function render(usefulThings) {
+	    var objects = usefulThings.objects;
+	    var camera = usefulThings.camera;
+	    var counters = usefulThings.counters;
+	    var renderer = usefulThings.renderer;
+	    var scene = usefulThings.scene;
+	    var mouse = usefulThings.mouse;
+	    var lightsObj = usefulThings.lightsObj;
+
+	    scene.updateMatrixWorld();
+
+	    counters.a += 0.02;
+
+	    for (var i = 0; i < objects.bigSphere.geometry.vertices.length; i++) {
+	      var vertex = objects.bigSphere.geometry.vertices[i];
+
+	      vertex.set(vertex.x += Math.cos(counters.a + i), vertex.y += Math.cos(counters.a + i), vertex.z += Math.cos(counters.a + i));
+	    }
+
+	    bigSphere.geometry.verticesNeedUpdate = true;
+	    bigSphere.geometry.dynamic = true;
+
+	    // objects.bigSphere.rotation.x += 0.02;
+
+	    renderer.render(scene, camera);
+
+	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj };
+	  }
+	}; // b3.js
+
+	module.exports = b3;
 
 /***/ }
 /******/ ]);

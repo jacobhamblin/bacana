@@ -19,6 +19,7 @@ const b3 = {
     };
     const counters = new Object;
     let lightsObj = new Object;
+    counters.a = 0;
 
     camera = new THREE.PerspectiveCamera(
       70,
@@ -50,15 +51,16 @@ const b3 = {
 
     const bigSphereGeom = new THREE.SphereGeometry(50, 32, 32);
     const material = new THREE.MeshPhongMaterial({
-<<<<<<< HEAD
-      color: 0x777777
-=======
       color: 0x333333
->>>>>>> bf97e57b86ac2ec8521f079f4e7a463f076a9896
     });
     const bigSphere = new THREE.Mesh(bigSphereGeom, material);
+    bigSphere.geometry.verticesNeedUpdate = true;
+    bigSphere.geometry.dynamic = true;
     bigSphere.position.set(0,0,700);
+    scene.add(bigSphere);
     objects.bigSphere = bigSphere;
+    window.bigSphere = bigSphere;
+    window.scene = scene;
 
     // let vertices = [];
     // for (let i = 0; i < bigSphere.geometry.vertices.length; i+=6) {
@@ -128,7 +130,7 @@ const b3 = {
 
     let newThings = this.render(usefulThings);
 
-    if (document.querySelectorAll('canvas')[0]) {
+    if (document.querySelector('canvas')) {
       requestAnimationFrame(function() {self.animate(newThings)});
     }
   },
@@ -145,6 +147,22 @@ const b3 = {
 
     scene.updateMatrixWorld();
 
+    counters.a += 0.02;
+
+    for (let i = 0; i < objects.bigSphere.geometry.vertices.length; i++) {
+      let vertex = objects.bigSphere.geometry.vertices[i];
+
+      vertex.set(
+        vertex.x += (Math.cos(counters.a + i)),
+        vertex.y += (Math.cos(counters.a + i)),
+        vertex.z += (Math.cos(counters.a + i))
+      )
+    }
+
+    bigSphere.geometry.verticesNeedUpdate = true;
+    bigSphere.geometry.dynamic = true;
+
+    // objects.bigSphere.rotation.x += 0.02;
 
     renderer.render(scene, camera);
 
