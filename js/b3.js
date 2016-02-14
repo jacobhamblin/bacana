@@ -51,7 +51,8 @@ const b3 = {
 
     const bigSphereGeom = new THREE.SphereGeometry(50, 32, 32);
     const material = new THREE.MeshPhongMaterial({
-      color: 0x333333
+      color: 0x333333,
+      shading: THREE.FlatShading
     });
     const bigSphere = new THREE.Mesh(bigSphereGeom, material);
     bigSphere.geometry.verticesNeedUpdate = true;
@@ -153,10 +154,10 @@ const b3 = {
       let vertex = objects.bigSphere.geometry.vertices[i];
 
       vertex.set(
-        vertex.x += (Math.cos(counters.a + i)),
-        vertex.y += (Math.cos(counters.a + i)),
-        vertex.z += (Math.cos(counters.a + i))
-      )
+        vertex.x += (Math.cos(counters.a + i) * 0.05),
+        vertex.y += (Math.cos(counters.a + i) * 0.05),
+        vertex.z += (Math.cos(counters.a + i) * 0.05)
+      );
     }
 
     bigSphere.geometry.verticesNeedUpdate = true;
