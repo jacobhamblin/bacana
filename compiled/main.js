@@ -37011,8 +37011,7 @@
 
 	    var camera = undefined,
 	        scene = undefined;
-	    var mouse = new _three2.default.Vector2(),
-	        INTERSECTED = undefined;
+	    var mouse = new _three2.default.Vector2();
 	    var objects = new Object();
 	    var usefulThings = new Object();
 	    var raycasterObj = new Object();
@@ -37211,7 +37210,6 @@
 	    }
 
 	    raycasterObj.raycaster.setFromCamera(mouse, camera);
-
 	    var intersects = raycasterObj.raycaster.intersectObjects(scene.children);
 
 	    var tempIntersection = false;
@@ -37624,106 +37622,74 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var b3 = {
+	  animate: function animate(usefulThings) {
+	    var self = this;
+
+	    var newThings = this.render(usefulThings);
+
+	    if (document.querySelector('canvas')) {
+	      requestAnimationFrame(function () {
+	        self.animate(newThings);
+	      });
+	    }
+	  },
+	  changeMaterial: function changeMaterial(mesh, shading) {
+	    var shadingType = undefined;
+	    shadingType = shading === "smooth" ? _three2.default.SmoothShading : _three2.default.FlatShading;
+	    var material = new _three2.default.MeshPhongMaterial({
+	      color: 0x333333,
+	      shading: shadingType
+	    });
+	    mesh.material = material;
+	  },
+	  handleIntersection: function handleIntersection(object) {
+	    var raycasterObj = object.raycasterObj;
+	    var objects = object.objects;
+	    var scene = object.scene;
+	    var mouse = object.mouse;
+	    var camera = object.camera;
+
+	    raycasterObj.raycaster.setFromCamera(mouse, camera);
+	    var intersects = raycasterObj.raycaster.intersectObjects(scene.children);
+
+	    var tempIntersection = undefined;
+	    tempIntersection = intersects[0] && intersects[0].object === objects.bigSphere ? true : false;
+
+	    if (raycasterObj.intersection !== tempIntersection) {
+	      raycasterObj.intersection = tempIntersection;
+	      if (raycasterObj.intersection) {
+	        raycasterObj.intersected = intersects[0].object;
+	      }
+	      this.mouseToggle(raycasterObj);
+	    }
+	  },
 	  init: function init(container, renderer) {
 	    var usefulThings = this.setup(container, renderer);
 	    this.animate(usefulThings);
 	  },
-	  setup: function setup(container, renderer) {
-	    console.log('initialized b3!');
+	  mouseToggle: function mouseToggle(raycasterObj) {
+	    var intersection = raycasterObj.intersection;
+	    var intersected = raycasterObj.intersected;
 
-	    var camera = undefined,
-	        scene = undefined;
-	    var mouse = new _three2.default.Vector2();
-	    var objects = new Object();
-	    var usefulThings = new Object();
-	    var objectsInfo = {
-	      bubbles: { count: 50, radius: 10 }
-	    };
-	    var counters = new Object();
-	    var lightsObj = new Object();
-	    counters.a = 0;
+	    if (intersection) {
+	      document.body.style.cursor = "pointer";
+	      this.changeMaterial(intersected, "flat");
+	    } else {
+	      document.body.style.cursor = "initial";
+	      this.changeMaterial(intersected, "smooth");
+	    }
+	  },
+	  moveSmallSpheres: function moveSmallSpheres(spheres) {
+	    for (var i = 0; i < spheres.length; i++) {
+	      var sphere = spheres[i];
 
-	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
-	    camera.position.set(0, 0, 800);
-	    camera.lookAt(0, 0, 0);
+	      sphere.position.x += sphere.pace.x;
+	      sphere.position.y += sphere.pace.y;
 
-	    scene = new _three2.default.Scene();
-
-	    renderer.setClearColor(0x222222);
-	    renderer.setPixelRatio(window.devicePixelRatio);
-	    renderer.setSize(window.innerWidth, window.innerHeight);
-	    container.appendChild(renderer.domElement);
-
-	    lightsObj.lights = [];
-
-	    var lightOne = new _three2.default.PointLight(0xffffff, 1, 2000);
-	    lightOne.position.set(0, 0, 600);
-	    lightsObj.lights.push(lightOne);
-	    scene.add(lightOne);
-
-	    var lightTwo = new _three2.default.PointLight(0xffffff, 1, 2000);
-	    lightTwo.position.set(-100, -100, 900);
-	    lightsObj.lights.push(lightTwo);
-	    scene.add(lightTwo);
-
-	    var bigSphereGeom = new _three2.default.SphereGeometry(50, 32, 32);
-	    var material = new _three2.default.MeshPhongMaterial({
-	      color: 0x333333,
-	      shading: _three2.default.FlatShading
-	    });
-	    var bigSphere = new _three2.default.Mesh(bigSphereGeom, material);
-	    bigSphere.geometry.verticesNeedUpdate = true;
-	    bigSphere.geometry.dynamic = true;
-	    bigSphere.position.set(0, 0, 700);
-	    scene.add(bigSphere);
-	    objects.bigSphere = bigSphere;
-	    window.bigSphere = bigSphere;
-	    window.scene = scene;
-
-	    // let vertices = [];
-	    // for (let i = 0; i < bigSphere.geometry.vertices.length; i+=6) {
-	    //   let vertex = bigSphere.geometry.vertices[i].clone();
-	    //   let realVertex = vertex.applyMatrix4(bigSphere.matrixWorld)
-	    //   if (realVertex.x < 0) {
-	    //     vertices.push(realVertex);
-	    //   }
-	    // }
-
-	    // objects.bubbles = [];
-	    // for (let i = 0; i < vertices.length; i++) {
-	    //   const geom = new THREE.SphereGeometry(3, 8, 8);
-	    //   const mat = new THREE.MeshPhongMaterial({
-	    //     color: 0xffffff
-	    //   });
-	    //   const bubble = new THREE.Mesh(geom, mat);
-	    //   bubble.position.set(
-	    //     vertices[i][0],
-	    //     vertices[i][1],
-	    //     vertices[i][2] + 750
-	    //   )
-	    //   scene.add(bubble);
-	    //   objects.bubbles.push(bubble);
-	    // }
-
-	    usefulThings = {
-	      camera: camera,
-	      scene: scene,
-	      renderer: renderer,
-	      mouse: mouse,
-	      objects: objects,
-	      counters: counters,
-	      lightsObj: lightsObj
-	    };
-
-	    var self = this;
-	    window.addEventListener('resize', function () {
-	      self.onWindowResize(usefulThings);
-	    }, false);
-	    window.addEventListener('mousemove', function () {
-	      self.onMouseMove(usefulThings);
-	    }, false);
-
-	    return usefulThings;
+	      if (sphere.position.x > 400 || sphere.position.y > 300) {
+	        sphere.position.set(sphere.initialPosition[0], sphere.initialPosition[1], sphere.initialPosition[2]);
+	      }
+	    }
 	  },
 	  onMouseMove: function onMouseMove(usefulThings) {
 	    var mouse = usefulThings.mouse;
@@ -37741,16 +37707,124 @@
 
 	    renderer.setSize(window.innerWidth, window.innerHeight);
 	  },
-	  animate: function animate(usefulThings) {
-	    var self = this;
+	  prepCamera: function prepCamera() {
+	    var camera = undefined;
 
-	    var newThings = this.render(usefulThings);
+	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
+	    camera.position.set(0, 0, 800);
+	    camera.lookAt(0, 0, 0);
 
-	    if (document.querySelector('canvas')) {
-	      requestAnimationFrame(function () {
-	        self.animate(newThings);
-	      });
+	    return camera;
+	  },
+	  prepScene: function prepScene() {
+	    var scene = new _three2.default.Scene();
+	    return scene;
+	  },
+	  prepRenderer: function prepRenderer(container, renderer) {
+	    renderer.setClearColor(0x222222);
+	    renderer.setPixelRatio(window.devicePixelRatio);
+	    renderer.setSize(window.innerWidth, window.innerHeight);
+	    container.appendChild(renderer.domElement);
+
+	    return renderer;
+	  },
+	  prepSmallSpheres: function prepSmallSpheres(info, scene) {
+	    var spheres = [];
+	    for (var i = 0; i < info.count; i++) {
+	      var sphere = new _three2.default.Mesh(new _three2.default.SphereGeometry(Math.random() * 2, 8, 8), new _three2.default.MeshPhongMaterial({
+	        color: 0x333333,
+	        shading: _three2.default.SmoothShading
+	      }));
+
+	      var pos = [Math.random() * 200 - 300, Math.random() * 100 - 150, Math.random() * 200 + 575];
+	      var xRate = (1 - (pos[2] - 675) * 0.01) * Math.random() * 2 * 0.4;
+
+	      sphere.position.set(pos[0], pos[1], pos[2]);
+
+	      sphere.initialPosition = pos;
+
+	      sphere.pace = {
+	        x: xRate,
+	        y: xRate * 0.5
+	      };
+
+	      spheres.push(sphere);
+	      scene.add(sphere);
 	    }
+	    return spheres;
+	  },
+	  setup: function setup(container, renderer) {
+	    console.log('initialized b3!');
+
+	    var self = this;
+	    var mouse = new _three2.default.Vector2();
+	    var objects = new Object();
+	    var usefulThings = new Object();
+	    var objectsInfo = {
+	      bubbles: { count: 100, radius: 16 }
+	    };
+	    var counters = new Object();
+	    var lightsObj = new Object();
+	    var raycasterObj = new Object();
+	    counters.a = 0;
+
+	    var scene = this.prepScene();
+	    var camera = this.prepCamera();
+	    renderer = this.prepRenderer(container, renderer);
+
+	    lightsObj.lights = [];
+
+	    raycasterObj.raycaster = new _three2.default.Raycaster();
+	    raycasterObj.intersection = false;
+
+	    var lightOne = new _three2.default.PointLight(0xffffff, 1, 2000);
+	    lightOne.position.set(0, 0, 600);
+	    lightsObj.lights.push(lightOne);
+	    scene.add(lightOne);
+
+	    var lightTwo = new _three2.default.PointLight(0xffffff, 1, 2000);
+	    lightTwo.position.set(-100, -100, 900);
+	    lightsObj.lights.push(lightTwo);
+	    scene.add(lightTwo);
+
+	    var bigSphereGeom = new _three2.default.SphereGeometry(50, 32, 32);
+	    var material = new _three2.default.MeshPhongMaterial({
+	      color: 0x333333,
+	      shading: _three2.default.SmoothShading
+	    });
+	    var bigSphere = new _three2.default.Mesh(bigSphereGeom, material);
+	    bigSphere.geometry.verticesNeedUpdate = true;
+	    bigSphere.geometry.dynamic = true;
+	    bigSphere.position.set(0, 0, 675);
+	    scene.add(bigSphere);
+	    objects.bigSphere = bigSphere;
+	    objects.bigSphereMotion = [function (i) {
+	      return Math.cos(counters.a * 4 - i) * 0.2;
+	    }, function (i) {
+	      return -(Math.cos(counters.a * 4 + i) * 0.2);
+	    }];
+
+	    objects.smallSpheres = this.prepSmallSpheres(objectsInfo.bubbles, scene);
+
+	    usefulThings = {
+	      camera: camera,
+	      scene: scene,
+	      renderer: renderer,
+	      mouse: mouse,
+	      objects: objects,
+	      counters: counters,
+	      lightsObj: lightsObj,
+	      raycasterObj: raycasterObj
+	    };
+
+	    window.addEventListener('resize', function () {
+	      self.onWindowResize(usefulThings);
+	    }, false);
+	    window.addEventListener('mousemove', function () {
+	      self.onMouseMove(usefulThings);
+	    }, false);
+
+	    return usefulThings;
 	  },
 	  render: function render(usefulThings) {
 	    var objects = usefulThings.objects;
@@ -37760,25 +37834,29 @@
 	    var scene = usefulThings.scene;
 	    var mouse = usefulThings.mouse;
 	    var lightsObj = usefulThings.lightsObj;
+	    var raycasterObj = usefulThings.raycasterObj;
 
 	    scene.updateMatrixWorld();
 
 	    counters.a += 0.02;
 
+	    this.handleIntersection({ raycasterObj: raycasterObj, objects: objects, mouse: mouse, camera: camera, scene: scene });
+	    this.moveSmallSpheres(objects.smallSpheres);
+
 	    for (var i = 0; i < objects.bigSphere.geometry.vertices.length; i++) {
 	      var vertex = objects.bigSphere.geometry.vertices[i];
 
-	      vertex.set(vertex.x += Math.cos(counters.a + i) * 0.05, vertex.y += Math.cos(counters.a + i) * 0.05, vertex.z += Math.cos(counters.a + i) * 0.05);
+	      vertex.set(vertex.x += objects.bigSphereMotion[0](i), vertex.y += objects.bigSphereMotion[0](i), vertex.z += objects.bigSphereMotion[0](i));
 	    }
 
-	    bigSphere.geometry.verticesNeedUpdate = true;
-	    bigSphere.geometry.dynamic = true;
+	    objects.bigSphere.geometry.verticesNeedUpdate = true;
+	    objects.bigSphere.geometry.dynamic = true;
 
 	    // objects.bigSphere.rotation.x += 0.02;
 
 	    renderer.render(scene, camera);
 
-	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj };
+	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj };
 	  }
 	}; // b3.js
 

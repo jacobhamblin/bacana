@@ -12,7 +12,7 @@ const b2 = {
     console.log('initialized b2!');
 
     let camera, scene;
-    let mouse = new THREE.Vector2(), INTERSECTED;
+    let mouse = new THREE.Vector2();
     let objects = new Object;
     let usefulThings = new Object;
     let raycasterObj = new Object;
@@ -235,7 +235,6 @@ const b2 = {
     }
 
     raycasterObj.raycaster.setFromCamera(mouse, camera);
-
     let intersects = raycasterObj.raycaster.intersectObjects(scene.children);
 
     let tempIntersection = false;
