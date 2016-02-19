@@ -251,232 +251,243 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var b1 = {
-	    init: function init(container, renderer) {
-	        var usefulThings = this.setup(container, renderer);
-	        this.animate(usefulThings);
-	    },
-	    prepControls: function prepControls(camera, renderer) {
-	        var controls = new _OrbitControls2.default(camera, renderer.domElement);
-	        controls.enableZoom = false;
-	        controls.rotateSpeed = 1;
-	        return controls;
-	    },
-	    setup: function setup(container, renderer) {
-	        console.log('initialized b1!');
+	  init: function init(container, renderer) {
+	    var usefulThings = this.setup(container, renderer);
+	    this.animate(usefulThings);
+	  },
+	  prepControls: function prepControls(camera, renderer) {
+	    var controls = new _OrbitControls2.default(camera, renderer.domElement);
+	    controls.enableZoom = false;
+	    controls.rotateSpeed = 1;
+	    return controls;
+	  },
+	  prepCamera: function prepCamera() {
+	    var camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
+	    camera.position.set(0, 0, 50);
+	    camera.lookAt(0, 0, 0);
 
-	        var camera = undefined,
-	            scene = undefined;
-	        var mouse = new _three2.default.Vector2();
-	        var objects = new Object();
-	        var usefulThings = new Object();
-	        var uniforms = [];
-	        var parameters = [];
-	        var materials = [];
-	        var objectsInfo = { count: 1, radius: 15 };
-	        var counters = new Object();
-	        counters.a = 0;
+	    return camera;
+	  },
+	  prepRenderer: function prepRenderer(container, renderer) {
+	    renderer.setClearColor(0x222222);
+	    renderer.setPixelRatio(window.devicePixelRatio);
+	    renderer.setSize(window.innerWidth, window.innerHeight);
+	    container.appendChild(renderer.domElement);
 
-	        camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
-	        camera.position.set(0, 0, 50);
-	        camera.lookAt(0, 0, 0);
+	    return renderer;
+	  },
+	  prepScene: function prepScene() {
+	    var scene = new _three2.default.Scene();
 
-	        scene = new _three2.default.Scene();
+	    return scene;
+	  },
+	  setup: function setup(container, renderer) {
+	    console.log('initialized b1!');
 
-	        renderer.setClearColor(0x222222);
-	        renderer.setPixelRatio(window.devicePixelRatio);
-	        renderer.setSize(window.innerWidth, window.innerHeight);
-	        container.appendChild(renderer.domElement);
+	    var mouse = new _three2.default.Vector2();
+	    var objects = new Object();
+	    var usefulThings = new Object();
+	    var uniforms = [];
+	    var parameters = [];
+	    var materials = [];
+	    var objectsInfo = { count: 1, radius: 15 };
+	    var counters = new Object();
+	    counters.a = 0;
 
-	        var controls = this.prepControls(camera, renderer);
+	    var camera = this.prepCamera();
+	    var scene = this.prepScene();
+	    renderer = this.prepRenderer(container, renderer);
 
-	        var light = new _three2.default.PointLight(0xffffff, 1, 2000);
+	    var controls = this.prepControls(camera, renderer);
 
-	        light.position.set(0, 0, 900);
+	    var light = new _three2.default.PointLight(0xffffff, 1, 2000);
 
-	        scene.add(light);
+	    light.position.set(0, 0, 900);
 
-	        objects.obj1 = [];
-	        objects.particles1 = [];
-	        objects.materials = [];
+	    scene.add(light);
 
-	        objects.particlesParameters = [[[1, 1, 0.5], 1.25], [[0.95, 1, 0.5], 1], [[0.90, 1, 0.5], 0.75], [[0.85, 1, 0.5], 0.5], [[0.80, 1, 0.5], 0.25]];
+	    objects.obj1 = [];
+	    objects.particles1 = [];
+	    objects.materials = [];
 
-	        var geometry = new _three2.default.Geometry();
+	    objects.particlesParameters = [[[1, 1, 0.5], 1.25], [[0.95, 1, 0.5], 1], [[0.90, 1, 0.5], 0.75], [[0.85, 1, 0.5], 0.5], [[0.80, 1, 0.5], 0.25]];
 
-	        for (var i = 0; i < 20000; i++) {
-	            var vertex = new _three2.default.Vector3();
-	            vertex.x = Math.random() * 2000 - 1000;
-	            vertex.y = Math.random() * 2000 - 1000;
-	            vertex.z = Math.random() * 2000 - 1000;
-	            geometry.vertices.push(vertex);
-	        }
+	    var geometry = new _three2.default.Geometry();
 
-	        for (var i = 0; i < objects.particlesParameters.length; i++) {
-	            var color = objects.particlesParameters[i][0];
-	            var size = objects.particlesParameters[i][1];
-
-	            materials[i] = new _three2.default.PointsMaterial({ size: size });
-	            objects.materials.push(materials[i]);
-	            var particles = new _three2.default.Points(geometry, materials[i]);
-	            particles.rotation.x = Math.random() * 6;
-	            particles.rotation.y = Math.random() * 6;
-	            particles.rotation.z = Math.random() * 6;
-
-	            objects.particles1.push(particles);
-	            scene.add(particles);
-	        }
-
-	        for (var i = 0; i < objectsInfo.count; i++) {
-
-	            var _geometry = new _three2.default.IcosahedronGeometry(objectsInfo.radius);
-
-	            var maxLength = i % 2 === 0 ? 16 : 4;
-	            var tessellateModifier = new _TessellateModifier2.default(maxLength);
-
-	            for (var j = 0; j < 6; j++) {
-	                tessellateModifier.modify(_geometry);
-	            }
-
-	            var explodeModifier = new _ExplodeModifier2.default();
-	            explodeModifier.modify(_geometry);
-
-	            var numFaces = _geometry.faces.length;
-
-	            var newGeometry = new _three2.default.BufferGeometry().fromGeometry(_geometry);
-
-	            // const material = new THREE.MeshPhongMaterial({
-	            //   color: 0xbbbbbb,
-	            //   shading: THREE.FlatShading
-	            // });
-
-	            var colors = new Float32Array(numFaces * 3 * 3);
-	            var displacement = new Float32Array(numFaces * 3 * 3);
-
-	            var color = new _three2.default.Color();
-
-	            for (var f = 0; f < numFaces; f++) {
-	                var index = 9 * f;
-
-	                var h = 0.5 + (i - 1) * .1 * Math.random();
-	                var s = 0;
-	                var l = 0.05 + 0.05 * Math.random();
-
-	                color.setHSL(h, s, l);
-
-	                var d = 10 * (0.5 - Math.random());
-
-	                for (var k = 0; k < 3; k++) {
-	                    colors[index + 3 * k] = color.r;
-	                    colors[index + 3 * k + 1] = color.g;
-	                    colors[index + 3 * k + 2] = color.b;
-
-	                    displacement[index + 3 * k] = d;
-	                    displacement[index + 3 * k + 1] = d;
-	                    displacement[index + 3 * k + 2] = d;
-	                }
-	            }
-
-	            newGeometry.addAttribute('customColor', new _three2.default.BufferAttribute(colors, 3));
-	            newGeometry.addAttribute('displacement', new _three2.default.BufferAttribute(displacement, 3));
-
-	            uniforms.push({
-	                amplitude: { type: "f", value: 0.0 }
-	            });
-
-	            var shaderMaterial = new _three2.default.ShaderMaterial({
-	                shading: _three2.default.FlatShading,
-	                fragmentShader: _fragment2.default,
-	                vertexShader: _vertex2.default,
-	                uniforms: uniforms[i],
-	                side: _three2.default.DoubleSide
-	            });
-
-	            var object = new _three2.default.Mesh(newGeometry, shaderMaterial);
-
-	            object.position.set(0, 0, 0);
-
-	            objects.obj1.push(object);
-	            scene.add(object);
-	        }
-
-	        usefulThings = { controls: controls, camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms };
-
-	        var self = this;
-	        window.addEventListener('resize', function () {
-	            self.onWindowResize(usefulThings);
-	        }, false);
-	        window.addEventListener('mousemove', function () {
-	            self.onMouseMove(usefulThings);
-	        }, false);
-
-	        return usefulThings;
-	    },
-	    onMouseMove: function onMouseMove(usefulThings) {
-	        var mouse = usefulThings.mouse;
-
-	        event.preventDefault();
-	        mouse.x = event.clientX / window.innerWidth * 2 - 1;
-	        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-	    },
-	    onWindowResize: function onWindowResize(usefulThings) {
-	        var camera = usefulThings.camera;
-	        var renderer = usefulThings.renderer;
-
-
-	        camera.aspect = window.innerWidth / window.innerHeight;
-	        camera.updateProjectionMatrix();
-
-	        renderer.setSize(window.innerWidth, window.innerHeight);
-	    },
-	    animate: function animate(usefulThings) {
-	        var self = this;
-
-	        var newThings = this.render(usefulThings);
-
-	        if (document.querySelectorAll('canvas')[0]) {
-	            requestAnimationFrame(function () {
-	                self.animate(newThings);
-	            });
-	        }
-	    },
-	    render: function render(usefulThings) {
-	        var objects = usefulThings.objects;
-	        var camera = usefulThings.camera;
-	        var counters = usefulThings.counters;
-	        var renderer = usefulThings.renderer;
-	        var scene = usefulThings.scene;
-	        var mouse = usefulThings.mouse;
-	        var uniforms = usefulThings.uniforms;
-	        var controls = usefulThings.controls;
-
-
-	        controls.update();
-
-	        var time = Date.now() * 0.001;
-	        var altTime = Date.now() * 0.000025;
-
-	        for (var i = 0; i < objects.obj1.length; i++) {
-	            objects.obj1[i].rotation.x += 0.05;
-	            uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
-	        }
-	        for (var i = 0; i < objects.particles1.length; i++) {
-	            var particle = objects.particles1[i];
-	            particle.rotation.x = altTime * (i < 4 ? i + 1 : -(i + 1));
-	        }
-	        for (var i = 0; i < objects.materials.length; i++) {
-	            var material = objects.materials[i];
-	            var color = objects.particlesParameters[i][0];
-
-	            var h = 360 * (color[0] + altTime) % 360 / 360;
-	            material.color.setHSL(h, color[1], color[2]);
-	        }
-
-	        counters.a += 0.02;
-
-	        renderer.render(scene, camera);
-
-	        return { controls: controls, camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms };
+	    for (var i = 0; i < 20000; i++) {
+	      var vertex = new _three2.default.Vector3();
+	      vertex.x = Math.random() * 2000 - 1000;
+	      vertex.y = Math.random() * 2000 - 1000;
+	      vertex.z = Math.random() * 2000 - 1000;
+	      geometry.vertices.push(vertex);
 	    }
+
+	    for (var i = 0; i < objects.particlesParameters.length; i++) {
+	      var color = objects.particlesParameters[i][0];
+	      var size = objects.particlesParameters[i][1];
+
+	      materials[i] = new _three2.default.PointsMaterial({ size: size });
+	      objects.materials.push(materials[i]);
+	      var particles = new _three2.default.Points(geometry, materials[i]);
+	      particles.rotation.x = Math.random() * 6;
+	      particles.rotation.y = Math.random() * 6;
+	      particles.rotation.z = Math.random() * 6;
+
+	      objects.particles1.push(particles);
+	      scene.add(particles);
+	    }
+
+	    for (var i = 0; i < objectsInfo.count; i++) {
+
+	      var _geometry = new _three2.default.IcosahedronGeometry(objectsInfo.radius);
+
+	      var maxLength = i % 2 === 0 ? 16 : 4;
+	      var tessellateModifier = new _TessellateModifier2.default(maxLength);
+
+	      for (var j = 0; j < 6; j++) {
+	        tessellateModifier.modify(_geometry);
+	      }
+
+	      var explodeModifier = new _ExplodeModifier2.default();
+	      explodeModifier.modify(_geometry);
+
+	      var numFaces = _geometry.faces.length;
+
+	      var newGeometry = new _three2.default.BufferGeometry().fromGeometry(_geometry);
+
+	      // const material = new THREE.MeshPhongMaterial({
+	      //   color: 0xbbbbbb,
+	      //   shading: THREE.FlatShading
+	      // });
+
+	      var colors = new Float32Array(numFaces * 3 * 3);
+	      var displacement = new Float32Array(numFaces * 3 * 3);
+
+	      var color = new _three2.default.Color();
+
+	      for (var f = 0; f < numFaces; f++) {
+	        var index = 9 * f;
+
+	        var h = 0.5 + (i - 1) * .1 * Math.random();
+	        var s = 0;
+	        var l = 0.05 + 0.05 * Math.random();
+
+	        color.setHSL(h, s, l);
+
+	        var d = 10 * (0.5 - Math.random());
+
+	        for (var k = 0; k < 3; k++) {
+	          colors[index + 3 * k] = color.r;
+	          colors[index + 3 * k + 1] = color.g;
+	          colors[index + 3 * k + 2] = color.b;
+
+	          displacement[index + 3 * k] = d;
+	          displacement[index + 3 * k + 1] = d;
+	          displacement[index + 3 * k + 2] = d;
+	        }
+	      }
+
+	      newGeometry.addAttribute('customColor', new _three2.default.BufferAttribute(colors, 3));
+	      newGeometry.addAttribute('displacement', new _three2.default.BufferAttribute(displacement, 3));
+
+	      uniforms.push({
+	        amplitude: { type: "f", value: 0.0 }
+	      });
+
+	      var shaderMaterial = new _three2.default.ShaderMaterial({
+	        shading: _three2.default.FlatShading,
+	        fragmentShader: _fragment2.default,
+	        vertexShader: _vertex2.default,
+	        uniforms: uniforms[i],
+	        side: _three2.default.DoubleSide
+	      });
+
+	      var object = new _three2.default.Mesh(newGeometry, shaderMaterial);
+
+	      object.position.set(0, 0, 0);
+
+	      objects.obj1.push(object);
+	      scene.add(object);
+	    }
+
+	    usefulThings = { controls: controls, camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms };
+
+	    var self = this;
+	    window.addEventListener('resize', function () {
+	      self.onWindowResize(usefulThings);
+	    }, false);
+	    window.addEventListener('mousemove', function () {
+	      self.onMouseMove(usefulThings);
+	    }, false);
+
+	    return usefulThings;
+	  },
+	  onMouseMove: function onMouseMove(usefulThings) {
+	    var mouse = usefulThings.mouse;
+
+	    event.preventDefault();
+	    mouse.x = event.clientX / window.innerWidth * 2 - 1;
+	    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+	  },
+	  onWindowResize: function onWindowResize(usefulThings) {
+	    var camera = usefulThings.camera;
+	    var renderer = usefulThings.renderer;
+
+
+	    camera.aspect = window.innerWidth / window.innerHeight;
+	    camera.updateProjectionMatrix();
+
+	    renderer.setSize(window.innerWidth, window.innerHeight);
+	  },
+	  animate: function animate(usefulThings) {
+	    var self = this;
+
+	    var newThings = this.render(usefulThings);
+
+	    if (document.querySelectorAll('canvas')[0]) {
+	      requestAnimationFrame(function () {
+	        self.animate(newThings);
+	      });
+	    }
+	  },
+	  render: function render(usefulThings) {
+	    var objects = usefulThings.objects;
+	    var camera = usefulThings.camera;
+	    var counters = usefulThings.counters;
+	    var renderer = usefulThings.renderer;
+	    var scene = usefulThings.scene;
+	    var mouse = usefulThings.mouse;
+	    var uniforms = usefulThings.uniforms;
+	    var controls = usefulThings.controls;
+
+
+	    controls.update();
+
+	    var time = Date.now() * 0.001;
+	    var altTime = Date.now() * 0.000025;
+
+	    for (var i = 0; i < objects.obj1.length; i++) {
+	      objects.obj1[i].rotation.x += 0.05;
+	      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
+	    }
+	    for (var i = 0; i < objects.particles1.length; i++) {
+	      var particle = objects.particles1[i];
+	      particle.rotation.x = altTime * (i < 4 ? i + 1 : -(i + 1));
+	    }
+	    for (var i = 0; i < objects.materials.length; i++) {
+	      var material = objects.materials[i];
+	      var color = objects.particlesParameters[i][0];
+
+	      var h = 360 * (color[0] + altTime) % 360 / 360;
+	      material.color.setHSL(h, color[1], color[2]);
+	    }
+
+	    counters.a += 0.02;
+
+	    renderer.render(scene, camera);
+
+	    return { controls: controls, camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms };
+	  }
 	}; // b1.js
 
 	module.exports = b1;
@@ -37637,7 +37648,13 @@
 
 	var _three2 = _interopRequireDefault(_three);
 
+	var _OrbitControls = __webpack_require__(15);
+
+	var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// b3.js
 
 	var b3 = {
 	  animate: function animate(usefulThings) {
@@ -37732,10 +37749,16 @@
 	    var camera = undefined;
 
 	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
-	    camera.position.set(0, 0, 800);
+	    camera.position.set(0, 0, 125);
 	    camera.lookAt(0, 0, 0);
 
 	    return camera;
+	  },
+	  prepControls: function prepControls(camera, renderer) {
+	    var controls = new _OrbitControls2.default(camera, renderer.domElement);
+	    controls.enableZoom = false;
+	    controls.rotateSpeed = 1;
+	    return controls;
 	  },
 	  prepScene: function prepScene() {
 	    var scene = new _three2.default.Scene();
@@ -37757,8 +37780,8 @@
 	        shading: _three2.default.SmoothShading
 	      }));
 
-	      var pos = [Math.random() * 200 - 300, Math.random() * 100 - 150, Math.random() * 200 + 575];
-	      var xRate = (1 - (pos[2] - 675) * 0.01) * Math.random() * 2 * 0.4;
+	      var pos = [Math.random() * 200 - 300, Math.random() * 100 - 150, Math.random() * 200 - 125];
+	      var xRate = (1 - (pos[2] - 100) * 0.01) * Math.random() * 2 * 0.4;
 
 	      sphere.position.set(pos[0], pos[1], pos[2]);
 
@@ -37775,6 +37798,7 @@
 	    return spheres;
 	  },
 	  render: function render(usefulThings) {
+	    var controls = usefulThings.controls;
 	    var objects = usefulThings.objects;
 	    var camera = usefulThings.camera;
 	    var counters = usefulThings.counters;
@@ -37786,6 +37810,7 @@
 
 
 	    scene.updateMatrixWorld();
+	    controls.update();
 
 	    counters.a += 0.02;
 
@@ -37805,7 +37830,7 @@
 
 	    renderer.render(scene, camera);
 
-	    return { camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj };
+	    return { controls: controls, camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj };
 	  },
 	  setup: function setup(container, renderer) {
 	    console.log('initialized b3!');
@@ -37825,6 +37850,7 @@
 	    var scene = this.prepScene();
 	    var camera = this.prepCamera();
 	    renderer = this.prepRenderer(container, renderer);
+	    var controls = this.prepControls(camera, renderer);
 
 	    lightsObj.lights = [];
 
@@ -37832,12 +37858,12 @@
 	    raycasterObj.intersection = false;
 
 	    var lightOne = new _three2.default.PointLight(0xffffff, 1, 2000);
-	    lightOne.position.set(0, 0, 600);
+	    lightOne.position.set(0, 0, -75);
 	    lightsObj.lights.push(lightOne);
 	    scene.add(lightOne);
 
 	    var lightTwo = new _three2.default.PointLight(0xffffff, 1, 2000);
-	    lightTwo.position.set(-100, -100, 900);
+	    lightTwo.position.set(-100, -100, 225);
 	    lightsObj.lights.push(lightTwo);
 	    scene.add(lightTwo);
 
@@ -37849,7 +37875,7 @@
 	    var bigSphere = new _three2.default.Mesh(bigSphereGeom, material);
 	    bigSphere.geometry.verticesNeedUpdate = true;
 	    bigSphere.geometry.dynamic = true;
-	    bigSphere.position.set(0, 0, 675);
+	    bigSphere.position.set(0, 0, 0);
 	    scene.add(bigSphere);
 	    objects.bigSphere = bigSphere;
 	    objects.bigSphereMotion = [function (i) {
@@ -37861,6 +37887,7 @@
 	    objects.smallSpheres = this.prepSmallSpheres(objectsInfo.bubbles, scene);
 
 	    usefulThings = {
+	      controls: controls,
 	      camera: camera,
 	      scene: scene,
 	      renderer: renderer,
@@ -37880,7 +37907,7 @@
 
 	    return usefulThings;
 	  }
-	}; // b3.js
+	};
 
 	module.exports = b3;
 

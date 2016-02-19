@@ -19,10 +19,34 @@ const b1 = {
     controls.rotateSpeed = 1;
     return controls;
   },
+  prepCamera: function () {
+    const camera = new THREE.PerspectiveCamera(
+      70,
+      window.innerWidth / window.innerHeight,
+      1,
+      400
+    );
+    camera.position.set(0, 0, 50);
+    camera.lookAt(0,0,0);
+
+    return camera;
+  },
+  prepRenderer: function(container, renderer) {
+    renderer.setClearColor(0x222222);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+
+    return renderer;
+  },
+  prepScene: function () {
+    const scene = new THREE.Scene();
+
+    return scene;
+  },
   setup: function (container, renderer) {
     console.log('initialized b1!');
 
-    let camera, scene;
     let mouse = new THREE.Vector2();
     let objects = new Object;
     let usefulThings = new Object;
@@ -33,21 +57,9 @@ const b1 = {
     const counters = new Object;
     counters.a = 0;
 
-    camera = new THREE.PerspectiveCamera(
-      70,
-      window.innerWidth / window.innerHeight,
-      1,
-      400
-    );
-    camera.position.set(0, 0, 50);
-    camera.lookAt(0,0,0);
-
-    scene = new THREE.Scene();
-
-    renderer.setClearColor(0x222222);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    container.appendChild(renderer.domElement);
+    const camera = this.prepCamera();
+    const scene = this.prepScene();
+    renderer = this.prepRenderer(container, renderer);
 
     const controls = this.prepControls(camera, renderer);
 

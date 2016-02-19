@@ -1,6 +1,7 @@
 // b3.js
 
 import THREE from 'three';
+import OrbitControls from './vendor/OrbitControls.js';
 
 const b3 = {
   animate: function(usefulThings) {
@@ -92,10 +93,16 @@ const b3 = {
       1,
       400
     );
-    camera.position.set(0, 0, 800);
+    camera.position.set(0, 0, 125);
     camera.lookAt(0,0,0);
 
     return camera;
+  },
+  prepControls: function(camera, renderer) {
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableZoom = false;
+    controls.rotateSpeed = 1;
+    return controls;
   },
   prepScene: function() {
     let scene = new THREE.Scene();
@@ -123,9 +130,9 @@ const b3 = {
       const pos = [
         (Math.random() * 200) - 300,
         (Math.random() * 100) - 150,
-        Math.random() * 200 + 575
+        Math.random() * 200 - 125
       ];
-      const xRate = (((1 - ((pos[2] - 675) * 0.01)) * Math.random() * 2) * 0.4);
+      const xRate = (((1 - ((pos[2] - 100) * 0.01)) * Math.random() * 2) * 0.4);
 
       sphere.position.set(
         pos[0],
@@ -147,6 +154,7 @@ const b3 = {
   },
   render: function(usefulThings) {
     let {
+      controls,
       objects,
       camera,
       counters,
@@ -158,6 +166,7 @@ const b3 = {
     } = usefulThings;
 
     scene.updateMatrixWorld();
+    controls.update();
 
     counters.a += 0.02;
 
@@ -182,7 +191,7 @@ const b3 = {
 
     renderer.render(scene, camera);
 
-    return {camera, scene, renderer, mouse, objects, counters, lightsObj, raycasterObj};
+    return {controls, camera, scene, renderer, mouse, objects, counters, lightsObj, raycasterObj};
   },
   setup: function (container, renderer) {
     console.log('initialized b3!');
@@ -202,6 +211,7 @@ const b3 = {
     const scene = this.prepScene();
     const camera = this.prepCamera();
     renderer = this.prepRenderer(container, renderer);
+    const controls = this.prepControls(camera, renderer);
 
     lightsObj.lights = [];
 
@@ -209,12 +219,12 @@ const b3 = {
     raycasterObj.intersection = false;
 
     const lightOne = new THREE.PointLight(0xffffff, 1, 2000);
-    lightOne.position.set(0, 0, 600);
+    lightOne.position.set(0, 0, -75);
     lightsObj.lights.push(lightOne);
     scene.add(lightOne);
 
     const lightTwo = new THREE.PointLight(0xffffff, 1, 2000);
-    lightTwo.position.set(-100,-100,900);
+    lightTwo.position.set(-100,-100,225);
     lightsObj.lights.push(lightTwo);
     scene.add(lightTwo);
 
@@ -226,7 +236,7 @@ const b3 = {
     const bigSphere = new THREE.Mesh(bigSphereGeom, material);
     bigSphere.geometry.verticesNeedUpdate = true;
     bigSphere.geometry.dynamic = true;
-    bigSphere.position.set(0,0,675);
+    bigSphere.position.set(0,0,0);
     scene.add(bigSphere);
     objects.bigSphere = bigSphere;
     objects.bigSphereMotion = [
@@ -237,6 +247,7 @@ const b3 = {
     objects.smallSpheres = this.prepSmallSpheres(objectsInfo.bubbles, scene);
 
     usefulThings = {
+      controls,
       camera,
       scene,
       renderer,
