@@ -39,7 +39,7 @@ const b3 = {
       this.mouseToggle(raycasterObj);
     }
   },
-  init: function (container, renderer) {
+  init: function ({container, renderer}) {
     let usefulThings = this.setup(container, renderer);
     this.animate(usefulThings);
   },
@@ -70,19 +70,34 @@ const b3 = {
       }
     }
   },
-  onMouseMove: function(usefulThings) {
-    const { mouse } = usefulThings;
+  onMouseMove: function(mouse) {
     event.preventDefault();
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   },
-  onWindowResize: function(usefulThings) {
-    let { camera, renderer } = usefulThings;
-
+  onWindowResize: function({camera, renderer}) {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
+  },
+  prepBigSphere: function({scene, counters}) {
+    const bigSphereGeom = new THREE.SphereGeometry(50, 32, 32);
+    const material = new THREE.MeshPhongMaterial({
+      color: 0x333333,
+      shading: THREE.SmoothShading
+    });
+    const bigSphere = new THREE.Mesh(bigSphereGeom, material);
+    bigSphere.geometry.verticesNeedUpdate = true;
+    bigSphere.geometry.dynamic = true;
+    bigSphere.position.set(0,0,0);
+    bigSphere.motion = [
+      function(i) { return (Math.cos((counters.a * 4) - i) * 0.2) },
+      function(i) { return (-(Math.cos((counters.a * 4) + i) * 0.2)) }
+    ];
+    scene.add(bigSphere);
+
+    return bigSphere;
   },
   prepCamera: function() {
     let camera;
@@ -98,17 +113,28 @@ const b3 = {
 
     return camera;
   },
-  prepControls: function(camera, renderer) {
+  prepControls: function({camera, renderer}) {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableZoom = false;
     controls.rotateSpeed = 1;
     return controls;
   },
+  prepLights: function(scene) {
+    const lightOne = new THREE.PointLight(0xffffff, 1, 2000);
+    lightOne.position.set(0, 0, -75);
+    scene.add(lightOne);
+
+    const lightTwo = new THREE.PointLight(0xffffff, 1, 2000);
+    lightTwo.position.set(-100,-100,225);
+    scene.add(lightTwo);
+
+    return [lightOne, lightTwo];
+  },
   prepScene: function() {
     let scene = new THREE.Scene();
     return scene;
   },
-  prepRenderer: function (container, renderer) {
+  prepRenderer: function ({container, renderer}) {
     renderer.setClearColor(0x222222);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -116,7 +142,7 @@ const b3 = {
 
     return renderer;
   },
-  prepSmallSpheres: function(info, scene) {
+  prepSmallSpheres: function({info, scene}) {
     let spheres = [];
     for (let i = 0; i < info.count; i++) {
       const sphere = new THREE.Mesh(
@@ -152,6 +178,20 @@ const b3 = {
     }
     return spheres;
   },
+  pulsateBigSphere: function(bigSphere) {
+    for (let i = 0; i < bigSphere.geometry.vertices.length; i++) {
+      let vertex = bigSphere.geometry.vertices[i];
+
+      vertex.set(
+        vertex.x += bigSphere.motion[0](i),
+        vertex.y += bigSphere.motion[0](i),
+        vertex.z += bigSphere.motion[0](i)
+      );
+    }
+
+    bigSphere.geometry.verticesNeedUpdate = true;
+    bigSphere.geometry.dynamic = true;
+  },
   render: function(usefulThings) {
     let {
       controls,
@@ -170,24 +210,9 @@ const b3 = {
 
     counters.a += 0.02;
 
-
     this.handleIntersection({raycasterObj, objects, mouse, camera, scene});
     this.moveSmallSpheres(objects.smallSpheres);
-
-    for (let i = 0; i < objects.bigSphere.geometry.vertices.length; i++) {
-      let vertex = objects.bigSphere.geometry.vertices[i];
-
-      vertex.set(
-        vertex.x += objects.bigSphereMotion[0](i),
-        vertex.y += objects.bigSphereMotion[0](i),
-        vertex.z += objects.bigSphereMotion[0](i)
-      );
-    }
-
-    objects.bigSphere.geometry.verticesNeedUpdate = true;
-    objects.bigSphere.geometry.dynamic = true;
-
-    // objects.bigSphere.rotation.x += 0.02;
+    this.pulsateBigSphere(objects.bigSphere);
 
     renderer.render(scene, camera);
 
@@ -210,41 +235,18 @@ const b3 = {
 
     const scene = this.prepScene();
     const camera = this.prepCamera();
-    renderer = this.prepRenderer(container, renderer);
-    const controls = this.prepControls(camera, renderer);
+    renderer = this.prepRenderer({container, renderer});
+    const controls = this.prepControls({camera, renderer});
 
-    lightsObj.lights = [];
 
     raycasterObj.raycaster = new THREE.Raycaster();
     raycasterObj.intersection = false;
 
-    const lightOne = new THREE.PointLight(0xffffff, 1, 2000);
-    lightOne.position.set(0, 0, -75);
-    lightsObj.lights.push(lightOne);
-    scene.add(lightOne);
+    lightsObj.lights = this.prepLights(scene);
+    objects.bigSphere = this.prepBigSphere({scene, counters});
 
-    const lightTwo = new THREE.PointLight(0xffffff, 1, 2000);
-    lightTwo.position.set(-100,-100,225);
-    lightsObj.lights.push(lightTwo);
-    scene.add(lightTwo);
-
-    const bigSphereGeom = new THREE.SphereGeometry(50, 32, 32);
-    const material = new THREE.MeshPhongMaterial({
-      color: 0x333333,
-      shading: THREE.SmoothShading
-    });
-    const bigSphere = new THREE.Mesh(bigSphereGeom, material);
-    bigSphere.geometry.verticesNeedUpdate = true;
-    bigSphere.geometry.dynamic = true;
-    bigSphere.position.set(0,0,0);
-    scene.add(bigSphere);
-    objects.bigSphere = bigSphere;
-    objects.bigSphereMotion = [
-      function(i) { return (Math.cos((counters.a * 4) - i) * 0.2) },
-      function(i) { return (-(Math.cos((counters.a * 4) + i) * 0.2)) }
-    ];
-
-    objects.smallSpheres = this.prepSmallSpheres(objectsInfo.bubbles, scene);
+    let bubbles = objectsInfo.bubbles;
+    objects.smallSpheres = this.prepSmallSpheres({info: bubbles, scene});
 
     usefulThings = {
       controls,
@@ -260,12 +262,12 @@ const b3 = {
 
     window.addEventListener(
       'resize',
-      function() {self.onWindowResize(usefulThings)},
+      function() {self.onWindowResize({camera, renderer})},
       false
     );
     window.addEventListener(
       'mousemove',
-      function() {self.onMouseMove(usefulThings)},
+      function() {self.onMouseMove(mouse)},
       false
     );
 

@@ -64,7 +64,7 @@ function hasClass(el, className) {
       // move css
       const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
       toggleClass(divFullscreen, "active");
-      demosCode['b' + (num + 1).toString()].init(divFullscreen, renderer);
+      demosCode['b' + (num + 1).toString()].init({container: divFullscreen, renderer});
     })
     previewContainer.appendChild(preview);
     previewContainer.appendChild(prevOverlay);
@@ -93,6 +93,7 @@ window.addEventListener('keydown', function (e) {
 
 function closeDemo(demo) {
   toggleClass(demo, "active");
+  document.body.style.cursor = "initial";
   setTimeout(function () {
     demo.removeChild(document.querySelectorAll('canvas')[0]);
   }, 100);

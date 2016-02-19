@@ -9,11 +9,11 @@ import FresnelShader from './vendor/shaders/FresnelShader.js';
 import OrbitControls from './vendor/OrbitControls.js';
 
 const b1 = {
-  init: function (container, renderer) {
-    let usefulThings = this.setup(container, renderer);
+  init: function ({container, renderer}) {
+    let usefulThings = this.setup({container, renderer});
     this.animate(usefulThings);
   },
-  prepControls: function(camera, renderer) {
+  prepControls: function({camera, renderer}) {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableZoom = false;
     controls.rotateSpeed = 1;
@@ -31,7 +31,7 @@ const b1 = {
 
     return camera;
   },
-  prepRenderer: function(container, renderer) {
+  prepRenderer: function({container, renderer}) {
     renderer.setClearColor(0x222222);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -44,7 +44,7 @@ const b1 = {
 
     return scene;
   },
-  setup: function (container, renderer) {
+  setup: function ({container, renderer}) {
     console.log('initialized b1!');
 
     let mouse = new THREE.Vector2();
@@ -59,9 +59,9 @@ const b1 = {
 
     const camera = this.prepCamera();
     const scene = this.prepScene();
-    renderer = this.prepRenderer(container, renderer);
+    renderer = this.prepRenderer({container, renderer});
 
-    const controls = this.prepControls(camera, renderer);
+    const controls = this.prepControls({camera, renderer});
 
     const light = new THREE.PointLight(0xffffff, 1, 2000);
 
@@ -196,26 +196,23 @@ const b1 = {
     let self = this;
     window.addEventListener(
       'resize',
-      function() {self.onWindowResize(usefulThings)},
+      function() {self.onWindowResize({camera, renderer})},
       false
     );
     window.addEventListener(
       'mousemove',
-      function() {self.onMouseMove(usefulThings)},
+      function() {self.onMouseMove(mouse)},
       false
     );
 
     return usefulThings;
   },
-  onMouseMove: function(usefulThings) {
-    const { mouse } = usefulThings;
+  onMouseMove: function(mouse) {
     event.preventDefault();
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   },
-  onWindowResize: function(usefulThings) {
-    let { camera, renderer } = usefulThings;
-
+  onWindowResize: function({camera, renderer}) {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
