@@ -145,6 +145,45 @@ const b3 = {
     }
     return spheres;
   },
+  render: function(usefulThings) {
+    let {
+      objects,
+      camera,
+      counters,
+      renderer,
+      scene,
+      mouse,
+      lightsObj,
+      raycasterObj
+    } = usefulThings;
+
+    scene.updateMatrixWorld();
+
+    counters.a += 0.02;
+
+
+    this.handleIntersection({raycasterObj, objects, mouse, camera, scene});
+    this.moveSmallSpheres(objects.smallSpheres);
+
+    for (let i = 0; i < objects.bigSphere.geometry.vertices.length; i++) {
+      let vertex = objects.bigSphere.geometry.vertices[i];
+
+      vertex.set(
+        vertex.x += objects.bigSphereMotion[0](i),
+        vertex.y += objects.bigSphereMotion[0](i),
+        vertex.z += objects.bigSphereMotion[0](i)
+      );
+    }
+
+    objects.bigSphere.geometry.verticesNeedUpdate = true;
+    objects.bigSphere.geometry.dynamic = true;
+
+    // objects.bigSphere.rotation.x += 0.02;
+
+    renderer.render(scene, camera);
+
+    return {camera, scene, renderer, mouse, objects, counters, lightsObj, raycasterObj};
+  },
   setup: function (container, renderer) {
     console.log('initialized b3!');
 
@@ -220,45 +259,6 @@ const b3 = {
     );
 
     return usefulThings;
-  },
-  render: function(usefulThings) {
-    let {
-      objects,
-      camera,
-      counters,
-      renderer,
-      scene,
-      mouse,
-      lightsObj,
-      raycasterObj
-    } = usefulThings;
-
-    scene.updateMatrixWorld();
-
-    counters.a += 0.02;
-
-
-    this.handleIntersection({raycasterObj, objects, mouse, camera, scene});
-    this.moveSmallSpheres(objects.smallSpheres);
-
-    for (let i = 0; i < objects.bigSphere.geometry.vertices.length; i++) {
-      let vertex = objects.bigSphere.geometry.vertices[i];
-
-      vertex.set(
-        vertex.x += objects.bigSphereMotion[0](i),
-        vertex.y += objects.bigSphereMotion[0](i),
-        vertex.z += objects.bigSphereMotion[0](i)
-      );
-    }
-
-    objects.bigSphere.geometry.verticesNeedUpdate = true;
-    objects.bigSphere.geometry.dynamic = true;
-
-    // objects.bigSphere.rotation.x += 0.02;
-
-    renderer.render(scene, camera);
-
-    return {camera, scene, renderer, mouse, objects, counters, lightsObj, raycasterObj};
   }
 };
 

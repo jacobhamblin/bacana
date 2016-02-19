@@ -6,11 +6,18 @@ import ExplodeModifier from './vendor/ExplodeModifier.js';
 import FragmentShader from './vendor/shaders/fragment.txt';
 import VertexShader from './vendor/shaders/vertex.txt';
 import FresnelShader from './vendor/shaders/FresnelShader.js';
+import OrbitControls from './vendor/OrbitControls.js';
 
 const b1 = {
   init: function (container, renderer) {
     let usefulThings = this.setup(container, renderer);
     this.animate(usefulThings);
+  },
+  prepControls: function(camera, renderer) {
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableZoom = false;
+    controls.rotateSpeed = 1;
+    return controls;
   },
   setup: function (container, renderer) {
     console.log('initialized b1!');
@@ -32,7 +39,7 @@ const b1 = {
       1,
       400
     );
-    camera.position.set(0, 0, 800);
+    camera.position.set(0, 0, 50);
     camera.lookAt(0,0,0);
 
     scene = new THREE.Scene();
@@ -41,6 +48,8 @@ const b1 = {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
+
+    const controls = this.prepControls(camera, renderer);
 
     const light = new THREE.PointLight(0xffffff, 1, 2000);
 
@@ -162,7 +171,7 @@ const b1 = {
       object.position.set(
         0,
         0,
-        750
+        0
       );
 
       objects.obj1.push(object);
@@ -170,7 +179,7 @@ const b1 = {
     }
 
 
-    usefulThings = {camera, scene, renderer, mouse, objects, counters, uniforms};
+    usefulThings = {controls, camera, scene, renderer, mouse, objects, counters, uniforms};
 
     let self = this;
     window.addEventListener(
@@ -217,9 +226,11 @@ const b1 = {
       renderer,
       scene,
       mouse,
-      uniforms
+      uniforms,
+      controls
     } = usefulThings;
 
+    controls.update();
 
     let time = Date.now() * 0.001;
     let altTime = Date.now() * 0.000025;
@@ -244,7 +255,7 @@ const b1 = {
 
     renderer.render(scene, camera);
 
-    return {camera, scene, renderer, mouse, objects, counters, uniforms};
+    return {controls, camera, scene, renderer, mouse, objects, counters, uniforms};
   }
 };
 
