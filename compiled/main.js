@@ -264,7 +264,6 @@
 	    var renderer = _ref2.renderer;
 
 	    var controls = new _OrbitControls2.default(camera, renderer.domElement);
-	    controls.enableZoom = false;
 	    controls.rotateSpeed = 1;
 	    return controls;
 	  },
