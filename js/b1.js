@@ -89,11 +89,11 @@ const b1 = {
       let color = objects.particlesParameters[i][0];
       let size  = objects.particlesParameters[i][1];
 
-      materials[i] = new THREE.PointsMaterial( { size: size } );
+      materials[i] = new THREE.PointsMaterial({ size: size });
       const particles = new THREE.Points( geometry, materials[i] );
-      particles.rotation.x = Math.random() * 6;
-      particles.rotation.y = Math.random() * 6;
-      particles.rotation.z = Math.random() * 6;
+      particles.rotation.x = Math.random() * 30;
+      particles.rotation.y = Math.random() * 30;
+      particles.rotation.z = Math.random() * 30;
 
       particlesArr.push(particles);
       scene.add( particles );
@@ -144,11 +144,11 @@ const b1 = {
     objects.obj1 = [];
 
     objects.particlesParameters = [
-      [ [1, 1, 0.5], 1.25 ],
-      [ [0.95, 1, 0.5], 1 ],
-      [ [0.90, 1, 0.5], 0.75 ],
-      [ [0.85, 1, 0.5], 0.5 ],
-      [ [0.80, 1, 0.5], 0.25 ]
+      [ [0.80, 1, 0.5], 1.25 ],
+      [ [0.75, 1, 0.5], 1 ],
+      [ [0.70, 1, 0.5], 0.75 ],
+      [ [0.65, 1, 0.5], 0.5 ],
+      [ [0.60, 1, 0.5], 0.25 ]
     ];
 
     let particleParams = objects.particlesParameters;

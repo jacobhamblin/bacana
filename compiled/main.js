@@ -353,9 +353,9 @@
 
 	      materials[i] = new _three2.default.PointsMaterial({ size: size });
 	      var particles = new _three2.default.Points(geometry, materials[i]);
-	      particles.rotation.x = Math.random() * 6;
-	      particles.rotation.y = Math.random() * 6;
-	      particles.rotation.z = Math.random() * 6;
+	      particles.rotation.x = Math.random() * 30;
+	      particles.rotation.y = Math.random() * 30;
+	      particles.rotation.z = Math.random() * 30;
 
 	      particlesArr.push(particles);
 	      scene.add(particles);
@@ -411,7 +411,7 @@
 
 	    objects.obj1 = [];
 
-	    objects.particlesParameters = [[[1, 1, 0.5], 1.25], [[0.95, 1, 0.5], 1], [[0.90, 1, 0.5], 0.75], [[0.85, 1, 0.5], 0.5], [[0.80, 1, 0.5], 0.25]];
+	    objects.particlesParameters = [[[0.80, 1, 0.5], 1.25], [[0.75, 1, 0.5], 1], [[0.70, 1, 0.5], 0.75], [[0.65, 1, 0.5], 0.5], [[0.60, 1, 0.5], 0.25]];
 
 	    var particleParams = objects.particlesParameters;
 	    var particlesObject = this.prepParticles({ scene: scene, objects: objects });
@@ -38882,6 +38882,7 @@
 	    }, function (i) {
 	      return -(Math.cos(counters.a * 4 + i) * 0.2);
 	    }];
+	    bigSphere.rotation.y += 0.5;
 	    scene.add(bigSphere);
 
 	    return bigSphere;

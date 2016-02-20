@@ -93,6 +93,7 @@ const b3 = {
       function(i) { return (Math.cos((counters.a * 4) - i) * 0.2) },
       function(i) { return (-(Math.cos((counters.a * 4) + i) * 0.2)) }
     ];
+    bigSphere.rotation.y += 0.5;
     scene.add(bigSphere);
 
     return bigSphere;
