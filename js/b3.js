@@ -156,7 +156,7 @@ const b3 = {
       const pos = [
         (Math.random() * 200) - 300,
         (Math.random() * 100) - 150,
-        Math.random() * 200 - 125
+        Math.random() * 200 - 100
       ];
       const xRate = (((1 - ((pos[2] - 100) * 0.01)) * Math.random() * 2) * 0.4);
 

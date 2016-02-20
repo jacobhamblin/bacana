@@ -38943,7 +38943,7 @@
 	        shading: _three2.default.SmoothShading
 	      }));
 
-	      var pos = [Math.random() * 200 - 300, Math.random() * 100 - 150, Math.random() * 200 - 125];
+	      var pos = [Math.random() * 200 - 300, Math.random() * 100 - 150, Math.random() * 200 - 100];
 	      var xRate = (1 - (pos[2] - 100) * 0.01) * Math.random() * 2 * 0.4;
 
 	      sphere.position.set(pos[0], pos[1], pos[2]);
