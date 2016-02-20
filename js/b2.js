@@ -27,7 +27,7 @@ const b2 = {
     // render method calls switchActiveCrystal when seven frames have passed
   },
   handleRaycasterIntersection: function(usefulThings) {
-    let {raycasterObj, mouse, camera, scene} = usefulThings;
+    let {raycasterObj, mouse, camera, scene, objects, counters} = usefulThings;
 
     raycasterObj.raycaster.setFromCamera(mouse, camera);
     let intersects = raycasterObj.raycaster.intersectObjects(scene.children);
@@ -107,6 +107,7 @@ const b2 = {
     return camera;
   },
   prepCrystals: function({objects, scene}) {
+    const self = this;
 
     const manager = new THREE.LoadingManager();
     manager.onProgress = function ( item, loaded, total ) {
@@ -229,7 +230,7 @@ const b2 = {
     } = usefulThings;
     let self = this;
 
-    this.shakeOrSwapCrystal(objects);
+    this.shakeOrSwapCrystal({objects, counters, scene, lightsObj});
 
     counters.floatingCrystalPos += (Math.cos(counters.cosY) * 0.2);
     counters.cosY += 0.02;
@@ -298,7 +299,7 @@ const b2 = {
 
     return usefulThings;
   },
-  shakeOrSwapCrystal: function(objects) {
+  shakeOrSwapCrystal: function({lightsObj, objects, counters, scene}) {
     if (typeof objects.activeCrystal === typeof 1) {
       objects.crystals[objects.activeCrystal].rotation.y += 0.05;
       objects.crystals[objects.activeCrystal].position.y = counters.floatingCrystalPos;
@@ -311,12 +312,11 @@ const b2 = {
         objects.crystals[objects.activeCrystal]
           .position.y += (Math.random() * 10) - 5;
       } else if (counters.frame === (counters.clicked + 8)) {
-        self.switchActiveCrystal(usefulThings);
+        this.switchActiveCrystal({lightsObj, scene, objects});
       }
     }
   },
-  switchActiveCrystal: function(usefulThings) {
-    let { lightsObj, scene, objects } = usefulThings;
+  switchActiveCrystal: function({lightsObj, scene, objects}) {
     let self = this;
 
     objects.crystals[objects.activeCrystal].position.x = 0;
