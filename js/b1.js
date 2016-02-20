@@ -9,6 +9,47 @@ import FresnelShader from './vendor/shaders/FresnelShader.js';
 import OrbitControls from './vendor/OrbitControls.js';
 
 const b1 = {
+  changeParticleColors: function({objects, raycasterObj, counters, altTime}) {
+    for (let i = 0; i < objects.materials.length; i++) {
+      let material = objects.materials[i];
+
+      let params = objects.particlesParameters;
+      let grayscale = [params[i][0][0], 0, params[i][0][2]];
+      let timePassed = ((Date.now() * 0.001) - counters.lastHovered) - (i * 0.4);
+      timePassed > 2 ? timePassed = 2 : null;
+      timePassed < 0 ? timePassed = 0 : null;
+      let modifier = timePassed / 2;
+
+      let coloring = [
+        params[i][0][0],
+        modifier * params[i][0][1],
+        params[i][0][2]
+      ];
+      let color = ( raycasterObj.intersection ? coloring : grayscale);
+
+      let h = ( 360 * ( color[0] + altTime ) % 360 ) / 360;
+			material.color.setHSL( h, color[1], color[2] );
+    }
+  },
+  handleIntersection: function(object) {
+    let {raycasterObj, objects, scene, mouse, camera, counters, altTime} = object;
+
+    raycasterObj.raycaster.setFromCamera(mouse, camera);
+    let intersects = raycasterObj.raycaster.intersectObjects(scene.children);
+
+    let tempIntersection;
+    tempIntersection = (intersects[0] && intersects[0].object === objects.obj1[0]) ? true : false;
+
+    if (raycasterObj.intersection !== tempIntersection) {
+      raycasterObj.intersection = tempIntersection;
+      if (tempIntersection) {
+        document.body.style.cursor = "pointer";
+        counters.lastHovered = (Date.now() * 0.001);
+      } else {
+        document.body.style.cursor = "initial";
+      }
+    }
+  },
   init: function ({container, renderer}) {
     let usefulThings = this.setup({container, renderer});
     this.animate(usefulThings);
@@ -31,6 +72,35 @@ const b1 = {
 
     return camera;
   },
+  prepParticles: function({scene, objects}) {
+    const geometry = new THREE.Geometry();
+
+    for ( let i = 0; i < 10000; i++ ) {
+      let vertex = new THREE.Vector3();
+      vertex.x = Math.random() * 1500 - 750;
+      vertex.y = Math.random() * 1500 - 750;
+      vertex.z = Math.random() * 1500 - 750;
+      geometry.vertices.push(vertex);
+    }
+
+    let particlesArr = [], materials = [];
+
+    for ( let i = 0; i < objects.particlesParameters.length; i++ ) {
+      let color = objects.particlesParameters[i][0];
+      let size  = objects.particlesParameters[i][1];
+
+      materials[i] = new THREE.PointsMaterial( { size: size } );
+      const particles = new THREE.Points( geometry, materials[i] );
+      particles.rotation.x = Math.random() * 6;
+      particles.rotation.y = Math.random() * 6;
+      particles.rotation.z = Math.random() * 6;
+
+      particlesArr.push(particles);
+      scene.add( particles );
+
+    }
+    return {particles: particlesArr, materials};
+  },
   prepRenderer: function({container, renderer}) {
     renderer.setClearColor(0x222222);
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -49,10 +119,9 @@ const b1 = {
 
     let mouse = new THREE.Vector2();
     let objects = new Object;
-    let usefulThings = new Object;
+    let usefulThings = new Object, raycasterObj = new Object;
     let uniforms = [];
     let parameters = [];
-    let materials = [];
     let objectsInfo = {count: 1, radius: 15};
     const counters = new Object;
     counters.a = 0;
@@ -60,6 +129,9 @@ const b1 = {
     const camera = this.prepCamera();
     const scene = this.prepScene();
     renderer = this.prepRenderer({container, renderer});
+
+    raycasterObj.raycaster = new THREE.Raycaster();
+    raycasterObj.intersection = false;
 
     const controls = this.prepControls({camera, renderer});
 
@@ -70,8 +142,6 @@ const b1 = {
     scene.add(light);
 
     objects.obj1 = [];
-    objects.particles1 = [];
-    objects.materials = [];
 
     objects.particlesParameters = [
       [ [1, 1, 0.5], 1.25 ],
@@ -81,30 +151,10 @@ const b1 = {
       [ [0.80, 1, 0.5], 0.25 ]
     ];
 
-    const geometry = new THREE.Geometry();
-
-		for ( let i = 0; i < 20000; i ++ ) {
-			let vertex = new THREE.Vector3();
-			vertex.x = Math.random() * 2000 - 1000;
-			vertex.y = Math.random() * 2000 - 1000;
-			vertex.z = Math.random() * 2000 - 1000;
-			geometry.vertices.push( vertex );
-		}
-
-    for ( let i = 0; i < objects.particlesParameters.length; i ++ ) {
-      let color = objects.particlesParameters[i][0];
-      let size  = objects.particlesParameters[i][1];
-
-      materials[i] = new THREE.PointsMaterial( { size: size } );
-      objects.materials.push(materials[i]);
-      const particles = new THREE.Points( geometry, materials[i] );
-      particles.rotation.x = Math.random() * 6;
-      particles.rotation.y = Math.random() * 6;
-      particles.rotation.z = Math.random() * 6;
-
-      objects.particles1.push(particles);
-      scene.add( particles );
-    }
+    let particleParams = objects.particlesParameters;
+    let particlesObject = this.prepParticles({scene, objects});
+    objects.particles1 = particlesObject.particles;
+    objects.materials = particlesObject.materials;
 
     for (let i = 0; i < objectsInfo.count; i++) {
 
@@ -116,7 +166,6 @@ const b1 = {
       for (let j = 0; j < 6; j++) {
         tessellateModifier.modify(geometry);
       }
-
 
       const explodeModifier = new ExplodeModifier();
       explodeModifier.modify(geometry);
@@ -190,8 +239,7 @@ const b1 = {
       scene.add(object);
     }
 
-
-    usefulThings = {controls, camera, scene, renderer, mouse, objects, counters, uniforms};
+    usefulThings = {controls, camera, scene, renderer, mouse, objects, counters, uniforms, raycasterObj};
 
     let self = this;
     window.addEventListener(
@@ -236,7 +284,8 @@ const b1 = {
       scene,
       mouse,
       uniforms,
-      controls
+      controls,
+      raycasterObj
     } = usefulThings;
 
     controls.update();
@@ -244,27 +293,24 @@ const b1 = {
     let time = Date.now() * 0.001;
     let altTime = Date.now() * 0.000025;
 
+    this.handleIntersection({raycasterObj, objects, scene, mouse, camera, counters, altTime});
+
     for (let i = 0; i < objects.obj1.length; i++) {
       objects.obj1[i].rotation.x += 0.05;
       uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
     }
     for (let i = 0; i < objects.particles1.length; i++) {
       let particle = objects.particles1[i];
-      particle.rotation.x = altTime * (i < 4 ? i+1 : -(i + 1))
+      particle.rotation.x = altTime * (i < 4 ? i + 1 : -(i + 1))
     }
-    for (let i = 0; i < objects.materials.length; i++) {
-      let material = objects.materials[i];
-      let color = objects.particlesParameters[i][0];
 
-      let h = ( 360 * ( color[0] + altTime ) % 360 ) / 360;
-			material.color.setHSL( h, color[1], color[2] );
-    }
+    this.changeParticleColors({objects, raycasterObj, counters, altTime});
 
     counters.a += 0.02;
 
     renderer.render(scene, camera);
 
-    return {controls, camera, scene, renderer, mouse, objects, counters, uniforms};
+    return {controls, camera, scene, renderer, mouse, objects, counters, uniforms, raycasterObj};
   }
 };
 

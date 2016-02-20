@@ -22,9 +22,7 @@ const b3 = {
     });
     mesh.material = material;
   },
-  handleIntersection: function(object) {
-    let {raycasterObj, objects, scene, mouse, camera} = object;
-
+  handleIntersection: function({raycasterObj, objects, scene, mouse, camera}) {
     raycasterObj.raycaster.setFromCamera(mouse, camera);
     let intersects = raycasterObj.raycaster.intersectObjects(scene.children);
 
