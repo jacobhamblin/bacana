@@ -1,3 +1,27 @@
+@font-face {
+  font-family: "Helvetica Neue";
+  font-weight: 300;
+  font-style: normal;
+  src: url(compiled/ca6317c5440e1dc88a2fcee44595bef2.woff) format("woff"); }
+
+@font-face {
+  font-family: "Helvetica Neue";
+  font-weight: 200;
+  font-style: normal;
+  src: url(compiled/0f09c03ea48b868fede3c98bee746d98.woff) format("woff"); }
+
+@font-face {
+  font-family: "Helvetica Neue";
+  font-weight: 300;
+  font-style: italic;
+  src: url(compiled/82f9957cedb96ce4dda15994d084baba.woff) format("woff"); }
+
+@font-face {
+  font-family: "Helvetica Neue";
+  font-style: 200;
+  font-weight: italic;
+  src: url(compiled/68eead767aefbb308e1d4745f3052d90.woff) format("woff"); }
+
 header div.box.one {
   background-color: #777;
   opacity: 0.7;
@@ -829,6 +853,30 @@ header div.box.two {
   to {
     opacity: 0.8; } }
 
+@font-face {
+  font-family: "Helvetica Neue";
+  font-weight: 300;
+  font-style: normal;
+  src: url(compiled/ca6317c5440e1dc88a2fcee44595bef2.woff) format("woff"); }
+
+@font-face {
+  font-family: "Helvetica Neue";
+  font-weight: 200;
+  font-style: normal;
+  src: url(compiled/0f09c03ea48b868fede3c98bee746d98.woff) format("woff"); }
+
+@font-face {
+  font-family: "Helvetica Neue";
+  font-weight: 300;
+  font-style: italic;
+  src: url(compiled/82f9957cedb96ce4dda15994d084baba.woff) format("woff"); }
+
+@font-face {
+  font-family: "Helvetica Neue";
+  font-style: 200;
+  font-weight: italic;
+  src: url(compiled/68eead767aefbb308e1d4745f3052d90.woff) format("woff"); }
+
 div.previews-container.one {
   background-color: #d0d6d6; }
   div.previews-container.one div.preview-container div.preview-overlay {
@@ -853,6 +901,50 @@ div.previews-container {
     background-color: #777;
     z-index: 0;
     position: relative; }
+    div.previews-container div.preview-container div.title {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: calc(100% - 1rem);
+      height: 2rem;
+      padding: 0 0.5rem;
+      pointer-events: none;
+      overflow: hidden; }
+      div.previews-container div.preview-container div.title:after {
+        position: absolute;
+        -webkit-transition: .3s;
+        transition: .3s;
+        content: '';
+        width: 0;
+        left: 50%;
+        bottom: 0;
+        height: 3px;
+        background: #fff;
+        height: 120%;
+        left: -10%;
+        -webkit-transform: skewX(15deg);
+        transform: skewX(-25deg);
+        z-index: 0; }
+      div.previews-container div.preview-container div.title h6 {
+        font-family: 'Helvetica Neue', Arial;
+        font-size: 1.4rem;
+        font-weight: 200;
+        font-style: normal;
+        margin: 0;
+        color: transparent;
+        line-height: 2rem;
+        position: relative;
+        margin-left: -1rem;
+        overflow: hidden;
+        -webkit-transition: margin-left 1s ease;
+        transition: margin-left 1s ease;
+        z-index: 1; }
+    div.previews-container div.preview-container:hover div.title:after {
+      left: -10%;
+      width: 130%; }
+    div.previews-container div.preview-container:hover div.title h6 {
+      color: #333;
+      margin-left: 0; }
     div.previews-container div.preview-container div.preview-overlay {
       position: absolute;
       width: 15rem;
@@ -861,6 +953,7 @@ div.previews-container {
               transform: rotate(45deg);
       z-index: 1;
       top: 0;
+      display: none;
       pointer-events: none; }
       div.previews-container div.preview-container div.preview-overlay:nth-of-type(2) {
         -webkit-transform: rotate(45deg);
@@ -999,8 +1092,7 @@ html body {
       width: 100%;
       height: 100%;
       z-index: 1;
-      position: relative;
-      cursor: pointer; }
+      position: relative; }
   html body section.content {
     width: 90%;
     max-width: 960px;
@@ -1008,3 +1100,34 @@ html body {
     z-index: 1;
     overflow: hidden;
     position: relative; }
+  html body footer {
+    width: 90%;
+    max-width: 960px;
+    text-align: center;
+    margin: 0 auto;
+    padding: 1rem 0;
+    font-family: 'Helvetica Neue', Arial;
+    font-size: 1rem;
+    font-weight: 200;
+    font-style: italic;
+    color: #333;
+    opacity: 0.7;
+    background-image: linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
+    background-image: -webkit-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
+    background-image: -ms-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
+    -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+    -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+    -webkit-animation-direction: alternate;
+            animation-direction: alternate;
+    -webkit-animation-name: changeOpacity;
+            animation-name: changeOpacity; }
+    html body footer svg:hover {
+      fill: #fff; }
+
+@keyframes changeOpacity {
+  from {
+    opacity: 0.7; }
+  to {
+    opacity: 0.8; } }

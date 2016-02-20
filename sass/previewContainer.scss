@@ -4,6 +4,9 @@ $lightgrayOne: #d0d6d6;
 $lightgrayTwo: #eee;
 $time: 4s;
 $animDur: 2s;
+$captionHeight: 2rem;
+
+@import './fonts.scss';
 
 div.previews-container.one {
   background-color: $lightgrayOne;
@@ -43,8 +46,57 @@ div.previews-container {
     background-color: #777;
     z-index: 0;
     position: relative;
+    div.title {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: calc(100% - 1rem);
+      height: $captionHeight;
+      padding: 0 0.5rem;
+      pointer-events: none;
+      overflow: hidden;
+      &:after {
+        position: absolute;
+        -webkit-transition: .3s;
+        transition: .3s;
+        content: '';
+        width: 0;
+        left: 50%;
+        bottom: 0;
+        height: 3px;
+        background: #fff;
+        height: 120%;
+        left: -10%;
+        -webkit-transform: skewX(15deg);
+        transform: skewX(-25deg);
+        z-index: 0;
+      }
+      h6 {
+        font-family: 'Helvetica Neue', Arial;
+        font-size: 1.4rem;
+        font-weight: 200;
+        font-style: normal;
+        margin: 0;
+        color: transparent;
+        line-height: $captionHeight;
+        position: relative;
+        margin-left: -1rem;
+        overflow: hidden;
+        transition: margin-left 1s ease;
+        z-index: 1;
+      }
+    }
     &:hover {
-
+      div.title {
+        &:after {
+          left: -10%;
+          width: 130%;
+        }
+        h6 {
+          color: #333;
+          margin-left: 0;
+        }
+      }
     }
     div.preview-overlay {
       position: absolute;
@@ -53,6 +105,7 @@ div.previews-container {
       transform: rotate(45deg);
       z-index: 1;
       top: 0;
+      display: none;
       pointer-events: none;
       &:nth-of-type(2) {
         transform: rotate(45deg);

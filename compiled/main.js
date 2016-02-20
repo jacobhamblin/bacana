@@ -121,11 +121,16 @@
 	    var previewContainer = document.createElement('div');
 	    previewContainer.className = 'preview-container';
 	    var preview = document.createElement('div');
+	    var title = document.createElement('div');
+	    var text = document.createElement('h6');
 	    var prevOverlay = document.createElement('div');
 	    var prevOverlay1 = document.createElement('div');
 	    prevOverlay.className = "preview-overlay";
 	    prevOverlay1.className = "preview-overlay";
 	    preview.className = 'preview';
+	    title.className = 'title';
+	    text.innerText = ("0" + (i + 1)).slice(-2);
+
 	    preview.style.backgroundImage = 'url(' + demo.preview + ')';
 	    var num = i;
 	    preview.addEventListener('click', function (e) {
@@ -136,8 +141,11 @@
 	      demosCode['b' + (num + 1).toString()].init({ container: divFullscreen, renderer: renderer });
 	    });
 	    previewContainer.appendChild(preview);
+	    previewContainer.appendChild(preview);
 	    previewContainer.appendChild(prevOverlay);
 	    previewContainer.appendChild(prevOverlay1);
+	    title.appendChild(text);
+	    previewContainer.appendChild(title);
 	    document.querySelectorAll('.previews-container')[0].appendChild(previewContainer);
 	  };
 
@@ -184,13 +192,13 @@
 	});
 
 	document.querySelectorAll('div.box')[0].addEventListener('click', function (e) {
-	  bannerCounter++;
-	  toggleClass(document.body, "two");
-	  toggleClass(document.body, "one");
-	  toggleClass(document.querySelectorAll('div.previews-container')[0], "two");
-	  toggleClass(document.querySelectorAll('div.previews-container')[0], "one");
-	  toggleClass(e.target, "two");
-	  toggleClass(e.target, "one");
+	  // bannerCounter++;
+	  // toggleClass(document.body, "two");
+	  // toggleClass(document.body, "one");
+	  // toggleClass(document.querySelectorAll('div.previews-container')[0], "two");
+	  // toggleClass(document.querySelectorAll('div.previews-container')[0], "one");
+	  // toggleClass(e.target, "two");
+	  // toggleClass(e.target, "one");
 	});
 
 /***/ },

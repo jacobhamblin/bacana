@@ -2,7 +2,10 @@ $slateblu: #6a7989;
 $lightgrayOne: #d0d6d6;
 $lightgrayTwo: #eee;
 $maxWidth: 960px;
+$accent: #777;
+$animDur: 2s;
 
+@import './fonts.scss';
 @import './headerBoxOne.scss';
 @import './headerBoxTwo.scss';
 @import './previewContainer.scss';
@@ -85,7 +88,7 @@ html {
         height: 100%;
         z-index: 1;
         position: relative;
-        cursor: pointer;
+        // cursor: pointer;
       }
     }
     section.content {
@@ -95,6 +98,37 @@ html {
       z-index: 1;
       overflow: hidden;
       position: relative;
+    }
+    footer {
+      width: 90%;
+      max-width: $maxWidth;
+      text-align: center;
+      margin: 0 auto;
+      padding: 1rem 0;
+      font-family: 'Helvetica Neue', Arial;
+      font-size: 1rem;
+      font-weight: 200;
+      font-style: italic;
+      color: #333;
+      opacity: 0.7;
+      background-image: linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
+      background-image: -webkit-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
+      background-image: -moz-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
+      background-image: -o-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
+      background-image: -ms-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
+      animation-iteration-count: infinite;
+      animation-duration: $animDur;
+      animation-direction: alternate;
+      animation-name: changeOpacity;
+      svg {
+        &:hover {
+          fill: #fff;
+        }
+      }
+    }
+    @keyframes changeOpacity {
+      from { opacity: 0.7 }
+      to { opacity: 0.8 }
     }
   }
 }
