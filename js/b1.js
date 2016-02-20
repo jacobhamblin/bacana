@@ -16,6 +16,7 @@ const b1 = {
   prepControls: function({camera, renderer}) {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.rotateSpeed = 1;
+    controls.enablePan = false;
     return controls;
   },
   prepCamera: function () {

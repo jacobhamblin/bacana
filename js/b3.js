@@ -116,6 +116,7 @@ const b3 = {
   prepControls: function({camera, renderer}) {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableZoom = false;
+    controls.enablePan = false;
     controls.rotateSpeed = 1;
     return controls;
   },
