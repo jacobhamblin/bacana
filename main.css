@@ -900,7 +900,9 @@ div.previews-container {
     overflow: hidden;
     background-color: #777;
     z-index: 0;
-    position: relative; }
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1rem; }
     div.previews-container div.preview-container div.title {
       position: absolute;
       bottom: 0;
@@ -1085,7 +1087,7 @@ html body {
           transition: all .2s ease; }
   html body header {
     width: 90%;
-    max-width: 45em;
+    max-width: 48em;
     height: 17rem;
     margin: 2rem auto 0 auto; }
     html body header div.box {
@@ -1095,14 +1097,14 @@ html body {
       position: relative; }
   html body section.content {
     width: 90%;
-    max-width: 45em;
+    max-width: 48em;
     margin: 0 auto;
     z-index: 1;
     overflow: hidden;
     position: relative; }
   html body footer {
     width: 90%;
-    max-width: 45em;
+    max-width: 48em;
     text-align: center;
     margin: 0 auto;
     padding: 1rem 0;
