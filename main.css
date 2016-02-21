@@ -891,8 +891,8 @@ div.previews-container {
   display: -webkit-box;
   display: flex;
   flex-wrap: wrap;
-  -webkit-box-pack: center;
-          justify-content: center;
+  -webkit-box-pack: justify;
+          justify-content: space-between;
   overflow: hidden; }
   div.previews-container div.preview-container {
     width: 15rem;
@@ -1085,7 +1085,7 @@ html body {
           transition: all .2s ease; }
   html body header {
     width: 90%;
-    max-width: 960px;
+    max-width: 45em;
     height: 17rem;
     margin: 2rem auto 0 auto; }
     html body header div.box {
@@ -1095,14 +1095,14 @@ html body {
       position: relative; }
   html body section.content {
     width: 90%;
-    max-width: 960px;
+    max-width: 45em;
     margin: 0 auto;
     z-index: 1;
     overflow: hidden;
     position: relative; }
   html body footer {
     width: 90%;
-    max-width: 960px;
+    max-width: 45em;
     text-align: center;
     margin: 0 auto;
     padding: 1rem 0;

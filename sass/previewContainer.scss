@@ -27,7 +27,7 @@ div.previews-container.two {
 div.previews-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
   overflow: hidden;
   div.preview-container.hovered {
     div.preview-overlay {
