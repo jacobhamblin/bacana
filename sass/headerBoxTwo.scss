@@ -1,17 +1,12 @@
 $slateblu: #6a7989;
 $lightgray: #d0d6d6;
-$accent: #777;
+$accent: #333;
 $animDur: 2s;
 
 header {
   div.box.two {
     background-color: $accent;
     opacity: 0.7;
-    background-image: linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
-    background-image: -webkit-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
-    background-image: -moz-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
-    background-image: -o-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
-    background-image: -ms-linear-gradient(45deg, #333, rgba(255, 255, 255, 0));
     animation-iteration-count: infinite;
     animation-duration: $animDur;
     animation-direction: alternate;

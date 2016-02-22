@@ -11,11 +11,12 @@ import OrbitControls from './vendor/OrbitControls.js';
 const b1 = {
   changeParticleColors: function({objects, raycasterObj, counters, altTime}) {
     for (let i = 0; i < objects.materials.length; i++) {
+      let mats = objects.materials;
       let material = objects.materials[i];
 
       let params = objects.particlesParameters;
       let grayscale = [params[i][0][0], 0, params[i][0][2]];
-      let timePassed = ((Date.now() * 0.001) - counters.lastHovered) - (i * 0.4);
+      let timePassed = ((Date.now() * 0.001) - counters.lastHovered) - (((mats.length - 1) - i) * 0.4);
       timePassed > 2 ? timePassed = 2 : null;
       timePassed < 0 ? timePassed = 0 : null;
       let modifier = timePassed / 2;
