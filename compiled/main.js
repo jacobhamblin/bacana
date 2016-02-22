@@ -62,7 +62,7 @@
 
 	var _b6 = _interopRequireDefault(_b5);
 
-	var _fastclickMin = __webpack_require__(13);
+	var _fastclickMin = __webpack_require__(14);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
@@ -72,12 +72,17 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(14);
+	__webpack_require__(15);
+	// import b4 from './b4.js';
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
 	demosCode.b2 = _b4.default;
 	demosCode.b3 = _b6.default;
+	// demosCode.b4 = b4;
+
+	var interaction = new Object();
+	interaction.open = false;
 
 	var bannerCounter = 0;
 	(function attachFastClick() {
@@ -136,7 +141,11 @@
 	    preview.addEventListener('click', function (e) {
 	      event.preventDefault();
 	      // move css
+	      interaction.open = true;
 	      var divFullscreen = document.querySelectorAll('div.fullscreen')[0];
+	      if (document.querySelector('canvas') && interaction.open) {
+	        divFullscreen.removeChild(document.querySelectorAll('canvas')[0]);
+	      }
 	      toggleClass(divFullscreen, "active");
 	      demosCode['b' + (num + 1).toString()].init({ container: divFullscreen, renderer: renderer });
 	    });
@@ -174,9 +183,11 @@
 	function closeDemo(demo) {
 	  toggleClass(demo, "active");
 	  document.body.style.cursor = "initial";
+
+	  interaction.demo = false;
 	  setTimeout(function () {
-	    demo.removeChild(document.querySelectorAll('canvas')[0]);
-	  }, 100);
+	    if (demo && interaction.open === false) demo.removeChild(document.querySelectorAll('canvas')[0]);
+	  }, 500);
 	};
 
 	var prevsNodeList = document.querySelectorAll('div.preview-container');
@@ -259,6 +270,17 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var b1 = {
+	  animate: function animate(usefulThings) {
+	    var self = this;
+
+	    var newThings = this.render(usefulThings);
+
+	    if (document.querySelectorAll('canvas')[0]) {
+	      requestAnimationFrame(function () {
+	        self.animate(newThings);
+	      });
+	    }
+	  },
 	  changeParticleColors: function changeParticleColors(_ref) {
 	    var objects = _ref.objects;
 	    var raycasterObj = _ref.raycasterObj;
@@ -315,9 +337,23 @@
 	    var usefulThings = this.setup({ container: container, renderer: renderer });
 	    this.animate(usefulThings);
 	  },
-	  prepControls: function prepControls(_ref3) {
+	  onMouseMove: function onMouseMove(mouse) {
+	    event.preventDefault();
+	    mouse.x = event.clientX / window.innerWidth * 2 - 1;
+	    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+	  },
+	  onWindowResize: function onWindowResize(_ref3) {
 	    var camera = _ref3.camera;
 	    var renderer = _ref3.renderer;
+
+	    camera.aspect = window.innerWidth / window.innerHeight;
+	    camera.updateProjectionMatrix();
+
+	    renderer.setSize(window.innerWidth, window.innerHeight);
+	  },
+	  prepControls: function prepControls(_ref4) {
+	    var camera = _ref4.camera;
+	    var renderer = _ref4.renderer;
 
 	    var controls = new _OrbitControls2.default(camera, renderer.domElement);
 	    controls.rotateSpeed = 1;
@@ -331,9 +367,9 @@
 
 	    return camera;
 	  },
-	  prepParticles: function prepParticles(_ref4) {
-	    var scene = _ref4.scene;
-	    var objects = _ref4.objects;
+	  prepParticles: function prepParticles(_ref5) {
+	    var scene = _ref5.scene;
+	    var objects = _ref5.objects;
 
 	    var geometry = new _three2.default.Geometry();
 
@@ -363,9 +399,9 @@
 	    }
 	    return { particles: particlesArr, materials: materials };
 	  },
-	  prepRenderer: function prepRenderer(_ref5) {
-	    var container = _ref5.container;
-	    var renderer = _ref5.renderer;
+	  prepRenderer: function prepRenderer(_ref6) {
+	    var container = _ref6.container;
+	    var renderer = _ref6.renderer;
 
 	    renderer.setClearColor(0x222222);
 	    renderer.setPixelRatio(window.devicePixelRatio);
@@ -379,9 +415,44 @@
 
 	    return scene;
 	  },
-	  setup: function setup(_ref6) {
-	    var container = _ref6.container;
-	    var renderer = _ref6.renderer;
+	  render: function render(usefulThings) {
+	    var objects = usefulThings.objects;
+	    var camera = usefulThings.camera;
+	    var counters = usefulThings.counters;
+	    var renderer = usefulThings.renderer;
+	    var scene = usefulThings.scene;
+	    var mouse = usefulThings.mouse;
+	    var uniforms = usefulThings.uniforms;
+	    var controls = usefulThings.controls;
+	    var raycasterObj = usefulThings.raycasterObj;
+
+	    controls.update();
+
+	    var time = Date.now() * 0.001;
+	    var altTime = Date.now() * 0.000025;
+
+	    this.handleIntersection({ raycasterObj: raycasterObj, objects: objects, scene: scene, mouse: mouse, camera: camera, counters: counters, altTime: altTime });
+
+	    for (var i = 0; i < objects.obj1.length; i++) {
+	      objects.obj1[i].rotation.x += 0.05;
+	      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
+	    }
+	    for (var i = 0; i < objects.particles1.length; i++) {
+	      var particle = objects.particles1[i];
+	      particle.rotation.x = altTime * (i < 4 ? i + 1 : -(i + 1));
+	    }
+
+	    this.changeParticleColors({ objects: objects, raycasterObj: raycasterObj, counters: counters, altTime: altTime });
+
+	    counters.a += 0.02;
+
+	    renderer.render(scene, camera);
+
+	    return { controls: controls, camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms, raycasterObj: raycasterObj };
+	  },
+	  setup: function setup(_ref7) {
+	    var container = _ref7.container;
+	    var renderer = _ref7.renderer;
 
 	    console.log('initialized b1!');
 
@@ -503,66 +574,6 @@
 	    }, false);
 
 	    return usefulThings;
-	  },
-	  onMouseMove: function onMouseMove(mouse) {
-	    event.preventDefault();
-	    mouse.x = event.clientX / window.innerWidth * 2 - 1;
-	    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-	  },
-	  onWindowResize: function onWindowResize(_ref7) {
-	    var camera = _ref7.camera;
-	    var renderer = _ref7.renderer;
-
-	    camera.aspect = window.innerWidth / window.innerHeight;
-	    camera.updateProjectionMatrix();
-
-	    renderer.setSize(window.innerWidth, window.innerHeight);
-	  },
-	  animate: function animate(usefulThings) {
-	    var self = this;
-
-	    var newThings = this.render(usefulThings);
-
-	    if (document.querySelectorAll('canvas')[0]) {
-	      requestAnimationFrame(function () {
-	        self.animate(newThings);
-	      });
-	    }
-	  },
-	  render: function render(usefulThings) {
-	    var objects = usefulThings.objects;
-	    var camera = usefulThings.camera;
-	    var counters = usefulThings.counters;
-	    var renderer = usefulThings.renderer;
-	    var scene = usefulThings.scene;
-	    var mouse = usefulThings.mouse;
-	    var uniforms = usefulThings.uniforms;
-	    var controls = usefulThings.controls;
-	    var raycasterObj = usefulThings.raycasterObj;
-
-	    controls.update();
-
-	    var time = Date.now() * 0.001;
-	    var altTime = Date.now() * 0.000025;
-
-	    this.handleIntersection({ raycasterObj: raycasterObj, objects: objects, scene: scene, mouse: mouse, camera: camera, counters: counters, altTime: altTime });
-
-	    for (var i = 0; i < objects.obj1.length; i++) {
-	      objects.obj1[i].rotation.x += 0.05;
-	      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
-	    }
-	    for (var i = 0; i < objects.particles1.length; i++) {
-	      var particle = objects.particles1[i];
-	      particle.rotation.x = altTime * (i < 4 ? i + 1 : -(i + 1));
-	    }
-
-	    this.changeParticleColors({ objects: objects, raycasterObj: raycasterObj, counters: counters, altTime: altTime });
-
-	    counters.a += 0.02;
-
-	    renderer.render(scene, camera);
-
-	    return { controls: controls, camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms, raycasterObj: raycasterObj };
 	  }
 	}; // b1.js
 
@@ -39050,7 +39061,8 @@
 	module.exports = b3;
 
 /***/ },
-/* 13 */
+/* 13 */,
+/* 14 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -39205,7 +39217,7 @@
 	}]);
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

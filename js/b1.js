@@ -9,6 +9,15 @@ import FresnelShader from './vendor/shaders/FresnelShader.js';
 import OrbitControls from './vendor/OrbitControls.js';
 
 const b1 = {
+  animate: function(usefulThings) {
+    let self = this;
+
+    let newThings = this.render(usefulThings);
+
+    if (document.querySelectorAll('canvas')[0]) {
+      requestAnimationFrame(function() {self.animate(newThings)});
+    }
+  },
   changeParticleColors: function({objects, raycasterObj, counters, altTime}) {
     for (let i = 0; i < objects.materials.length; i++) {
       let mats = objects.materials;
@@ -54,6 +63,17 @@ const b1 = {
   init: function ({container, renderer}) {
     let usefulThings = this.setup({container, renderer});
     this.animate(usefulThings);
+  },
+  onMouseMove: function(mouse) {
+    event.preventDefault();
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  },
+  onWindowResize: function({camera, renderer}) {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
   },
   prepControls: function({camera, renderer}) {
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -115,11 +135,48 @@ const b1 = {
 
     return scene;
   },
+  render: function(usefulThings) {
+    let {
+      objects,
+      camera,
+      counters,
+      renderer,
+      scene,
+      mouse,
+      uniforms,
+      controls,
+      raycasterObj
+    } = usefulThings;
+
+    controls.update();
+
+    let time = Date.now() * 0.001;
+    let altTime = Date.now() * 0.000025;
+
+    this.handleIntersection({raycasterObj, objects, scene, mouse, camera, counters, altTime});
+
+    for (let i = 0; i < objects.obj1.length; i++) {
+      objects.obj1[i].rotation.x += 0.05;
+      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
+    }
+    for (let i = 0; i < objects.particles1.length; i++) {
+      let particle = objects.particles1[i];
+      particle.rotation.x = altTime * (i < 4 ? i + 1 : -(i + 1))
+    }
+
+    this.changeParticleColors({objects, raycasterObj, counters, altTime});
+
+    counters.a += 0.02;
+
+    renderer.render(scene, camera);
+
+    return {controls, camera, scene, renderer, mouse, objects, counters, uniforms, raycasterObj};
+  },
   setup: function ({container, renderer}) {
     console.log('initialized b1!');
 
     let mouse = new THREE.Vector2();
-    let objects = new Object;
+    const objects = new Object;
     let usefulThings = new Object, raycasterObj = new Object;
     let uniforms = [];
     let parameters = [];
@@ -255,63 +312,6 @@ const b1 = {
     );
 
     return usefulThings;
-  },
-  onMouseMove: function(mouse) {
-    event.preventDefault();
-    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-  },
-  onWindowResize: function({camera, renderer}) {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  },
-  animate: function(usefulThings) {
-    let self = this;
-
-    let newThings = this.render(usefulThings);
-
-    if (document.querySelectorAll('canvas')[0]) {
-      requestAnimationFrame(function() {self.animate(newThings)});
-    }
-  },
-  render: function(usefulThings) {
-    let {
-      objects,
-      camera,
-      counters,
-      renderer,
-      scene,
-      mouse,
-      uniforms,
-      controls,
-      raycasterObj
-    } = usefulThings;
-
-    controls.update();
-
-    let time = Date.now() * 0.001;
-    let altTime = Date.now() * 0.000025;
-
-    this.handleIntersection({raycasterObj, objects, scene, mouse, camera, counters, altTime});
-
-    for (let i = 0; i < objects.obj1.length; i++) {
-      objects.obj1[i].rotation.x += 0.05;
-      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
-    }
-    for (let i = 0; i < objects.particles1.length; i++) {
-      let particle = objects.particles1[i];
-      particle.rotation.x = altTime * (i < 4 ? i + 1 : -(i + 1))
-    }
-
-    this.changeParticleColors({objects, raycasterObj, counters, altTime});
-
-    counters.a += 0.02;
-
-    renderer.render(scene, camera);
-
-    return {controls, camera, scene, renderer, mouse, objects, counters, uniforms, raycasterObj};
   }
 };
 

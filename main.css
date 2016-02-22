@@ -898,7 +898,6 @@ div.previews-container {
     background-color: #777;
     z-index: 0;
     position: relative;
-    margin-top: 1rem;
     margin-bottom: 1rem; }
     div.previews-container div.preview-container div.title {
       position: absolute;
@@ -1068,7 +1067,8 @@ html body {
       right: 0;
       padding: 1rem 1rem;
       z-index: 2;
-      cursor: pointer; }
+      cursor: pointer;
+      background: #222; }
       html body div.fullscreen div.close-container div.close {
         width: 20px;
         height: 20px; }
@@ -1086,7 +1086,7 @@ html body {
     width: 90%;
     max-width: 48em;
     height: 17rem;
-    margin: 2rem auto 0 auto; }
+    margin: 2rem auto 1rem auto; }
     html body header div.box {
       width: 100%;
       height: 100%;

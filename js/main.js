@@ -3,6 +3,7 @@ import demosJson from './demos.json';
 import b1 from './b1.js';
 import b2 from './b2.js';
 import b3 from './b3.js';
+// import b4 from './b4.js';
 import FastClick from './vendor/fastclick.min.js';
 import THREE from 'three';
 
@@ -10,6 +11,10 @@ const demosCode = new Object;
 demosCode.b1 = b1;
 demosCode.b2 = b2;
 demosCode.b3 = b3;
+// demosCode.b4 = b4;
+
+const interaction = new Object;
+interaction.open = false;
 
 let bannerCounter = 0;
 (function attachFastClick() {
@@ -67,7 +72,11 @@ function hasClass(el, className) {
     preview.addEventListener('click', function (e) {
       event.preventDefault();
       // move css
+      interaction.open = true;
       const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
+      if (document.querySelector('canvas') && interaction.open) {
+        divFullscreen.removeChild(document.querySelectorAll('canvas')[0]);
+      }
       toggleClass(divFullscreen, "active");
       demosCode['b' + (num + 1).toString()].init({container: divFullscreen, renderer});
     })
@@ -102,9 +111,12 @@ window.addEventListener('keydown', function (e) {
 function closeDemo(demo) {
   toggleClass(demo, "active");
   document.body.style.cursor = "initial";
+
+  interaction.demo = false;
   setTimeout(function () {
+    if (demo && interaction.open === false)
     demo.removeChild(document.querySelectorAll('canvas')[0]);
-  }, 100);
+  }, 500);
 };
 
 const prevsNodeList = document.querySelectorAll('div.preview-container');
