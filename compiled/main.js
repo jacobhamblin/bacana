@@ -62,7 +62,7 @@
 
 	var _b6 = _interopRequireDefault(_b5);
 
-	var _fastclickMin = __webpack_require__(14);
+	var _fastclickMin = __webpack_require__(15);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
@@ -72,7 +72,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(15);
+	__webpack_require__(16);
 	// import b4 from './b4.js';
 
 	var demosCode = new Object();
@@ -314,6 +314,7 @@
 	    var counters = object.counters;
 	    var altTime = object.altTime;
 
+
 	    raycasterObj.raycaster.setFromCamera(mouse, camera);
 	    var intersects = raycasterObj.raycaster.intersectObjects(scene.children);
 
@@ -425,6 +426,7 @@
 	    var uniforms = usefulThings.uniforms;
 	    var controls = usefulThings.controls;
 	    var raycasterObj = usefulThings.raycasterObj;
+
 
 	    controls.update();
 
@@ -36786,7 +36788,7 @@
 
 	var tessellateModifier = function tessellateModifier(maxEdgeLength) {
 
-		this.maxEdgeLength = maxEdgeLength;
+						this.maxEdgeLength = maxEdgeLength;
 	}; /**
 	    * Break faces with edges longer than maxEdgeLength
 	    * - not recursive
@@ -36796,205 +36798,205 @@
 
 	tessellateModifier.prototype.modify = function (geometry) {
 
-		var edge;
+						var edge;
 
-		var faces = [];
-		var faceVertexUvs = [];
-		var maxEdgeLengthSquared = this.maxEdgeLength * this.maxEdgeLength;
+						var faces = [];
+						var faceVertexUvs = [];
+						var maxEdgeLengthSquared = this.maxEdgeLength * this.maxEdgeLength;
 
-		for (var i = 0, il = geometry.faceVertexUvs.length; i < il; i++) {
+						for (var i = 0, il = geometry.faceVertexUvs.length; i < il; i++) {
 
-			faceVertexUvs[i] = [];
-		}
-
-		for (var i = 0, il = geometry.faces.length; i < il; i++) {
-
-			var face = geometry.faces[i];
-
-			if (face instanceof _three2.default.Face3) {
-
-				var a = face.a;
-				var b = face.b;
-				var c = face.c;
-
-				var va = geometry.vertices[a];
-				var vb = geometry.vertices[b];
-				var vc = geometry.vertices[c];
-
-				var dab = va.distanceToSquared(vb);
-				var dbc = vb.distanceToSquared(vc);
-				var dac = va.distanceToSquared(vc);
-
-				if (dab > maxEdgeLengthSquared || dbc > maxEdgeLengthSquared || dac > maxEdgeLengthSquared) {
-
-					var m = geometry.vertices.length;
-
-					var triA = face.clone();
-					var triB = face.clone();
-
-					if (dab >= dbc && dab >= dac) {
-
-						var vm = va.clone();
-						vm.lerp(vb, 0.5);
-
-						triA.a = a;
-						triA.b = m;
-						triA.c = c;
-
-						triB.a = m;
-						triB.b = b;
-						triB.c = c;
-
-						if (face.vertexNormals.length === 3) {
-
-							var vnm = face.vertexNormals[0].clone();
-							vnm.lerp(face.vertexNormals[1], 0.5);
-
-							triA.vertexNormals[1].copy(vnm);
-							triB.vertexNormals[0].copy(vnm);
+											faceVertexUvs[i] = [];
 						}
 
-						if (face.vertexColors.length === 3) {
+						for (var i = 0, il = geometry.faces.length; i < il; i++) {
 
-							var vcm = face.vertexColors[0].clone();
-							vcm.lerp(face.vertexColors[1], 0.5);
+											var face = geometry.faces[i];
 
-							triA.vertexColors[1].copy(vcm);
-							triB.vertexColors[0].copy(vcm);
+											if (face instanceof _three2.default.Face3) {
+
+																var a = face.a;
+																var b = face.b;
+																var c = face.c;
+
+																var va = geometry.vertices[a];
+																var vb = geometry.vertices[b];
+																var vc = geometry.vertices[c];
+
+																var dab = va.distanceToSquared(vb);
+																var dbc = vb.distanceToSquared(vc);
+																var dac = va.distanceToSquared(vc);
+
+																if (dab > maxEdgeLengthSquared || dbc > maxEdgeLengthSquared || dac > maxEdgeLengthSquared) {
+
+																					var m = geometry.vertices.length;
+
+																					var triA = face.clone();
+																					var triB = face.clone();
+
+																					if (dab >= dbc && dab >= dac) {
+
+																										var vm = va.clone();
+																										vm.lerp(vb, 0.5);
+
+																										triA.a = a;
+																										triA.b = m;
+																										triA.c = c;
+
+																										triB.a = m;
+																										triB.b = b;
+																										triB.c = c;
+
+																										if (face.vertexNormals.length === 3) {
+
+																															var vnm = face.vertexNormals[0].clone();
+																															vnm.lerp(face.vertexNormals[1], 0.5);
+
+																															triA.vertexNormals[1].copy(vnm);
+																															triB.vertexNormals[0].copy(vnm);
+																										}
+
+																										if (face.vertexColors.length === 3) {
+
+																															var vcm = face.vertexColors[0].clone();
+																															vcm.lerp(face.vertexColors[1], 0.5);
+
+																															triA.vertexColors[1].copy(vcm);
+																															triB.vertexColors[0].copy(vcm);
+																										}
+
+																										edge = 0;
+																					} else if (dbc >= dab && dbc >= dac) {
+
+																										var vm = vb.clone();
+																										vm.lerp(vc, 0.5);
+
+																										triA.a = a;
+																										triA.b = b;
+																										triA.c = m;
+
+																										triB.a = m;
+																										triB.b = c;
+																										triB.c = a;
+
+																										if (face.vertexNormals.length === 3) {
+
+																															var vnm = face.vertexNormals[1].clone();
+																															vnm.lerp(face.vertexNormals[2], 0.5);
+
+																															triA.vertexNormals[2].copy(vnm);
+
+																															triB.vertexNormals[0].copy(vnm);
+																															triB.vertexNormals[1].copy(face.vertexNormals[2]);
+																															triB.vertexNormals[2].copy(face.vertexNormals[0]);
+																										}
+
+																										if (face.vertexColors.length === 3) {
+
+																															var vcm = face.vertexColors[1].clone();
+																															vcm.lerp(face.vertexColors[2], 0.5);
+
+																															triA.vertexColors[2].copy(vcm);
+
+																															triB.vertexColors[0].copy(vcm);
+																															triB.vertexColors[1].copy(face.vertexColors[2]);
+																															triB.vertexColors[2].copy(face.vertexColors[0]);
+																										}
+
+																										edge = 1;
+																					} else {
+
+																										var vm = va.clone();
+																										vm.lerp(vc, 0.5);
+
+																										triA.a = a;
+																										triA.b = b;
+																										triA.c = m;
+
+																										triB.a = m;
+																										triB.b = b;
+																										triB.c = c;
+
+																										if (face.vertexNormals.length === 3) {
+
+																															var vnm = face.vertexNormals[0].clone();
+																															vnm.lerp(face.vertexNormals[2], 0.5);
+
+																															triA.vertexNormals[2].copy(vnm);
+																															triB.vertexNormals[0].copy(vnm);
+																										}
+
+																										if (face.vertexColors.length === 3) {
+
+																															var vcm = face.vertexColors[0].clone();
+																															vcm.lerp(face.vertexColors[2], 0.5);
+
+																															triA.vertexColors[2].copy(vcm);
+																															triB.vertexColors[0].copy(vcm);
+																										}
+
+																										edge = 2;
+																					}
+
+																					faces.push(triA, triB);
+																					geometry.vertices.push(vm);
+
+																					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
+
+																										if (geometry.faceVertexUvs[j].length) {
+
+																															var uvs = geometry.faceVertexUvs[j][i];
+
+																															var uvA = uvs[0];
+																															var uvB = uvs[1];
+																															var uvC = uvs[2];
+
+																															// AB
+
+																															if (edge === 0) {
+
+																																				var uvM = uvA.clone();
+																																				uvM.lerp(uvB, 0.5);
+
+																																				var uvsTriA = [uvA.clone(), uvM.clone(), uvC.clone()];
+																																				var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
+
+																																				// BC
+																															} else if (edge === 1) {
+
+																																									var uvM = uvB.clone();
+																																									uvM.lerp(uvC, 0.5);
+
+																																									var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
+																																									var uvsTriB = [uvM.clone(), uvC.clone(), uvA.clone()];
+
+																																									// AC
+																																				} else {
+
+																																														var uvM = uvA.clone();
+																																														uvM.lerp(uvC, 0.5);
+
+																																														var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
+																																														var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
+																																									}
+
+																															faceVertexUvs[j].push(uvsTriA, uvsTriB);
+																										}
+																					}
+																} else {
+
+																					faces.push(face);
+
+																					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
+
+																										faceVertexUvs[j].push(geometry.faceVertexUvs[j][i]);
+																					}
+																}
+											}
 						}
 
-						edge = 0;
-					} else if (dbc >= dab && dbc >= dac) {
-
-						var vm = vb.clone();
-						vm.lerp(vc, 0.5);
-
-						triA.a = a;
-						triA.b = b;
-						triA.c = m;
-
-						triB.a = m;
-						triB.b = c;
-						triB.c = a;
-
-						if (face.vertexNormals.length === 3) {
-
-							var vnm = face.vertexNormals[1].clone();
-							vnm.lerp(face.vertexNormals[2], 0.5);
-
-							triA.vertexNormals[2].copy(vnm);
-
-							triB.vertexNormals[0].copy(vnm);
-							triB.vertexNormals[1].copy(face.vertexNormals[2]);
-							triB.vertexNormals[2].copy(face.vertexNormals[0]);
-						}
-
-						if (face.vertexColors.length === 3) {
-
-							var vcm = face.vertexColors[1].clone();
-							vcm.lerp(face.vertexColors[2], 0.5);
-
-							triA.vertexColors[2].copy(vcm);
-
-							triB.vertexColors[0].copy(vcm);
-							triB.vertexColors[1].copy(face.vertexColors[2]);
-							triB.vertexColors[2].copy(face.vertexColors[0]);
-						}
-
-						edge = 1;
-					} else {
-
-						var vm = va.clone();
-						vm.lerp(vc, 0.5);
-
-						triA.a = a;
-						triA.b = b;
-						triA.c = m;
-
-						triB.a = m;
-						triB.b = b;
-						triB.c = c;
-
-						if (face.vertexNormals.length === 3) {
-
-							var vnm = face.vertexNormals[0].clone();
-							vnm.lerp(face.vertexNormals[2], 0.5);
-
-							triA.vertexNormals[2].copy(vnm);
-							triB.vertexNormals[0].copy(vnm);
-						}
-
-						if (face.vertexColors.length === 3) {
-
-							var vcm = face.vertexColors[0].clone();
-							vcm.lerp(face.vertexColors[2], 0.5);
-
-							triA.vertexColors[2].copy(vcm);
-							triB.vertexColors[0].copy(vcm);
-						}
-
-						edge = 2;
-					}
-
-					faces.push(triA, triB);
-					geometry.vertices.push(vm);
-
-					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
-
-						if (geometry.faceVertexUvs[j].length) {
-
-							var uvs = geometry.faceVertexUvs[j][i];
-
-							var uvA = uvs[0];
-							var uvB = uvs[1];
-							var uvC = uvs[2];
-
-							// AB
-
-							if (edge === 0) {
-
-								var uvM = uvA.clone();
-								uvM.lerp(uvB, 0.5);
-
-								var uvsTriA = [uvA.clone(), uvM.clone(), uvC.clone()];
-								var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
-
-								// BC
-							} else if (edge === 1) {
-
-									var uvM = uvB.clone();
-									uvM.lerp(uvC, 0.5);
-
-									var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
-									var uvsTriB = [uvM.clone(), uvC.clone(), uvA.clone()];
-
-									// AC
-								} else {
-
-										var uvM = uvA.clone();
-										uvM.lerp(uvC, 0.5);
-
-										var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
-										var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
-									}
-
-							faceVertexUvs[j].push(uvsTriA, uvsTriB);
-						}
-					}
-				} else {
-
-					faces.push(face);
-
-					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
-
-						faceVertexUvs[j].push(geometry.faceVertexUvs[j][i]);
-					}
-				}
-			}
-		}
-
-		geometry.faces = faces;
-		geometry.faceVertexUvs = faceVertexUvs;
+						geometry.faces = faces;
+						geometry.faceVertexUvs = faceVertexUvs;
 	};
 
 	module.exports = tessellateModifier;
@@ -37020,33 +37022,33 @@
 
 	explodeModifier.prototype.modify = function (geometry) {
 
-		var vertices = [];
+			var vertices = [];
 
-		for (var i = 0, il = geometry.faces.length; i < il; i++) {
+			for (var i = 0, il = geometry.faces.length; i < il; i++) {
 
-			var n = vertices.length;
+					var n = vertices.length;
 
-			var face = geometry.faces[i];
+					var face = geometry.faces[i];
 
-			var a = face.a;
-			var b = face.b;
-			var c = face.c;
+					var a = face.a;
+					var b = face.b;
+					var c = face.c;
 
-			var va = geometry.vertices[a];
-			var vb = geometry.vertices[b];
-			var vc = geometry.vertices[c];
+					var va = geometry.vertices[a];
+					var vb = geometry.vertices[b];
+					var vc = geometry.vertices[c];
 
-			vertices.push(va.clone());
-			vertices.push(vb.clone());
-			vertices.push(vc.clone());
+					vertices.push(va.clone());
+					vertices.push(vb.clone());
+					vertices.push(vc.clone());
 
-			face.a = n;
-			face.b = n + 1;
-			face.c = n + 2;
-		}
+					face.a = n;
+					face.b = n + 1;
+					face.c = n + 2;
+			}
 
-		geometry.vertices = vertices;
-		delete geometry.__tmpVertices;
+			geometry.vertices = vertices;
+			delete geometry.__tmpVertices;
 	};
 
 	module.exports = explodeModifier;
@@ -37055,13 +37057,13 @@
 /* 6 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n\t\t\tvarying vec3 vNormal;\n\t\t\tvarying vec3 vColor;\n\n\t\t\tvoid main() {\n\n\t\t\t\tconst float ambient = 0.4;\n\n\t\t\t\tvec3 light = vec3( 1.0 );\n\t\t\t\tlight = normalize( light );\n\n\t\t\t\tfloat directional = max( dot( vNormal, light ), 0.0 );\n\n\t\t\t\tgl_FragColor = vec4( ( directional + ambient ) * vColor, 1.0 );\n\n\t\t\t}\n"
+	module.exports = "\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tconst float ambient = 0.4;\r\n\r\n\t\t\t\tvec3 light = vec3( 1.0 );\r\n\t\t\t\tlight = normalize( light );\r\n\r\n\t\t\t\tfloat directional = max( dot( vNormal, light ), 0.0 );\r\n\r\n\t\t\t\tgl_FragColor = vec4( ( directional + ambient ) * vColor, 1.0 );\r\n\r\n\t\t\t}\r\n"
 
 /***/ },
 /* 7 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\t\t\tuniform float amplitude;\n\n\t\t\tattribute vec3 customColor;\n\t\t\tattribute vec3 displacement;\n\n\t\t\tvarying vec3 vNormal;\n\t\t\tvarying vec3 vColor;\n\n\t\t\tvoid main() {\n\n\t\t\t\tvNormal = normal;\n\t\t\t\tvColor = customColor;\n\n\t\t\t\tvec3 newPosition = position + normal * amplitude * displacement;\n\t\t\t\tgl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );\n\n\t\t\t}\n"
+	module.exports = "\r\n\t\t\tuniform float amplitude;\r\n\r\n\t\t\tattribute vec3 customColor;\r\n\t\t\tattribute vec3 displacement;\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tvNormal = normal;\r\n\t\t\t\tvColor = customColor;\r\n\r\n\t\t\t\tvec3 newPosition = position + normal * amplitude * displacement;\r\n\t\t\t\tgl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );\r\n\r\n\t\t\t}\r\n"
 
 /***/ },
 /* 8 */
@@ -37077,19 +37079,19 @@
 
 	_three2.default.FresnelShader = {
 
-		uniforms: {
+			uniforms: {
 
-			"mRefractionRatio": { type: "f", value: 1.02 },
-			"mFresnelBias": { type: "f", value: 0.1 },
-			"mFresnelPower": { type: "f", value: 2.0 },
-			"mFresnelScale": { type: "f", value: 1.0 },
-			"tCube": { type: "t", value: null }
+					"mRefractionRatio": { type: "f", value: 1.02 },
+					"mFresnelBias": { type: "f", value: 0.1 },
+					"mFresnelPower": { type: "f", value: 2.0 },
+					"mFresnelScale": { type: "f", value: 1.0 },
+					"tCube": { type: "t", value: null }
 
-		},
+			},
 
-		vertexShader: ["uniform float mRefractionRatio;", "uniform float mFresnelBias;", "uniform float mFresnelScale;", "uniform float mFresnelPower;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );", "vec4 worldPosition = modelMatrix * vec4( position, 1.0 );", "vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );", "vec3 I = worldPosition.xyz - cameraPosition;", "vReflect = reflect( I, worldNormal );", "vRefract[0] = refract( normalize( I ), worldNormal, mRefractionRatio );", "vRefract[1] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.99 );", "vRefract[2] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.98 );", "vReflectionFactor = mFresnelBias + mFresnelScale * pow( 1.0 + dot( normalize( I ), worldNormal ), mFresnelPower );", "gl_Position = projectionMatrix * mvPosition;", "}"].join("\n"),
+			vertexShader: ["uniform float mRefractionRatio;", "uniform float mFresnelBias;", "uniform float mFresnelScale;", "uniform float mFresnelPower;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );", "vec4 worldPosition = modelMatrix * vec4( position, 1.0 );", "vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );", "vec3 I = worldPosition.xyz - cameraPosition;", "vReflect = reflect( I, worldNormal );", "vRefract[0] = refract( normalize( I ), worldNormal, mRefractionRatio );", "vRefract[1] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.99 );", "vRefract[2] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.98 );", "vReflectionFactor = mFresnelBias + mFresnelScale * pow( 1.0 + dot( normalize( I ), worldNormal ), mFresnelPower );", "gl_Position = projectionMatrix * mvPosition;", "}"].join("\n"),
 
-		fragmentShader: ["uniform samplerCube tCube;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 reflectedColor = textureCube( tCube, vec3( -vReflect.x, vReflect.yz ) );", "vec4 refractedColor = vec4( 1.0 );", "refractedColor.r = textureCube( tCube, vec3( -vRefract[0].x, vRefract[0].yz ) ).r;", "refractedColor.g = textureCube( tCube, vec3( -vRefract[1].x, vRefract[1].yz ) ).g;", "refractedColor.b = textureCube( tCube, vec3( -vRefract[2].x, vRefract[2].yz ) ).b;", "gl_FragColor = mix( refractedColor, reflectedColor, clamp( vReflectionFactor, 0.0, 1.0 ) );", "}"].join("\n")
+			fragmentShader: ["uniform samplerCube tCube;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 reflectedColor = textureCube( tCube, vec3( -vReflect.x, vReflect.yz ) );", "vec4 refractedColor = vec4( 1.0 );", "refractedColor.r = textureCube( tCube, vec3( -vRefract[0].x, vRefract[0].yz ) ).r;", "refractedColor.g = textureCube( tCube, vec3( -vRefract[1].x, vRefract[1].yz ) ).g;", "refractedColor.b = textureCube( tCube, vec3( -vRefract[2].x, vRefract[2].yz ) ).b;", "gl_FragColor = mix( refractedColor, reflectedColor, clamp( vReflectionFactor, 0.0, 1.0 ) );", "}"].join("\n")
 
 	}; /**
 	    * @author alteredq / http://alteredqualia.com/
@@ -37209,7 +37211,7 @@
 		};
 
 		// this method is exposed, but perhaps it would be better if we can make it private...
-		this.update = (function () {
+		this.update = function () {
 
 			var offset = new _three2.default.Vector3();
 
@@ -37303,7 +37305,7 @@
 
 				return false;
 			};
-		})();
+		}();
 
 		this.dispose = function () {
 
@@ -37383,7 +37385,7 @@
 			phiDelta -= angle;
 		}
 
-		var panLeft = (function () {
+		var panLeft = function () {
 
 			var v = new _three2.default.Vector3();
 
@@ -37398,9 +37400,9 @@
 
 				panOffset.add(v);
 			};
-		})();
+		}();
 
-		var panUp = (function () {
+		var panUp = function () {
 
 			var v = new _three2.default.Vector3();
 
@@ -37415,10 +37417,10 @@
 
 				panOffset.add(v);
 			};
-		})();
+		}();
 
 		// deltaX and deltaY are in pixels; right and down are positive
-		var pan = (function () {
+		var pan = function () {
 
 			var offset = new _three2.default.Vector3();
 
@@ -37451,7 +37453,7 @@
 					scope.enablePan = false;
 				}
 			};
-		})();
+		}();
 
 		function dollyIn(dollyScale) {
 
@@ -38093,6 +38095,8 @@
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; // b2.js
+
 	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
@@ -38102,8 +38106,6 @@
 	var _OBJLoader2 = _interopRequireDefault(_OBJLoader);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; } // b2.js
 
 	var b2 = {
 	  animate: function animate(usefulThings) {
@@ -38137,6 +38139,7 @@
 	    var scene = usefulThings.scene;
 	    var objects = usefulThings.objects;
 	    var counters = usefulThings.counters;
+
 
 	    raycasterObj.raycaster.setFromCamera(mouse, camera);
 	    var intersects = raycasterObj.raycaster.intersectObjects(scene.children);
@@ -38191,6 +38194,7 @@
 	  onWindowResize: function onWindowResize(_ref2) {
 	    var camera = _ref2.camera;
 	    var renderer = _ref2.renderer;
+
 
 	    camera.aspect = window.innerWidth / window.innerHeight;
 	    camera.updateProjectionMatrix();
@@ -38462,312 +38466,312 @@
 
 	_three2.default.OBJLoader = function (manager) {
 
-		this.manager = manager !== undefined ? manager : _three2.default.DefaultLoadingManager;
+				this.manager = manager !== undefined ? manager : _three2.default.DefaultLoadingManager;
 	}; /**
 	    * @author mrdoob / http://mrdoob.com/
 	    */
 
 	_three2.default.OBJLoader.prototype = {
 
-		constructor: _three2.default.OBJLoader,
+				constructor: _three2.default.OBJLoader,
 
-		load: function load(url, onLoad, onProgress, onError) {
+				load: function load(url, onLoad, onProgress, onError) {
 
-			var scope = this;
+							var scope = this;
 
-			var loader = new _three2.default.XHRLoader(scope.manager);
-			loader.setCrossOrigin(this.crossOrigin);
-			loader.load(url, function (text) {
+							var loader = new _three2.default.XHRLoader(scope.manager);
+							loader.setCrossOrigin(this.crossOrigin);
+							loader.load(url, function (text) {
 
-				onLoad(scope.parse(text));
-			}, onProgress, onError);
-		},
+										onLoad(scope.parse(text));
+							}, onProgress, onError);
+				},
 
-		setCrossOrigin: function setCrossOrigin(value) {
+				setCrossOrigin: function setCrossOrigin(value) {
 
-			this.crossOrigin = value;
-		},
+							this.crossOrigin = value;
+				},
 
-		parse: function parse(text) {
+				parse: function parse(text) {
 
-			console.time('OBJLoader');
+							console.time('OBJLoader');
 
-			var object,
-			    objects = [];
-			var geometry, material;
+							var object,
+							    objects = [];
+							var geometry, material;
 
-			function parseVertexIndex(value) {
+							function parseVertexIndex(value) {
 
-				var index = parseInt(value);
+										var index = parseInt(value);
 
-				return (index >= 0 ? index - 1 : index + vertices.length / 3) * 3;
-			}
-
-			function parseNormalIndex(value) {
-
-				var index = parseInt(value);
-
-				return (index >= 0 ? index - 1 : index + normals.length / 3) * 3;
-			}
-
-			function parseUVIndex(value) {
-
-				var index = parseInt(value);
-
-				return (index >= 0 ? index - 1 : index + uvs.length / 2) * 2;
-			}
-
-			function addVertex(a, b, c) {
-
-				geometry.vertices.push(vertices[a], vertices[a + 1], vertices[a + 2], vertices[b], vertices[b + 1], vertices[b + 2], vertices[c], vertices[c + 1], vertices[c + 2]);
-			}
-
-			function addNormal(a, b, c) {
-
-				geometry.normals.push(normals[a], normals[a + 1], normals[a + 2], normals[b], normals[b + 1], normals[b + 2], normals[c], normals[c + 1], normals[c + 2]);
-			}
-
-			function addUV(a, b, c) {
-
-				geometry.uvs.push(uvs[a], uvs[a + 1], uvs[b], uvs[b + 1], uvs[c], uvs[c + 1]);
-			}
-
-			function addFace(a, b, c, d, ua, ub, uc, ud, na, nb, nc, nd) {
-
-				var ia = parseVertexIndex(a);
-				var ib = parseVertexIndex(b);
-				var ic = parseVertexIndex(c);
-				var id;
-
-				if (d === undefined) {
-
-					addVertex(ia, ib, ic);
-				} else {
-
-					id = parseVertexIndex(d);
-
-					addVertex(ia, ib, id);
-					addVertex(ib, ic, id);
-				}
-
-				if (ua !== undefined) {
-
-					ia = parseUVIndex(ua);
-					ib = parseUVIndex(ub);
-					ic = parseUVIndex(uc);
-
-					if (d === undefined) {
-
-						addUV(ia, ib, ic);
-					} else {
-
-						id = parseUVIndex(ud);
-
-						addUV(ia, ib, id);
-						addUV(ib, ic, id);
-					}
-				}
-
-				if (na !== undefined) {
-
-					ia = parseNormalIndex(na);
-					ib = parseNormalIndex(nb);
-					ic = parseNormalIndex(nc);
-
-					if (d === undefined) {
-
-						addNormal(ia, ib, ic);
-					} else {
-
-						id = parseNormalIndex(nd);
-
-						addNormal(ia, ib, id);
-						addNormal(ib, ic, id);
-					}
-				}
-			}
-
-			// create mesh if no objects in text
-
-			if (/^o /gm.test(text) === false) {
-
-				geometry = {
-					vertices: [],
-					normals: [],
-					uvs: []
-				};
-
-				material = {
-					name: ''
-				};
-
-				object = {
-					name: '',
-					geometry: geometry,
-					material: material
-				};
-
-				objects.push(object);
-			}
-
-			var vertices = [];
-			var normals = [];
-			var uvs = [];
-
-			// v float float float
-
-			var vertex_pattern = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
-
-			// vn float float float
-
-			var normal_pattern = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
-
-			// vt float float
-
-			var uv_pattern = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
-
-			// f vertex vertex vertex ...
-
-			var face_pattern1 = /f( +-?\d+)( +-?\d+)( +-?\d+)( +-?\d+)?/;
-
-			// f vertex/uv vertex/uv vertex/uv ...
-
-			var face_pattern2 = /f( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))?/;
-
-			// f vertex/uv/normal vertex/uv/normal vertex/uv/normal ...
-
-			var face_pattern3 = /f( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))?/;
-
-			// f vertex//normal vertex//normal vertex//normal ...
-
-			var face_pattern4 = /f( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))?/;
-
-			//
-
-			var lines = text.split('\n');
-
-			for (var i = 0; i < lines.length; i++) {
-
-				var line = lines[i];
-				line = line.trim();
-
-				var result;
-
-				if (line.length === 0 || line.charAt(0) === '#') {
-
-					continue;
-				} else if ((result = vertex_pattern.exec(line)) !== null) {
-
-					// ["v 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
-
-					vertices.push(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3]));
-				} else if ((result = normal_pattern.exec(line)) !== null) {
-
-					// ["vn 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
-
-					normals.push(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3]));
-				} else if ((result = uv_pattern.exec(line)) !== null) {
-
-					// ["vt 0.1 0.2", "0.1", "0.2"]
-
-					uvs.push(parseFloat(result[1]), parseFloat(result[2]));
-				} else if ((result = face_pattern1.exec(line)) !== null) {
-
-					// ["f 1 2 3", "1", "2", "3", undefined]
-
-					addFace(result[1], result[2], result[3], result[4]);
-				} else if ((result = face_pattern2.exec(line)) !== null) {
-
-					// ["f 1/1 2/2 3/3", " 1/1", "1", "1", " 2/2", "2", "2", " 3/3", "3", "3", undefined, undefined, undefined]
-
-					addFace(result[2], result[5], result[8], result[11], result[3], result[6], result[9], result[12]);
-				} else if ((result = face_pattern3.exec(line)) !== null) {
-
-					// ["f 1/1/1 2/2/2 3/3/3", " 1/1/1", "1", "1", "1", " 2/2/2", "2", "2", "2", " 3/3/3", "3", "3", "3", undefined, undefined, undefined, undefined]
-
-					addFace(result[2], result[6], result[10], result[14], result[3], result[7], result[11], result[15], result[4], result[8], result[12], result[16]);
-				} else if ((result = face_pattern4.exec(line)) !== null) {
-
-					// ["f 1//1 2//2 3//3", " 1//1", "1", "1", " 2//2", "2", "2", " 3//3", "3", "3", undefined, undefined, undefined]
-
-					addFace(result[2], result[5], result[8], result[11], undefined, undefined, undefined, undefined, result[3], result[6], result[9], result[12]);
-				} else if (/^o /.test(line)) {
-
-					geometry = {
-						vertices: [],
-						normals: [],
-						uvs: []
-					};
-
-					material = {
-						name: ''
-					};
-
-					object = {
-						name: line.substring(2).trim(),
-						geometry: geometry,
-						material: material
-					};
-
-					objects.push(object);
-				} else if (/^g /.test(line)) {
-
-					// group
-
-				} else if (/^usemtl /.test(line)) {
-
-						// material
-
-						material.name = line.substring(7).trim();
-					} else if (/^mtllib /.test(line)) {
-
-						// mtl file
-
-					} else if (/^s /.test(line)) {
-
-							// smooth shading
-
-						} else {
-
-								// console.log( "THREE.OBJLoader: Unhandled line " + line );
-
+										return (index >= 0 ? index - 1 : index + vertices.length / 3) * 3;
 							}
-			}
 
-			var container = new _three2.default.Object3D();
+							function parseNormalIndex(value) {
 
-			for (var i = 0, l = objects.length; i < l; i++) {
+										var index = parseInt(value);
 
-				object = objects[i];
-				geometry = object.geometry;
+										return (index >= 0 ? index - 1 : index + normals.length / 3) * 3;
+							}
 
-				var buffergeometry = new _three2.default.BufferGeometry();
+							function parseUVIndex(value) {
 
-				buffergeometry.addAttribute('position', new _three2.default.BufferAttribute(new Float32Array(geometry.vertices), 3));
+										var index = parseInt(value);
 
-				if (geometry.normals.length > 0) {
+										return (index >= 0 ? index - 1 : index + uvs.length / 2) * 2;
+							}
 
-					buffergeometry.addAttribute('normal', new _three2.default.BufferAttribute(new Float32Array(geometry.normals), 3));
+							function addVertex(a, b, c) {
+
+										geometry.vertices.push(vertices[a], vertices[a + 1], vertices[a + 2], vertices[b], vertices[b + 1], vertices[b + 2], vertices[c], vertices[c + 1], vertices[c + 2]);
+							}
+
+							function addNormal(a, b, c) {
+
+										geometry.normals.push(normals[a], normals[a + 1], normals[a + 2], normals[b], normals[b + 1], normals[b + 2], normals[c], normals[c + 1], normals[c + 2]);
+							}
+
+							function addUV(a, b, c) {
+
+										geometry.uvs.push(uvs[a], uvs[a + 1], uvs[b], uvs[b + 1], uvs[c], uvs[c + 1]);
+							}
+
+							function addFace(a, b, c, d, ua, ub, uc, ud, na, nb, nc, nd) {
+
+										var ia = parseVertexIndex(a);
+										var ib = parseVertexIndex(b);
+										var ic = parseVertexIndex(c);
+										var id;
+
+										if (d === undefined) {
+
+													addVertex(ia, ib, ic);
+										} else {
+
+													id = parseVertexIndex(d);
+
+													addVertex(ia, ib, id);
+													addVertex(ib, ic, id);
+										}
+
+										if (ua !== undefined) {
+
+													ia = parseUVIndex(ua);
+													ib = parseUVIndex(ub);
+													ic = parseUVIndex(uc);
+
+													if (d === undefined) {
+
+																addUV(ia, ib, ic);
+													} else {
+
+																id = parseUVIndex(ud);
+
+																addUV(ia, ib, id);
+																addUV(ib, ic, id);
+													}
+										}
+
+										if (na !== undefined) {
+
+													ia = parseNormalIndex(na);
+													ib = parseNormalIndex(nb);
+													ic = parseNormalIndex(nc);
+
+													if (d === undefined) {
+
+																addNormal(ia, ib, ic);
+													} else {
+
+																id = parseNormalIndex(nd);
+
+																addNormal(ia, ib, id);
+																addNormal(ib, ic, id);
+													}
+										}
+							}
+
+							// create mesh if no objects in text
+
+							if (/^o /gm.test(text) === false) {
+
+										geometry = {
+													vertices: [],
+													normals: [],
+													uvs: []
+										};
+
+										material = {
+													name: ''
+										};
+
+										object = {
+													name: '',
+													geometry: geometry,
+													material: material
+										};
+
+										objects.push(object);
+							}
+
+							var vertices = [];
+							var normals = [];
+							var uvs = [];
+
+							// v float float float
+
+							var vertex_pattern = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+							// vn float float float
+
+							var normal_pattern = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+							// vt float float
+
+							var uv_pattern = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+							// f vertex vertex vertex ...
+
+							var face_pattern1 = /f( +-?\d+)( +-?\d+)( +-?\d+)( +-?\d+)?/;
+
+							// f vertex/uv vertex/uv vertex/uv ...
+
+							var face_pattern2 = /f( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))?/;
+
+							// f vertex/uv/normal vertex/uv/normal vertex/uv/normal ...
+
+							var face_pattern3 = /f( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))?/;
+
+							// f vertex//normal vertex//normal vertex//normal ...
+
+							var face_pattern4 = /f( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))?/;
+
+							//
+
+							var lines = text.split('\n');
+
+							for (var i = 0; i < lines.length; i++) {
+
+										var line = lines[i];
+										line = line.trim();
+
+										var result;
+
+										if (line.length === 0 || line.charAt(0) === '#') {
+
+													continue;
+										} else if ((result = vertex_pattern.exec(line)) !== null) {
+
+													// ["v 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
+
+													vertices.push(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3]));
+										} else if ((result = normal_pattern.exec(line)) !== null) {
+
+													// ["vn 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
+
+													normals.push(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3]));
+										} else if ((result = uv_pattern.exec(line)) !== null) {
+
+													// ["vt 0.1 0.2", "0.1", "0.2"]
+
+													uvs.push(parseFloat(result[1]), parseFloat(result[2]));
+										} else if ((result = face_pattern1.exec(line)) !== null) {
+
+													// ["f 1 2 3", "1", "2", "3", undefined]
+
+													addFace(result[1], result[2], result[3], result[4]);
+										} else if ((result = face_pattern2.exec(line)) !== null) {
+
+													// ["f 1/1 2/2 3/3", " 1/1", "1", "1", " 2/2", "2", "2", " 3/3", "3", "3", undefined, undefined, undefined]
+
+													addFace(result[2], result[5], result[8], result[11], result[3], result[6], result[9], result[12]);
+										} else if ((result = face_pattern3.exec(line)) !== null) {
+
+													// ["f 1/1/1 2/2/2 3/3/3", " 1/1/1", "1", "1", "1", " 2/2/2", "2", "2", "2", " 3/3/3", "3", "3", "3", undefined, undefined, undefined, undefined]
+
+													addFace(result[2], result[6], result[10], result[14], result[3], result[7], result[11], result[15], result[4], result[8], result[12], result[16]);
+										} else if ((result = face_pattern4.exec(line)) !== null) {
+
+													// ["f 1//1 2//2 3//3", " 1//1", "1", "1", " 2//2", "2", "2", " 3//3", "3", "3", undefined, undefined, undefined]
+
+													addFace(result[2], result[5], result[8], result[11], undefined, undefined, undefined, undefined, result[3], result[6], result[9], result[12]);
+										} else if (/^o /.test(line)) {
+
+													geometry = {
+																vertices: [],
+																normals: [],
+																uvs: []
+													};
+
+													material = {
+																name: ''
+													};
+
+													object = {
+																name: line.substring(2).trim(),
+																geometry: geometry,
+																material: material
+													};
+
+													objects.push(object);
+										} else if (/^g /.test(line)) {
+
+													// group
+
+										} else if (/^usemtl /.test(line)) {
+
+																// material
+
+																material.name = line.substring(7).trim();
+													} else if (/^mtllib /.test(line)) {
+
+																// mtl file
+
+													} else if (/^s /.test(line)) {
+
+																			// smooth shading
+
+																} else {
+
+																						// console.log( "THREE.OBJLoader: Unhandled line " + line );
+
+																			}
+							}
+
+							var container = new _three2.default.Object3D();
+
+							for (var i = 0, l = objects.length; i < l; i++) {
+
+										object = objects[i];
+										geometry = object.geometry;
+
+										var buffergeometry = new _three2.default.BufferGeometry();
+
+										buffergeometry.addAttribute('position', new _three2.default.BufferAttribute(new Float32Array(geometry.vertices), 3));
+
+										if (geometry.normals.length > 0) {
+
+													buffergeometry.addAttribute('normal', new _three2.default.BufferAttribute(new Float32Array(geometry.normals), 3));
+										}
+
+										if (geometry.uvs.length > 0) {
+
+													buffergeometry.addAttribute('uv', new _three2.default.BufferAttribute(new Float32Array(geometry.uvs), 2));
+										}
+
+										material = new _three2.default.MeshLambertMaterial();
+										material.name = object.material.name;
+
+										var mesh = new _three2.default.Mesh(buffergeometry, material);
+										mesh.name = object.name;
+
+										container.add(mesh);
+							}
+
+							console.timeEnd('OBJLoader');
+
+							return container;
 				}
-
-				if (geometry.uvs.length > 0) {
-
-					buffergeometry.addAttribute('uv', new _three2.default.BufferAttribute(new Float32Array(geometry.uvs), 2));
-				}
-
-				material = new _three2.default.MeshLambertMaterial();
-				material.name = object.material.name;
-
-				var mesh = new _three2.default.Mesh(buffergeometry, material);
-				mesh.name = object.name;
-
-				container.add(mesh);
-			}
-
-			console.timeEnd('OBJLoader');
-
-			return container;
-		}
 
 	};
 
@@ -38841,6 +38845,7 @@
 	  mouseToggle: function mouseToggle(raycasterObj) {
 	    var intersection = raycasterObj.intersection;
 	    var intersected = raycasterObj.intersected;
+
 
 	    if (intersection) {
 	      document.body.style.cursor = "pointer";
@@ -38993,6 +38998,7 @@
 	    var lightsObj = usefulThings.lightsObj;
 	    var raycasterObj = usefulThings.raycasterObj;
 
+
 	    scene.updateMatrixWorld();
 	    controls.update();
 
@@ -39062,21 +39068,22 @@
 
 /***/ },
 /* 13 */,
-/* 14 */
+/* 14 */,
+/* 15 */
 /***/ function(module, exports) {
 
 	"use strict";
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	/** Shrinkwrap URL:
 	 *      /v2/bundles/js?modules=fastclick%401.0.6%2Co-autoinit%401.2.0&shrinkwrap=
 	 */
-	!(function (t) {
+	!function (t) {
 		function e(o) {
 			if (n[o]) return n[o].exports;var i = n[o] = { exports: {}, id: o, loaded: !1 };return t[o].call(i.exports, i, i.exports, e), i.loaded = !0, i.exports;
 		}var n = {};return e.m = t, e.c = n, e.p = "", e(0);
-	})([function (t, e, n) {
+	}([function (t, e, n) {
 		"use strict";
 		n(1), window.Origami = { fastclick: n(2), "o-autoinit": n(4) };
 	}, function (t, e) {
@@ -39085,7 +39092,7 @@
 		t.exports = n(3);
 	}, function (t, e) {
 		"use strict";
-		var n = !1;!(function () {
+		var n = !1;!function () {
 			/**
 	  * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.
 	  *
@@ -39098,7 +39105,7 @@
 					return function () {
 						return t.apply(e, arguments);
 					};
-				}var r;if ((n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t))) {
+				}var r;if (n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t)) {
 					for (var a = ["onMouse", "onClick", "onTouchStart", "onTouchMove", "onTouchEnd", "onTouchCancel"], c = this, s = 0, u = a.length; u > s; s++) {
 						c[a[s]] = o(c[a[s]], c);
 					}i && (t.addEventListener("mouseover", this.onMouse, !0), t.addEventListener("mousedown", this.onMouse, !0), t.addEventListener("mouseup", this.onMouse, !0)), t.addEventListener("click", this.onClick, !0), t.addEventListener("touchstart", this.onTouchStart, !1), t.addEventListener("touchmove", this.onTouchMove, !1), t.addEventListener("touchend", this.onTouchEnd, !1), t.addEventListener("touchcancel", this.onTouchCancel, !1), Event.prototype.stopImmediatePropagation || (t.removeEventListener = function (e, n, o) {
@@ -39137,7 +39144,7 @@
 			}, e.prototype.focus = function (t) {
 				var e;r && t.setSelectionRange && 0 !== t.type.indexOf("date") && "time" !== t.type && "month" !== t.type ? (e = t.value.length, t.setSelectionRange(e, e)) : t.focus();
 			}, e.prototype.updateScrollParent = function (t) {
-				var e, n;if ((e = t.fastClickScrollParent, !e || !e.contains(t))) {
+				var e, n;if (e = t.fastClickScrollParent, !e || !e.contains(t)) {
 					n = t;do {
 						if (n.scrollHeight > n.offsetHeight) {
 							e = n, t.fastClickScrollParent = n;break;
@@ -39147,8 +39154,8 @@
 			}, e.prototype.getTargetElementFromEventTarget = function (t) {
 				return t.nodeType === Node.TEXT_NODE ? t.parentNode : t;
 			}, e.prototype.onTouchStart = function (t) {
-				var e, n, o;if (t.targetTouches.length > 1) return !0;if ((e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r)) {
-					if ((o = window.getSelection(), o.rangeCount && !o.isCollapsed)) return !0;if (!a) {
+				var e, n, o;if (t.targetTouches.length > 1) return !0;if (e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r) {
+					if (o = window.getSelection(), o.rangeCount && !o.isCollapsed) return !0;if (!a) {
 						if (n.identifier && n.identifier === this.lastTouchIdentifier) return t.preventDefault(), !1;this.lastTouchIdentifier = n.identifier, this.updateScrollParent(e);
 					}
 				}return this.trackingClick = !0, this.trackingClickStart = t.timeStamp, this.targetElement = e, this.touchStartX = n.pageX, this.touchStartY = n.pageY, t.timeStamp - this.lastClickTime < this.tapDelay && t.preventDefault(), !0;
@@ -39165,9 +39172,9 @@
 				    o,
 				    s,
 				    u,
-				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if ((this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o)) {
+				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if (this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o) {
 					if (e = this.findControl(l)) {
-						if ((this.focus(l), i)) return !1;l = e;
+						if (this.focus(l), i) return !1;l = e;
 					}
 				} else if (this.needsFocus(l)) return t.timeStamp - n > 100 || r && window.top !== window && "input" === o ? (this.targetElement = null, !1) : (this.focus(l), this.sendClick(l, t), r && "select" === o || (this.targetElement = null, t.preventDefault()), !1);return r && !a && (s = l.fastClickScrollParent, s && s.fastClickLastScrollTop !== s.scrollTop) ? !0 : (this.needsClick(l) || (t.preventDefault(), this.sendClick(l, t)), !1);
 			}, e.prototype.onTouchCancel = function () {
@@ -39191,20 +39198,20 @@
 			}, "function" == typeof n && "object" == _typeof(n.amd) && n.amd ? n(function () {
 				return e;
 			}) : "undefined" != typeof t && t.exports ? (t.exports = e.attach, t.exports.FastClick = e) : window.FastClick = e;
-		})();
+		}();
 	}, function (t, e, n) {
 		t.exports = n(5);
 	}, function (t, e) {
 		"use strict";
 		function n(t) {
 			t in o || (o[t] = !0, document.dispatchEvent(new CustomEvent("o." + t)));
-		}var o = {};if ((window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
+		}var o = {};if (window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
 			"complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded");
-		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent)) {
+		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent) {
 			var i = !1,
 			    r = 50;try {
 				i = null == window.frameElement && document.documentElement;
-			} catch (a) {}i && i.doScroll && !(function c() {
+			} catch (a) {}i && i.doScroll && !function c() {
 				if (!("DOMContentLoaded" in o)) {
 					try {
 						i.doScroll("left");
@@ -39212,12 +39219,12 @@
 						return 5e3 > r ? setTimeout(c, r *= 1.2) : void 0;
 					}n("DOMContentLoaded");
 				}
-			})();
+			}();
 		}
 	}]);
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
