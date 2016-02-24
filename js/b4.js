@@ -5,8 +5,7 @@ import bScene from './bScene.js';
 
 const b4 = {
   init({container, renderer}) {
-    console.log('b4 initialized!')
-    console.log(bScene);
+    console.log('initialized b4!')
     const b4Scene = bScene.create({container, renderer});
 
     b4Scene.incrementCounters = function () {
@@ -25,7 +24,7 @@ const b4 = {
       let objs = [];
 
         let mesh = new THREE.Mesh(
-          new THREE.TetrahedronGeometry(50, 0),
+          new THREE.TetrahedronGeometry(25, 0),
           new THREE.MeshPhongMaterial({
             color: 0xffffff,
             shading: THREE.FlatShading
@@ -43,7 +42,7 @@ const b4 = {
         )
         mesh.geometry.verticesNeedUpdate = true;
         mesh.geometry.dynamic = true;
-        mesh.motion = function(i) { return Math.tan((this.counters.a) + i * 0.02) }.bind(this);
+        mesh.motion = function(i) { return (Math.cos((this.counters.a * 4) - i) * 0.02)}.bind(this);
 
         this.scene.add(mesh);
         objs.push(mesh);
@@ -70,10 +69,11 @@ const b4 = {
       this.prepLights()
       this.prepObjects()
 
+      this.renderer.setClearColor(0xf7f7f7)
+
       return (
         function() {
           this.incrementCounters()
-
           this.pulsateBigSphere(this.objects.objs)
         }.bind(this)
       )

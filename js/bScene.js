@@ -21,7 +21,7 @@ const bScene = {
     this.render(fn)
 
     if (document.querySelectorAll('canvas')[0]) {
-      requestAnimationFrame( function() {this.animate()} )
+      requestAnimationFrame( function() {this.animate(fn)}.bind(this) )
     }
   },
   create({container, renderer}) {
@@ -68,7 +68,7 @@ const bScene = {
   onMouseMove () {
     event.preventDefault();
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-		this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		this.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
   },
   onWindowResize () {
     this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -78,24 +78,25 @@ const bScene = {
   },
   render(fn) {
     if (this.controls) this.controls.update();
+    if (fn) fn();
 
-    fn();
 
     this.renderer.render(this.scene, this.camera);
   },
   standardSetup () {
     this.prepRenderer()
     this.prepScene()
+    this.prepCamera()
     // this.prepControls()
 
     window.addEventListener(
       'resize',
-      function() { this.onWindowResize() },
+      function() { this.onWindowResize() }.bind(this),
       false
     );
     window.addEventListener(
       'mousemove',
-      function() { this.onMouseMove() },
+      function() { this.onMouseMove() }.bind(this),
       false
     );
   },
