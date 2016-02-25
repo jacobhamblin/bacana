@@ -16,6 +16,7 @@ const bScene = {
   },
   renderer: null,
   scene: new THREE.Scene(),
+  ended: false,
 
   animate(fn) {
     this.render(fn)
@@ -29,6 +30,19 @@ const bScene = {
     bScene.container = container;
     bScene.renderer = renderer;
     return bScene;
+  },
+  endDemo () {
+    cancelAnimationFrame(this.id);
+    this.renderer.domElement.addEventListener('dblclick', null, false);
+    this.scene = null;
+    this.projector = null;
+    this.camera = null;
+    this.controls = null;
+    this.objects = null;
+    this.lights = null;
+    this.counters = null;
+    this.raycaster = null;
+    this.ended = true;
   },
   init () {
     this.standardSetup()
@@ -77,6 +91,7 @@ const bScene = {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   },
   render(fn) {
+    if (this.ended) return
     if (this.controls) this.controls.update();
     if (fn) fn();
 

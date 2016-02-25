@@ -4,6 +4,7 @@ import THREE from 'three';
 import OrbitControls from './vendor/OrbitControls.js';
 
 const b3 = {
+  usefulThings: null,
   animate: function(usefulThings) {
     let self = this;
 
@@ -21,6 +22,13 @@ const b3 = {
       shading: shadingType
     });
     mesh.material = material;
+  },
+  endDemo: function(usefulThings) {
+    let {renderer, scene, camera} = usefulThings;
+
+    renderer.domElement.addEventListener('dblclick', null, false);
+    scene = null;
+    camera = null;
   },
   handleIntersection: function({raycasterObj, objects, scene, mouse, camera}) {
     raycasterObj.raycaster.setFromCamera(mouse, camera);
@@ -259,6 +267,8 @@ const b3 = {
       lightsObj,
       raycasterObj
     };
+
+    this.usefulThings = usefulThings;
 
     window.addEventListener(
       'resize',

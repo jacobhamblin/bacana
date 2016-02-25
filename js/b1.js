@@ -9,6 +9,7 @@ import FresnelShader from './vendor/shaders/FresnelShader.js';
 import OrbitControls from './vendor/OrbitControls.js';
 
 const b1 = {
+  usefulThings: null,
   animate: function(usefulThings) {
     let self = this;
 
@@ -40,6 +41,13 @@ const b1 = {
       let h = ( 360 * ( color[0] + altTime ) % 360 ) / 360;
 			material.color.setHSL( h, color[1], color[2] );
     }
+  },
+  endDemo: function(usefulThings) {
+    let {renderer, scene, camera} = usefulThings;
+
+    renderer.domElement.addEventListener('dblclick', null, false);
+    scene = null;
+    camera = null;
   },
   handleIntersection: function(object) {
     let {raycasterObj, objects, scene, mouse, camera, counters, altTime} = object;
@@ -298,6 +306,8 @@ const b1 = {
     }
 
     usefulThings = {controls, camera, scene, renderer, mouse, objects, counters, uniforms, raycasterObj};
+
+    this.usefulThings = usefulThings;
 
     let self = this;
     window.addEventListener(

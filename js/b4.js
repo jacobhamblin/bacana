@@ -2,11 +2,13 @@
 
 import THREE from 'three';
 import bScene from './bScene.js';
+import TweenLite from 'gsap';
 
 const b4 = {
   init({container, renderer}) {
     console.log('initialized b4!')
     const b4Scene = bScene.create({container, renderer});
+
 
     b4Scene.incrementCounters = function () {
       this.counters.a += 0.02;
@@ -80,6 +82,8 @@ const b4 = {
     }
 
     b4Scene.init();
+
+    return b4Scene;
   }
 }
 
