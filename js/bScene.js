@@ -22,7 +22,7 @@ const bScene = {
     this.render(fn)
 
     if (document.querySelectorAll('canvas')[0]) {
-      requestAnimationFrame( function() {this.animate(fn)}.bind(this) )
+      this.animFrameReq = requestAnimationFrame( function() {this.animate(fn)}.bind(this) )
     }
   },
   create({container, renderer}) {
@@ -31,9 +31,8 @@ const bScene = {
     bScene.renderer = renderer;
     return bScene;
   },
-  endDemo () {
-    cancelAnimationFrame(this.id);
-    this.renderer.domElement.addEventListener('dblclick', null, false);
+  destroy () {
+    cancelAnimationFrame(this.animFrameReq);
     this.scene = null;
     this.projector = null;
     this.camera = null;
@@ -102,7 +101,7 @@ const bScene = {
     this.prepRenderer()
     this.prepScene()
     this.prepCamera()
-    // this.prepControls()
+    this.prepControls()
 
     window.addEventListener(
       'resize',

@@ -54,29 +54,29 @@
 
 	var _b2 = _interopRequireDefault(_b);
 
-	var _b3 = __webpack_require__(10);
+	var _b3 = __webpack_require__(3);
 
 	var _b4 = _interopRequireDefault(_b3);
 
-	var _b5 = __webpack_require__(11);
+	var _b5 = __webpack_require__(8);
 
 	var _b6 = _interopRequireDefault(_b5);
 
-	var _b7 = __webpack_require__(12);
+	var _b7 = __webpack_require__(9);
 
 	var _b8 = _interopRequireDefault(_b7);
 
-	var _fastclickMin = __webpack_require__(16);
+	var _fastclickMin = __webpack_require__(12);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(4);
 
 	var _three2 = _interopRequireDefault(_three);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(17);
+	__webpack_require__(13);
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
@@ -144,8 +144,8 @@
 	    var num = i;
 	    preview.addEventListener('click', function (e) {
 	      event.preventDefault();
-	      // move css
 	      interaction.open = true;
+	      // move css
 	      var divFullscreen = document.querySelectorAll('div.fullscreen')[0];
 	      if (document.querySelector('canvas') && interaction.open) {
 	        divFullscreen.removeChild(document.querySelectorAll('canvas')[0]);
@@ -187,11 +187,12 @@
 	function closeDemo(demoEl) {
 	  toggleClass(demoEl, "active");
 	  document.body.style.cursor = "initial";
+	  var canvas = document.querySelector('canvas');
+	  interaction.open = false;
 
-	  interaction.demo = false;
-	  interaction.activeDemo.endDemo();
+	  interaction.activeDemo.destroy();
 	  setTimeout(function () {
-	    if (demoEl && interaction.open === false) demoEl.removeChild(document.querySelectorAll('canvas')[0]);
+	    if (demoEl && interaction.open === false) demoEl.removeChild(canvas);
 	  }, 500);
 	};
 
@@ -248,360 +249,527 @@
 
 	'use strict';
 
-	var _three = __webpack_require__(3);
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _three = __webpack_require__(4);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _TessellateModifier = __webpack_require__(4);
+	var _TessellateModifier = __webpack_require__(19);
 
 	var _TessellateModifier2 = _interopRequireDefault(_TessellateModifier);
 
-	var _ExplodeModifier = __webpack_require__(5);
+	var _ExplodeModifier = __webpack_require__(20);
 
 	var _ExplodeModifier2 = _interopRequireDefault(_ExplodeModifier);
 
-	var _fragment = __webpack_require__(6);
+	var _fragment = __webpack_require__(21);
 
 	var _fragment2 = _interopRequireDefault(_fragment);
 
-	var _vertex = __webpack_require__(7);
+	var _vertex = __webpack_require__(22);
 
 	var _vertex2 = _interopRequireDefault(_vertex);
 
-	var _FresnelShader = __webpack_require__(8);
+	var _FresnelShader = __webpack_require__(23);
 
 	var _FresnelShader2 = _interopRequireDefault(_FresnelShader);
 
-	var _OrbitControls = __webpack_require__(9);
+	var _bScene = __webpack_require__(5);
+
+	var _bScene2 = _interopRequireDefault(_bScene);
+
+	var _OrbitControls = __webpack_require__(6);
 
 	var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// b1.js
+
 	var b1 = {
-	  usefulThings: null,
-	  animate: function animate(usefulThings) {
-	    var self = this;
-
-	    var newThings = this.render(usefulThings);
-
-	    if (document.querySelectorAll('canvas')[0]) {
-	      requestAnimationFrame(function () {
-	        self.animate(newThings);
-	      });
-	    }
-	  },
-	  changeParticleColors: function changeParticleColors(_ref) {
-	    var objects = _ref.objects;
-	    var raycasterObj = _ref.raycasterObj;
-	    var counters = _ref.counters;
-	    var altTime = _ref.altTime;
-
-	    for (var i = 0; i < objects.materials.length; i++) {
-	      var mats = objects.materials;
-	      var material = objects.materials[i];
-
-	      var params = objects.particlesParameters;
-	      var grayscale = [params[i][0][0], 0, params[i][0][2]];
-	      var timePassed = Date.now() * 0.001 - counters.lastHovered - (mats.length - 1 - i) * 0.4;
-	      timePassed > 2 ? timePassed = 2 : null;
-	      timePassed < 0 ? timePassed = 0 : null;
-	      var modifier = timePassed / 2;
-
-	      var coloring = [params[i][0][0], modifier * params[i][0][1], params[i][0][2]];
-	      var color = raycasterObj.intersection ? coloring : grayscale;
-
-	      var h = 360 * (color[0] + altTime) % 360 / 360;
-	      material.color.setHSL(h, color[1], color[2]);
-	    }
-	  },
-	  endDemo: function endDemo(usefulThings) {
-	    var renderer = usefulThings.renderer;
-	    var scene = usefulThings.scene;
-	    var camera = usefulThings.camera;
-
-	    renderer.domElement.addEventListener('dblclick', null, false);
-	    scene = null;
-	    camera = null;
-	  },
-	  handleIntersection: function handleIntersection(object) {
-	    var raycasterObj = object.raycasterObj;
-	    var objects = object.objects;
-	    var scene = object.scene;
-	    var mouse = object.mouse;
-	    var camera = object.camera;
-	    var counters = object.counters;
-	    var altTime = object.altTime;
-
-	    raycasterObj.raycaster.setFromCamera(mouse, camera);
-	    var intersects = raycasterObj.raycaster.intersectObjects(scene.children);
-
-	    var tempIntersection = undefined;
-	    tempIntersection = intersects[0] && intersects[0].object === objects.obj1[0] ? true : false;
-
-	    if (raycasterObj.intersection !== tempIntersection) {
-	      raycasterObj.intersection = tempIntersection;
-	      if (tempIntersection) {
-	        document.body.style.cursor = "pointer";
-	        counters.lastHovered = Date.now() * 0.001;
-	      } else {
-	        document.body.style.cursor = "initial";
-	      }
-	    }
-	  },
-	  init: function init(_ref2) {
-	    var container = _ref2.container;
-	    var renderer = _ref2.renderer;
-
-	    var usefulThings = this.setup({ container: container, renderer: renderer });
-	    this.animate(usefulThings);
-	  },
-	  onMouseMove: function onMouseMove(mouse) {
-	    event.preventDefault();
-	    mouse.x = event.clientX / window.innerWidth * 2 - 1;
-	    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-	  },
-	  onWindowResize: function onWindowResize(_ref3) {
-	    var camera = _ref3.camera;
-	    var renderer = _ref3.renderer;
-
-	    camera.aspect = window.innerWidth / window.innerHeight;
-	    camera.updateProjectionMatrix();
-
-	    renderer.setSize(window.innerWidth, window.innerHeight);
-	  },
-	  prepControls: function prepControls(_ref4) {
-	    var camera = _ref4.camera;
-	    var renderer = _ref4.renderer;
-
-	    var controls = new _OrbitControls2.default(camera, renderer.domElement);
-	    controls.rotateSpeed = 1;
-	    controls.enablePan = false;
-	    return controls;
-	  },
-	  prepCamera: function prepCamera() {
-	    var camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
-	    camera.position.set(0, 0, 50);
-	    camera.lookAt(0, 0, 0);
-
-	    return camera;
-	  },
-	  prepParticles: function prepParticles(_ref5) {
-	    var scene = _ref5.scene;
-	    var objects = _ref5.objects;
-
-	    var geometry = new _three2.default.Geometry();
-
-	    for (var i = 0; i < 10000; i++) {
-	      var vertex = new _three2.default.Vector3();
-	      vertex.x = Math.random() * 1500 - 750;
-	      vertex.y = Math.random() * 1500 - 750;
-	      vertex.z = Math.random() * 1500 - 750;
-	      geometry.vertices.push(vertex);
-	    }
-
-	    var particlesArr = [],
-	        materials = [];
-
-	    for (var i = 0; i < objects.particlesParameters.length; i++) {
-	      var color = objects.particlesParameters[i][0];
-	      var size = objects.particlesParameters[i][1];
-
-	      materials[i] = new _three2.default.PointsMaterial({ size: size });
-	      var particles = new _three2.default.Points(geometry, materials[i]);
-	      particles.rotation.x = Math.random() * 30;
-	      particles.rotation.y = Math.random() * 30;
-	      particles.rotation.z = Math.random() * 30;
-
-	      particlesArr.push(particles);
-	      scene.add(particles);
-	    }
-	    return { particles: particlesArr, materials: materials };
-	  },
-	  prepRenderer: function prepRenderer(_ref6) {
-	    var container = _ref6.container;
-	    var renderer = _ref6.renderer;
-
-	    renderer.setClearColor(0x222222);
-	    renderer.setPixelRatio(window.devicePixelRatio);
-	    renderer.setSize(window.innerWidth, window.innerHeight);
-	    container.appendChild(renderer.domElement);
-
-	    return renderer;
-	  },
-	  prepScene: function prepScene() {
-	    var scene = new _three2.default.Scene();
-
-	    return scene;
-	  },
-	  render: function render(usefulThings) {
-	    var objects = usefulThings.objects;
-	    var camera = usefulThings.camera;
-	    var counters = usefulThings.counters;
-	    var renderer = usefulThings.renderer;
-	    var scene = usefulThings.scene;
-	    var mouse = usefulThings.mouse;
-	    var uniforms = usefulThings.uniforms;
-	    var controls = usefulThings.controls;
-	    var raycasterObj = usefulThings.raycasterObj;
-
-	    controls.update();
-
-	    var time = Date.now() * 0.001;
-	    var altTime = Date.now() * 0.000025;
-
-	    this.handleIntersection({ raycasterObj: raycasterObj, objects: objects, scene: scene, mouse: mouse, camera: camera, counters: counters, altTime: altTime });
-
-	    for (var i = 0; i < objects.obj1.length; i++) {
-	      objects.obj1[i].rotation.x += 0.05;
-	      uniforms[i].amplitude.value = 1.0 + Math.cos(time * 1.25);
-	    }
-	    for (var i = 0; i < objects.particles1.length; i++) {
-	      var particle = objects.particles1[i];
-	      particle.rotation.x = altTime * (i < 4 ? i + 1 : -(i + 1));
-	    }
-
-	    this.changeParticleColors({ objects: objects, raycasterObj: raycasterObj, counters: counters, altTime: altTime });
-
-	    counters.a += 0.02;
-
-	    renderer.render(scene, camera);
-
-	    return { controls: controls, camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms, raycasterObj: raycasterObj };
-	  },
-	  setup: function setup(_ref7) {
-	    var container = _ref7.container;
-	    var renderer = _ref7.renderer;
+	  init: function init(_ref) {
+	    var container = _ref.container;
+	    var renderer = _ref.renderer;
 
 	    console.log('initialized b1!');
+	    var b1Scene = _bScene2.default.create({ container: container, renderer: renderer });
 
-	    var mouse = new _three2.default.Vector2();
-	    var objects = new Object();
-	    var usefulThings = new Object(),
-	        raycasterObj = new Object();
-	    var uniforms = [];
-	    var parameters = [];
-	    var objectsInfo = { count: 1, radius: 15 };
-	    var counters = new Object();
-	    counters.a = 0;
+	    b1Scene.changeParticleColors = function () {
+	      for (var i = 0; i < this.objects.materials.length; i++) {
+	        var mats = this.objects.materials;
+	        var material = this.objects.materials[i];
 
-	    var camera = this.prepCamera();
-	    var scene = this.prepScene();
-	    renderer = this.prepRenderer({ container: container, renderer: renderer });
+	        var params = this.objects.particlesParameters;
+	        var grayscale = [params[i][0][0], 0, params[i][0][2]];
+	        var timePassed = Date.now() * 0.001 - this.counters.lastHovered - (mats.length - 1 - i) * 0.4;
+	        timePassed > 2 ? timePassed = 2 : null;
+	        timePassed < 0 ? timePassed = 0 : null;
+	        var modifier = timePassed / 2;
 
-	    raycasterObj.raycaster = new _three2.default.Raycaster();
-	    raycasterObj.intersection = false;
+	        var coloring = [params[i][0][0], modifier * params[i][0][1], params[i][0][2]];
+	        var color = this.raycaster.intersection ? coloring : grayscale;
 
-	    var controls = this.prepControls({ camera: camera, renderer: renderer });
-
-	    var light = new _three2.default.PointLight(0xffffff, 1, 2000);
-
-	    light.position.set(0, 0, 900);
-
-	    scene.add(light);
-
-	    objects.obj1 = [];
-
-	    objects.particlesParameters = [[[0.80, 1, 0.5], 1.25], [[0.75, 1, 0.5], 1], [[0.70, 1, 0.5], 0.75], [[0.65, 1, 0.5], 0.5], [[0.60, 1, 0.5], 0.25]];
-
-	    var particleParams = objects.particlesParameters;
-	    var particlesObject = this.prepParticles({ scene: scene, objects: objects });
-	    objects.particles1 = particlesObject.particles;
-	    objects.materials = particlesObject.materials;
-
-	    for (var i = 0; i < objectsInfo.count; i++) {
-
-	      var geometry = new _three2.default.IcosahedronGeometry(objectsInfo.radius);
-
-	      var maxLength = i % 2 === 0 ? 16 : 4;
-	      var tessellateModifier = new _TessellateModifier2.default(maxLength);
-
-	      for (var j = 0; j < 6; j++) {
-	        tessellateModifier.modify(geometry);
+	        var h = 360 * (color[0] + this.counters.altTime) % 360 / 360;
+	        material.color.setHSL(h, color[1], color[2]);
 	      }
+	    };
 
-	      var explodeModifier = new _ExplodeModifier2.default();
-	      explodeModifier.modify(geometry);
+	    b1Scene.handleIntersection = function () {
+	      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera);
+	      var intersects = this.raycaster.raycaster.intersectObjects(this.scene.children);
 
-	      var numFaces = geometry.faces.length;
+	      var tempIntersection = undefined;
+	      tempIntersection = intersects[0] && intersects[0].object === this.objects.obj1[0] ? true : false;
 
-	      var newGeometry = new _three2.default.BufferGeometry().fromGeometry(geometry);
-
-	      // const material = new THREE.MeshPhongMaterial({
-	      //   color: 0xbbbbbb,
-	      //   shading: THREE.FlatShading
-	      // });
-
-	      var colors = new Float32Array(numFaces * 3 * 3);
-	      var displacement = new Float32Array(numFaces * 3 * 3);
-
-	      var color = new _three2.default.Color();
-
-	      for (var f = 0; f < numFaces; f++) {
-	        var index = 9 * f;
-
-	        var h = 0.5 + (i - 1) * .1 * Math.random();
-	        var s = 0;
-	        var l = 0.05 + 0.05 * Math.random();
-
-	        color.setHSL(h, s, l);
-
-	        var d = 10 * (0.5 - Math.random());
-
-	        for (var k = 0; k < 3; k++) {
-	          colors[index + 3 * k] = color.r;
-	          colors[index + 3 * k + 1] = color.g;
-	          colors[index + 3 * k + 2] = color.b;
-
-	          displacement[index + 3 * k] = d;
-	          displacement[index + 3 * k + 1] = d;
-	          displacement[index + 3 * k + 2] = d;
+	      if (this.raycaster.intersection !== tempIntersection) {
+	        this.raycaster.intersection = tempIntersection;
+	        if (tempIntersection) {
+	          document.body.style.cursor = "pointer";
+	          this.counters.lastHovered = Date.now() * 0.001;
+	        } else {
+	          document.body.style.cursor = "initial";
 	        }
 	      }
+	    };
 
-	      newGeometry.addAttribute('customColor', new _three2.default.BufferAttribute(colors, 3));
-	      newGeometry.addAttribute('displacement', new _three2.default.BufferAttribute(displacement, 3));
+	    b1Scene.incrementCounters = function () {
+	      this.counters.time = Date.now() * 0.001;
+	      this.counters.altTime = Date.now() * 0.000025;
+	      this.counters.a += 0.02;
+	    };
 
-	      uniforms.push({
-	        amplitude: { type: "f", value: 0.0 }
-	      });
+	    b1Scene.prepCamera = function () {
+	      var camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
+	      camera.position.set(0, 0, 50);
+	      camera.lookAt(0, 0, 0);
 
-	      var shaderMaterial = new _three2.default.ShaderMaterial({
-	        shading: _three2.default.FlatShading,
-	        fragmentShader: _fragment2.default,
-	        vertexShader: _vertex2.default,
-	        uniforms: uniforms[i],
-	        side: _three2.default.DoubleSide
-	      });
+	      this.camera = camera;
+	    };
 
-	      var object = new _three2.default.Mesh(newGeometry, shaderMaterial);
+	    b1Scene.prepIcosahedron = function () {
+	      for (var i = 0; i < this.objects.info.count; i++) {
+	        var geometry = new _three2.default.IcosahedronGeometry(this.objects.info.radius);
+	        var maxLength = i % 2 === 0 ? 16 : 4;
+	        var tessellateModifier = new _TessellateModifier2.default(maxLength);
 
-	      object.position.set(0, 0, 0);
+	        for (var j = 0; j < 6; j++) {
+	          tessellateModifier.modify(geometry);
+	        }
 
-	      objects.obj1.push(object);
-	      scene.add(object);
-	    }
+	        var explodeModifier = new _ExplodeModifier2.default();
+	        explodeModifier.modify(geometry);
+	        var numFaces = geometry.faces.length;
+	        var newGeometry = new _three2.default.BufferGeometry().fromGeometry(geometry);
+	        var colors = new Float32Array(numFaces * 3 * 3);
+	        var displacement = new Float32Array(numFaces * 3 * 3);
+	        var color = new _three2.default.Color();
+	        for (var f = 0; f < numFaces; f++) {
+	          var index = 9 * f;
 
-	    usefulThings = { controls: controls, camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, uniforms: uniforms, raycasterObj: raycasterObj };
+	          var h = 0.5 + (i - 1) * 0.1 * Math.random();
+	          var s = 0;
+	          var l = 0.05 + 0.05 * Math.random();
 
-	    this.usefulThings = usefulThings;
+	          color.setHSL(h, s, l);
 
-	    var self = this;
-	    window.addEventListener('resize', function () {
-	      self.onWindowResize({ camera: camera, renderer: renderer });
-	    }, false);
-	    window.addEventListener('mousemove', function () {
-	      self.onMouseMove(mouse);
-	    }, false);
+	          var d = 10 * (0.5 - Math.random());
 
-	    return usefulThings;
+	          for (var k = 0; k < 3; k++) {
+	            colors[index + 3 * k] = color.r;
+	            colors[index + 3 * k + 1] = color.g;
+	            colors[index + 3 * k + 2] = color.b;
+
+	            displacement[index + 3 * k] = d;
+	            displacement[index + 3 * k + 1] = d;
+	            displacement[index + 3 * k + 2] = d;
+	          }
+	        }
+
+	        newGeometry.addAttribute('customColor', new _three2.default.BufferAttribute(colors, 3));
+	        newGeometry.addAttribute('displacement', new _three2.default.BufferAttribute(displacement, 3));
+
+	        this.uniforms.push({
+	          amplitude: { type: "f", value: 0.0 }
+	        });
+
+	        var shaderMaterial = new _three2.default.ShaderMaterial({
+	          shading: _three2.default.FlatShading,
+	          fragmentShader: _fragment2.default,
+	          vertexShader: _vertex2.default,
+	          uniforms: this.uniforms[i],
+	          side: _three2.default.DoubleSide
+	        });
+
+	        var object = new _three2.default.Mesh(newGeometry, shaderMaterial);
+
+	        object.position.set(0, 0, 0);
+
+	        this.objects.obj1.push(object);
+	        this.scene.add(object);
+	      }
+	    };
+
+	    b1Scene.prepLights = function () {
+	      this.lights.lights = [];
+	      var light = new _three2.default.PointLight(0xffffff, 1, 2000);
+	      light.position.set(0, 0, 900);
+	      this.lights.lights.push(light);
+	      this.scene.add(light);
+	    };
+
+	    b1Scene.prepParticles = function () {
+	      var geometry = new _three2.default.Geometry();
+
+	      for (var i = 0; i < 10000; i++) {
+	        var vertex = new _three2.default.Vector3();
+	        vertex.x = Math.random() * 1500 - 750;
+	        vertex.y = Math.random() * 1500 - 750;
+	        vertex.z = Math.random() * 1500 - 750;
+	        geometry.vertices.push(vertex);
+	      }
+
+	      var particlesArr = [],
+	          materials = [];
+
+	      for (var i = 0; i < this.objects.particlesParameters.length; i++) {
+	        var color = this.objects.particlesParameters[i][0];
+	        var size = this.objects.particlesParameters[i][1];
+
+	        materials[i] = new _three2.default.PointsMaterial({ size: size });
+	        var particles = new _three2.default.Points(geometry, materials[i]);
+	        particles.rotation.x = Math.random() * 30;
+	        particles.rotation.y = Math.random() * 30;
+	        particles.rotation.z = Math.random() * 30;
+
+	        particlesArr.push(particles);
+	        this.scene.add(particles);
+	      }
+
+	      this.objects.particles1 = particlesArr;
+	      this.objects.materials = materials;
+	    };
+
+	    b1Scene.rotateIcosahedron = function () {
+	      for (var i = 0; i < this.objects.obj1.length; i++) {
+	        this.objects.obj1[i].rotation.x += 0.05;
+	        this.uniforms[i].amplitude.value = 1.0 + Math.cos(this.counters.time * 1.25);
+	      }
+	    };
+
+	    b1Scene.rotateParticles = function () {
+	      for (var i = 0; i < this.objects.particles1.length; i++) {
+	        var particle = this.objects.particles1[i];
+	        particle.rotation.x = this.counters.altTime * (i < 4 ? i + 1 : -(i + 1));
+	      }
+	    };
+
+	    b1Scene.uniqueSetup = function () {
+	      this.prepCamera();
+	      this.prepControls();
+	      this.prepLights();
+
+	      this.counters.time = Date.now() * 0.001;
+	      this.counters.altTime = Date.now() * 0.000025;
+	      this.objects.info = { count: 1, radius: 15 };
+	      this.uniforms = [];
+	      this.objects.obj1 = [];
+
+	      this.objects.particlesParameters = [[[0.80, 1, 0.5], 1.25], [[0.75, 1, 0.5], 1], [[0.70, 1, 0.5], 0.75], [[0.65, 1, 0.5], 0.5], [[0.60, 1, 0.5], 0.25]];
+
+	      this.prepParticles();
+	      this.prepIcosahedron();
+
+	      return function () {
+	        this.incrementCounters();
+	        this.handleIntersection();
+	        this.changeParticleColors();
+	        this.rotateIcosahedron();
+	        this.rotateParticles();
+	      }.bind(this);
+	    };
+
+	    b1Scene.init();
+
+	    return b1Scene;
 	  }
-	}; // b1.js
+	};
 
-	module.exports = b1;
+	exports.default = b1;
 
 /***/ },
 /* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; // b2.js
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _three = __webpack_require__(4);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	var _bScene = __webpack_require__(5);
+
+	var _bScene2 = _interopRequireDefault(_bScene);
+
+	var _OBJLoader = __webpack_require__(7);
+
+	var _OBJLoader2 = _interopRequireDefault(_OBJLoader);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var b2 = {
+	  init: function init(_ref) {
+	    var container = _ref.container;
+	    var renderer = _ref.renderer;
+
+	    console.log('initialized b2!');
+	    var b2Scene = _bScene2.default.create({ container: container, renderer: renderer });
+
+	    b2Scene.applyMaterial = function (object, color) {
+	      var material = new _three2.default.MeshPhongMaterial({
+	        shading: _three2.default.FlatShading,
+	        color: color
+	      });
+
+	      object.material = material;
+	      return object;
+	    };
+
+	    b2Scene.crystalClicked = function () {
+	      this.counters.clicked = this.counters.frame;
+	      // render method calls switchActiveCrystal when seven frames have passed
+	    };
+
+	    b2Scene.handleRaycasterIntersection = function () {
+	      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera);
+	      var intersects = this.raycaster.raycaster.intersectObjects(this.scene.children);
+
+	      var tempIntersection = false;
+	      if (intersects.length > 0) {
+	        for (var i = 0; i < this.objects.crystals.length; i++) {
+	          if (this.objects.crystals[i] === intersects[0].object) {
+	            tempIntersection = true;
+	          }
+	        }
+	        this.raycaster.intersection = tempIntersection;
+	        if (this.raycaster.intersection === false) {
+	          this.mouseleaveCrystal();
+	        } else {
+	          this.mouseenterCrystal();
+	        }
+	      } else {
+	        this.raycaster.intersection = tempIntersection;
+	        if (this.raycaster.intersection === false) {
+	          this.mouseleaveCrystal();
+	        }
+	      }
+
+	      if (this.raycaster.intersection) {
+	        var val = this.counters.frame % 2 === 0 ? Math.cos(this.counters.cosY) * 2 : -(Math.cos(this.counters.cosY) * 2);
+	        this.objects.crystals[this.objects.activeCrystal].position.x += val;
+	      }
+	    };
+
+	    b2Scene.mouseenterCrystal = function () {
+	      document.body.style.cursor = "pointer";
+	    };
+
+	    b2Scene.mouseleaveCrystal = function () {
+	      if (this.objects.crystals[this.objects.activeCrystal] && this.raycaster.intersection === false) {
+	        this.objects.crystals[this.objects.activeCrystal].position.x = 0;
+	        document.body.style.cursor = "initial";
+	      }
+	    };
+
+	    b2Scene.onMouseClick = function () {
+	      if (this.raycaster && this.raycaster.intersection) {
+	        this.crystalClicked();
+	      }
+	    };
+
+	    b2Scene.prepCamera = function () {
+	      var camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
+	      camera.position.set(0, 0, 800);
+	      camera.lookAt(0, 0, 0);
+
+	      this.camera = camera;
+	    };
+
+	    b2Scene.prepCrystals = function () {
+	      var self = this;
+
+	      var manager = new _three2.default.LoadingManager();
+	      manager.onProgress = function (item, loaded, total) {
+	        console.log(item, loaded, total);
+	      };
+
+	      var onProgress = function onProgress(xhr) {
+	        if (xhr.lengthComputable) {
+	          var percentComplete = xhr.loaded / xhr.total * 100;
+	          console.log(Math.round(percentComplete, 2) + '% downloaded');
+	        }
+	      };
+
+	      var onError = function onError(xhr) {};
+
+	      self.objects.crystals = [];
+
+	      var icosahedronGeom = new _three2.default.IcosahedronGeometry(250, 3);
+	      var icosahedronMat = new _three2.default.MeshDepthMaterial({
+	        wireframe: true
+	      });
+	      var icosahedron = new _three2.default.Mesh(icosahedronGeom, icosahedronMat);
+	      icosahedron.position.set(0, 0, 700);
+	      this.scene.add(icosahedron);
+	      this.objects.icosahedron = icosahedron;
+
+	      var loadedCount = 0;
+	      var crystalObjects = ['./obj/b2_1.obj', './obj/b2_2.obj', './obj/b2_3.obj'];
+	      var colors = [0xaaaaaa, 0x777777, 0xaaaaaa];
+	      var loader = new _three2.default.OBJLoader(manager);
+
+	      var _loop = function _loop(i) {
+	        loader.load(crystalObjects[i], function (object) {
+	          object.traverse(function (child) {
+	            if (child instanceof _three2.default.Mesh) {
+	              child = self.applyMaterial(child, colors[i]);
+	              child.position.set(0, 0, 700);
+	              child.scale.set(0.15, 0.15, 0.15);
+	              self.objects.crystals.push(child);
+	              loadedCount++;
+	            }
+	          });
+
+	          if (loadedCount === crystalObjects.length) {
+	            self.objects.activeCrystal = 0;
+	            self.scene.add(self.objects.crystals[self.objects.activeCrystal]);
+	          }
+	        }, onProgress, onError);
+	      };
+
+	      for (var i = 0; i < crystalObjects.length; i++) {
+	        _loop(i);
+	      }
+	    };
+
+	    b2Scene.prepLights = function () {
+	      var primLight = new _three2.default.PointLight(0xffffff, 1, 2000);
+	      primLight.position.set(0, 0, 900);
+	      this.scene.add(primLight);
+
+	      var lightParameters = [[0xff0000, 0.5, [-100, 0, 900]], [0x7700FF, 0.5, [100, 0, 900]]];
+
+	      this.lights.colors = [[0xff0000, 0x7700ff], [0xcc00ff, 0x00aaff], [0x0000ff, 0x00ff00]];
+
+	      var lights = [];
+	      for (var i = 0; i < lightParameters.length; i++) {
+	        var light = new _three2.default.PointLight(lightParameters[i][0], lightParameters[i][1], 2000);
+
+	        light.position.set(lightParameters[i][2][0], lightParameters[i][2][1], lightParameters[i][2][2]);
+
+	        lights.push(light);
+	        this.scene.add(light);
+	      }
+
+	      this.lights.lights = lights;
+	    };
+
+	    b2Scene.pulsateLights = function () {
+	      for (var i = 0; i < this.lights.lights.length; i++) {
+	        var intensities = Math.abs(Math.cos(this.counters.cosY * 10 + i));
+	        var calculation = 1 - Math.abs(this.mouse.x);
+	        var intensity = calculation > 0.3 ? (calculation - 0.3) * 2 : 0;
+	        this.lights.lights[i].intensity = intensities * intensity;
+	      }
+	    };
+
+	    b2Scene.rollIcosahedron = function () {
+	      this.objects.icosahedron.rotation.y += this.mouse.x * 0.004;
+	      this.objects.icosahedron.rotation.x += this.mouse.y * 0.004;
+	    };
+
+	    b2Scene.uniqueSetup = function () {
+	      this.counters.cosY = 0;
+	      this.counters.frame = 0;
+	      this.counters.floatingCrystalPos = 0;
+	      this.counters.clicked = -4;
+	      this.prepCamera();
+	      this.prepLights();
+	      this.prepCrystals();
+	      this.controls = null;
+
+	      var self = this;
+	      document.querySelector('canvas').addEventListener('click', function () {
+	        self.onMouseClick();
+	      }, false);
+
+	      return function () {
+	        this.counters.floatingCrystalPos += Math.cos(this.counters.cosY) * 0.2;
+	        this.counters.cosY += 0.02;
+
+	        this.shakeOrSwapCrystal();
+	        this.pulsateLights();
+	        this.handleRaycasterIntersection();
+	        this.rollIcosahedron();
+
+	        this.counters.frame++;
+	      }.bind(this);
+	    };
+
+	    b2Scene.shakeOrSwapCrystal = function () {
+	      if (_typeof(this.objects.activeCrystal) === _typeof(1)) {
+	        this.objects.crystals[this.objects.activeCrystal].rotation.y += 0.05;
+	        this.objects.crystals[this.objects.activeCrystal].position.y = this.counters.floatingCrystalPos;
+	        if (this.counters.frame <= this.counters.clicked + 7 && this.counters.frame > this.counters.clicked) {
+	          switch (Math.floor(Math.random() * 3)) {
+	            case 0:
+	              this.renderer.setClearColor(0x222222);
+	              break;
+	            case 1:
+	              this.renderer.setClearColor(this.lights.colors[this.objects.activeCrystal][0]);
+	              break;
+	            case 2:
+	              this.renderer.setClearColor(this.lights.colors[this.objects.activeCrystal][1]);
+	              break;
+	          }
+	          this.objects.crystals[this.objects.activeCrystal].position.x += Math.random() * 10 - 5;
+	          this.objects.crystals[this.objects.activeCrystal].position.y += Math.random() * 10 - 5;
+	        } else if (this.counters.frame === this.counters.clicked + 8) {
+	          this.switchActiveCrystal();
+	          renderer.setClearColor(0x222222);
+	        }
+	      }
+	    };
+
+	    b2Scene.switchActiveCrystal = function () {
+	      this.objects.crystals[this.objects.activeCrystal].position.x = 0;
+	      this.scene.remove(this.objects.crystals[this.objects.activeCrystal]);
+	      this.objects.activeCrystal = (this.objects.activeCrystal + 1) % this.objects.crystals.length;
+	      this.scene.add(this.objects.crystals[this.objects.activeCrystal]);
+
+	      for (var i = 0; i < this.lights.lights.length; i++) {
+	        this.lights.lights[i].color = new _three2.default.Color(this.lights.colors[this.objects.activeCrystal][i]);
+	      }
+	    };
+
+	    b2Scene.init();
+
+	    return b2Scene;
+	  }
+	};
+
+	exports.default = b2;
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var self = self || {};// File:src/Three.js
@@ -36794,1993 +36962,20 @@
 
 
 /***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _three = __webpack_require__(3);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var tessellateModifier = function tessellateModifier(maxEdgeLength) {
-
-		this.maxEdgeLength = maxEdgeLength;
-	}; /**
-	    * Break faces with edges longer than maxEdgeLength
-	    * - not recursive
-	    *
-	    * @author alteredq / http://alteredqualia.com/
-	    */
-
-	tessellateModifier.prototype.modify = function (geometry) {
-
-		var edge;
-
-		var faces = [];
-		var faceVertexUvs = [];
-		var maxEdgeLengthSquared = this.maxEdgeLength * this.maxEdgeLength;
-
-		for (var i = 0, il = geometry.faceVertexUvs.length; i < il; i++) {
-
-			faceVertexUvs[i] = [];
-		}
-
-		for (var i = 0, il = geometry.faces.length; i < il; i++) {
-
-			var face = geometry.faces[i];
-
-			if (face instanceof _three2.default.Face3) {
-
-				var a = face.a;
-				var b = face.b;
-				var c = face.c;
-
-				var va = geometry.vertices[a];
-				var vb = geometry.vertices[b];
-				var vc = geometry.vertices[c];
-
-				var dab = va.distanceToSquared(vb);
-				var dbc = vb.distanceToSquared(vc);
-				var dac = va.distanceToSquared(vc);
-
-				if (dab > maxEdgeLengthSquared || dbc > maxEdgeLengthSquared || dac > maxEdgeLengthSquared) {
-
-					var m = geometry.vertices.length;
-
-					var triA = face.clone();
-					var triB = face.clone();
-
-					if (dab >= dbc && dab >= dac) {
-
-						var vm = va.clone();
-						vm.lerp(vb, 0.5);
-
-						triA.a = a;
-						triA.b = m;
-						triA.c = c;
-
-						triB.a = m;
-						triB.b = b;
-						triB.c = c;
-
-						if (face.vertexNormals.length === 3) {
-
-							var vnm = face.vertexNormals[0].clone();
-							vnm.lerp(face.vertexNormals[1], 0.5);
-
-							triA.vertexNormals[1].copy(vnm);
-							triB.vertexNormals[0].copy(vnm);
-						}
-
-						if (face.vertexColors.length === 3) {
-
-							var vcm = face.vertexColors[0].clone();
-							vcm.lerp(face.vertexColors[1], 0.5);
-
-							triA.vertexColors[1].copy(vcm);
-							triB.vertexColors[0].copy(vcm);
-						}
-
-						edge = 0;
-					} else if (dbc >= dab && dbc >= dac) {
-
-						var vm = vb.clone();
-						vm.lerp(vc, 0.5);
-
-						triA.a = a;
-						triA.b = b;
-						triA.c = m;
-
-						triB.a = m;
-						triB.b = c;
-						triB.c = a;
-
-						if (face.vertexNormals.length === 3) {
-
-							var vnm = face.vertexNormals[1].clone();
-							vnm.lerp(face.vertexNormals[2], 0.5);
-
-							triA.vertexNormals[2].copy(vnm);
-
-							triB.vertexNormals[0].copy(vnm);
-							triB.vertexNormals[1].copy(face.vertexNormals[2]);
-							triB.vertexNormals[2].copy(face.vertexNormals[0]);
-						}
-
-						if (face.vertexColors.length === 3) {
-
-							var vcm = face.vertexColors[1].clone();
-							vcm.lerp(face.vertexColors[2], 0.5);
-
-							triA.vertexColors[2].copy(vcm);
-
-							triB.vertexColors[0].copy(vcm);
-							triB.vertexColors[1].copy(face.vertexColors[2]);
-							triB.vertexColors[2].copy(face.vertexColors[0]);
-						}
-
-						edge = 1;
-					} else {
-
-						var vm = va.clone();
-						vm.lerp(vc, 0.5);
-
-						triA.a = a;
-						triA.b = b;
-						triA.c = m;
-
-						triB.a = m;
-						triB.b = b;
-						triB.c = c;
-
-						if (face.vertexNormals.length === 3) {
-
-							var vnm = face.vertexNormals[0].clone();
-							vnm.lerp(face.vertexNormals[2], 0.5);
-
-							triA.vertexNormals[2].copy(vnm);
-							triB.vertexNormals[0].copy(vnm);
-						}
-
-						if (face.vertexColors.length === 3) {
-
-							var vcm = face.vertexColors[0].clone();
-							vcm.lerp(face.vertexColors[2], 0.5);
-
-							triA.vertexColors[2].copy(vcm);
-							triB.vertexColors[0].copy(vcm);
-						}
-
-						edge = 2;
-					}
-
-					faces.push(triA, triB);
-					geometry.vertices.push(vm);
-
-					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
-
-						if (geometry.faceVertexUvs[j].length) {
-
-							var uvs = geometry.faceVertexUvs[j][i];
-
-							var uvA = uvs[0];
-							var uvB = uvs[1];
-							var uvC = uvs[2];
-
-							// AB
-
-							if (edge === 0) {
-
-								var uvM = uvA.clone();
-								uvM.lerp(uvB, 0.5);
-
-								var uvsTriA = [uvA.clone(), uvM.clone(), uvC.clone()];
-								var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
-
-								// BC
-							} else if (edge === 1) {
-
-									var uvM = uvB.clone();
-									uvM.lerp(uvC, 0.5);
-
-									var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
-									var uvsTriB = [uvM.clone(), uvC.clone(), uvA.clone()];
-
-									// AC
-								} else {
-
-										var uvM = uvA.clone();
-										uvM.lerp(uvC, 0.5);
-
-										var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
-										var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
-									}
-
-							faceVertexUvs[j].push(uvsTriA, uvsTriB);
-						}
-					}
-				} else {
-
-					faces.push(face);
-
-					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
-
-						faceVertexUvs[j].push(geometry.faceVertexUvs[j][i]);
-					}
-				}
-			}
-		}
-
-		geometry.faces = faces;
-		geometry.faceVertexUvs = faceVertexUvs;
-	};
-
-	module.exports = tessellateModifier;
-
-/***/ },
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _three = __webpack_require__(3);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var explodeModifier = function explodeModifier() {}; /**
-	                                                      * Make all faces use unique vertices
-	                                                      * so that each face can be separated from others
-	                                                      *
-	                                                      * @author alteredq / http://alteredqualia.com/
-	                                                      */
-
-	explodeModifier.prototype.modify = function (geometry) {
-
-		var vertices = [];
-
-		for (var i = 0, il = geometry.faces.length; i < il; i++) {
-
-			var n = vertices.length;
-
-			var face = geometry.faces[i];
-
-			var a = face.a;
-			var b = face.b;
-			var c = face.c;
-
-			var va = geometry.vertices[a];
-			var vb = geometry.vertices[b];
-			var vc = geometry.vertices[c];
-
-			vertices.push(va.clone());
-			vertices.push(vb.clone());
-			vertices.push(vc.clone());
-
-			face.a = n;
-			face.b = n + 1;
-			face.c = n + 2;
-		}
-
-		geometry.vertices = vertices;
-		delete geometry.__tmpVertices;
-	};
-
-	module.exports = explodeModifier;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	module.exports = "\n\n\t\t\tvarying vec3 vNormal;\n\t\t\tvarying vec3 vColor;\n\n\t\t\tvoid main() {\n\n\t\t\t\tconst float ambient = 0.4;\n\n\t\t\t\tvec3 light = vec3( 1.0 );\n\t\t\t\tlight = normalize( light );\n\n\t\t\t\tfloat directional = max( dot( vNormal, light ), 0.0 );\n\n\t\t\t\tgl_FragColor = vec4( ( directional + ambient ) * vColor, 1.0 );\n\n\t\t\t}\n"
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	module.exports = "\n\t\t\tuniform float amplitude;\n\n\t\t\tattribute vec3 customColor;\n\t\t\tattribute vec3 displacement;\n\n\t\t\tvarying vec3 vNormal;\n\t\t\tvarying vec3 vColor;\n\n\t\t\tvoid main() {\n\n\t\t\t\tvNormal = normal;\n\t\t\t\tvColor = customColor;\n\n\t\t\t\tvec3 newPosition = position + normal * amplitude * displacement;\n\t\t\t\tgl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );\n\n\t\t\t}\n"
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var _three = __webpack_require__(3);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	_three2.default.FresnelShader = {
-
-		uniforms: {
-
-			"mRefractionRatio": { type: "f", value: 1.02 },
-			"mFresnelBias": { type: "f", value: 0.1 },
-			"mFresnelPower": { type: "f", value: 2.0 },
-			"mFresnelScale": { type: "f", value: 1.0 },
-			"tCube": { type: "t", value: null }
-
-		},
-
-		vertexShader: ["uniform float mRefractionRatio;", "uniform float mFresnelBias;", "uniform float mFresnelScale;", "uniform float mFresnelPower;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );", "vec4 worldPosition = modelMatrix * vec4( position, 1.0 );", "vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );", "vec3 I = worldPosition.xyz - cameraPosition;", "vReflect = reflect( I, worldNormal );", "vRefract[0] = refract( normalize( I ), worldNormal, mRefractionRatio );", "vRefract[1] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.99 );", "vRefract[2] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.98 );", "vReflectionFactor = mFresnelBias + mFresnelScale * pow( 1.0 + dot( normalize( I ), worldNormal ), mFresnelPower );", "gl_Position = projectionMatrix * mvPosition;", "}"].join("\n"),
-
-		fragmentShader: ["uniform samplerCube tCube;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 reflectedColor = textureCube( tCube, vec3( -vReflect.x, vReflect.yz ) );", "vec4 refractedColor = vec4( 1.0 );", "refractedColor.r = textureCube( tCube, vec3( -vRefract[0].x, vRefract[0].yz ) ).r;", "refractedColor.g = textureCube( tCube, vec3( -vRefract[1].x, vRefract[1].yz ) ).g;", "refractedColor.b = textureCube( tCube, vec3( -vRefract[2].x, vRefract[2].yz ) ).b;", "gl_FragColor = mix( refractedColor, reflectedColor, clamp( vReflectionFactor, 0.0, 1.0 ) );", "}"].join("\n")
-
-	}; /**
-	    * @author alteredq / http://alteredqualia.com/
-	    *
-	    * Based on Nvidia Cg tutorial
-	    */
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _three = __webpack_require__(3);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	_three2.default.OrbitControls = function (object, domElement) {
-
-		this.object = object;
-
-		this.domElement = domElement !== undefined ? domElement : document;
-
-		// Set to false to disable this control
-		this.enabled = true;
-
-		// "target" sets the location of focus, where the object orbits around
-		this.target = new _three2.default.Vector3();
-
-		// How far you can dolly in and out ( PerspectiveCamera only )
-		this.minDistance = 0;
-		this.maxDistance = Infinity;
-
-		// How far you can zoom in and out ( OrthographicCamera only )
-		this.minZoom = 0;
-		this.maxZoom = Infinity;
-
-		// How far you can orbit vertically, upper and lower limits.
-		// Range is 0 to Math.PI radians.
-		this.minPolarAngle = 0; // radians
-		this.maxPolarAngle = Math.PI; // radians
-
-		// How far you can orbit horizontally, upper and lower limits.
-		// If set, must be a sub-interval of the interval [ - Math.PI, Math.PI ].
-		this.minAzimuthAngle = -Infinity; // radians
-		this.maxAzimuthAngle = Infinity; // radians
-
-		// Set to true to enable damping (inertia)
-		// If damping is enabled, you must call controls.update() in your animation loop
-		this.enableDamping = false;
-		this.dampingFactor = 0.25;
-
-		// This option actually enables dollying in and out; left as "zoom" for backwards compatibility.
-		// Set to false to disable zooming
-		this.enableZoom = true;
-		this.zoomSpeed = 1.0;
-
-		// Set to false to disable rotating
-		this.enableRotate = true;
-		this.rotateSpeed = 1.0;
-
-		// Set to false to disable panning
-		this.enablePan = true;
-		this.keyPanSpeed = 7.0; // pixels moved per arrow key push
-
-		// Set to true to automatically rotate around the target
-		// If auto-rotate is enabled, you must call controls.update() in your animation loop
-		this.autoRotate = false;
-		this.autoRotateSpeed = 2.0; // 30 seconds per round when fps is 60
-
-		// Set to false to disable use of the keys
-		this.enableKeys = true;
-
-		// The four arrow keys
-		this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
-
-		// Mouse buttons
-		this.mouseButtons = { ORBIT: _three2.default.MOUSE.LEFT, ZOOM: _three2.default.MOUSE.MIDDLE, PAN: _three2.default.MOUSE.RIGHT };
-
-		// for reset
-		this.target0 = this.target.clone();
-		this.position0 = this.object.position.clone();
-		this.zoom0 = this.object.zoom;
-
-		//
-		// public methods
-		//
-
-		this.getPolarAngle = function () {
-
-			return phi;
-		};
-
-		this.getAzimuthalAngle = function () {
-
-			return theta;
-		};
-
-		this.reset = function () {
-
-			scope.target.copy(scope.target0);
-			scope.object.position.copy(scope.position0);
-			scope.object.zoom = scope.zoom0;
-
-			scope.object.updateProjectionMatrix();
-			scope.dispatchEvent(changeEvent);
-
-			scope.update();
-
-			state = STATE.NONE;
-		};
-
-		// this method is exposed, but perhaps it would be better if we can make it private...
-		this.update = (function () {
-
-			var offset = new _three2.default.Vector3();
-
-			// so camera.up is the orbit axis
-			var quat = new _three2.default.Quaternion().setFromUnitVectors(object.up, new _three2.default.Vector3(0, 1, 0));
-			var quatInverse = quat.clone().inverse();
-
-			var lastPosition = new _three2.default.Vector3();
-			var lastQuaternion = new _three2.default.Quaternion();
-
-			return function () {
-
-				var position = scope.object.position;
-
-				offset.copy(position).sub(scope.target);
-
-				// rotate offset to "y-axis-is-up" space
-				offset.applyQuaternion(quat);
-
-				// angle from z-axis around y-axis
-
-				theta = Math.atan2(offset.x, offset.z);
-
-				// angle from y-axis
-
-				phi = Math.atan2(Math.sqrt(offset.x * offset.x + offset.z * offset.z), offset.y);
-
-				if (scope.autoRotate && state === STATE.NONE) {
-
-					rotateLeft(getAutoRotationAngle());
-				}
-
-				theta += thetaDelta;
-				phi += phiDelta;
-
-				// restrict theta to be between desired limits
-				theta = Math.max(scope.minAzimuthAngle, Math.min(scope.maxAzimuthAngle, theta));
-
-				// restrict phi to be between desired limits
-				phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, phi));
-
-				// restrict phi to be betwee EPS and PI-EPS
-				phi = Math.max(EPS, Math.min(Math.PI - EPS, phi));
-
-				var radius = offset.length() * scale;
-
-				// restrict radius to be between desired limits
-				radius = Math.max(scope.minDistance, Math.min(scope.maxDistance, radius));
-
-				// move target to panned location
-				scope.target.add(panOffset);
-
-				offset.x = radius * Math.sin(phi) * Math.sin(theta);
-				offset.y = radius * Math.cos(phi);
-				offset.z = radius * Math.sin(phi) * Math.cos(theta);
-
-				// rotate offset back to "camera-up-vector-is-up" space
-				offset.applyQuaternion(quatInverse);
-
-				position.copy(scope.target).add(offset);
-
-				scope.object.lookAt(scope.target);
-
-				if (scope.enableDamping === true) {
-
-					thetaDelta *= 1 - scope.dampingFactor;
-					phiDelta *= 1 - scope.dampingFactor;
-				} else {
-
-					thetaDelta = 0;
-					phiDelta = 0;
-				}
-
-				scale = 1;
-				panOffset.set(0, 0, 0);
-
-				// update condition is:
-				// min(camera displacement, camera rotation in radians)^2 > EPS
-				// using small-angle approximation cos(x/2) = 1 - x^2 / 8
-
-				if (zoomChanged || lastPosition.distanceToSquared(scope.object.position) > EPS || 8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS) {
-
-					scope.dispatchEvent(changeEvent);
-
-					lastPosition.copy(scope.object.position);
-					lastQuaternion.copy(scope.object.quaternion);
-					zoomChanged = false;
-
-					return true;
-				}
-
-				return false;
-			};
-		})();
-
-		this.dispose = function () {
-
-			scope.domElement.removeEventListener('contextmenu', onContextMenu, false);
-			scope.domElement.removeEventListener('mousedown', onMouseDown, false);
-			scope.domElement.removeEventListener('mousewheel', onMouseWheel, false);
-			scope.domElement.removeEventListener('MozMousePixelScroll', onMouseWheel, false); // firefox
-
-			scope.domElement.removeEventListener('touchstart', onTouchStart, false);
-			scope.domElement.removeEventListener('touchend', onTouchEnd, false);
-			scope.domElement.removeEventListener('touchmove', onTouchMove, false);
-
-			document.removeEventListener('mousemove', onMouseMove, false);
-			document.removeEventListener('mouseup', onMouseUp, false);
-			document.removeEventListener('mouseout', onMouseUp, false);
-
-			window.removeEventListener('keydown', onKeyDown, false);
-
-			//scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
-		};
-
-		//
-		// internals
-		//
-
-		var scope = this;
-
-		var changeEvent = { type: 'change' };
-		var startEvent = { type: 'start' };
-		var endEvent = { type: 'end' };
-
-		var STATE = { NONE: -1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY: 4, TOUCH_PAN: 5 };
-
-		var state = STATE.NONE;
-
-		var EPS = 0.000001;
-
-		// current position in spherical coordinates
-		var theta;
-		var phi;
-
-		var phiDelta = 0;
-		var thetaDelta = 0;
-		var scale = 1;
-		var panOffset = new _three2.default.Vector3();
-		var zoomChanged = false;
-
-		var rotateStart = new _three2.default.Vector2();
-		var rotateEnd = new _three2.default.Vector2();
-		var rotateDelta = new _three2.default.Vector2();
-
-		var panStart = new _three2.default.Vector2();
-		var panEnd = new _three2.default.Vector2();
-		var panDelta = new _three2.default.Vector2();
-
-		var dollyStart = new _three2.default.Vector2();
-		var dollyEnd = new _three2.default.Vector2();
-		var dollyDelta = new _three2.default.Vector2();
-
-		function getAutoRotationAngle() {
-
-			return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
-		}
-
-		function getZoomScale() {
-
-			return Math.pow(0.95, scope.zoomSpeed);
-		}
-
-		function rotateLeft(angle) {
-
-			thetaDelta -= angle;
-		}
-
-		function rotateUp(angle) {
-
-			phiDelta -= angle;
-		}
-
-		var panLeft = (function () {
-
-			var v = new _three2.default.Vector3();
-
-			return function panLeft(distance, objectMatrix) {
-
-				var te = objectMatrix.elements;
-
-				// get X column of objectMatrix
-				v.set(te[0], te[1], te[2]);
-
-				v.multiplyScalar(-distance);
-
-				panOffset.add(v);
-			};
-		})();
-
-		var panUp = (function () {
-
-			var v = new _three2.default.Vector3();
-
-			return function panUp(distance, objectMatrix) {
-
-				var te = objectMatrix.elements;
-
-				// get Y column of objectMatrix
-				v.set(te[4], te[5], te[6]);
-
-				v.multiplyScalar(distance);
-
-				panOffset.add(v);
-			};
-		})();
-
-		// deltaX and deltaY are in pixels; right and down are positive
-		var pan = (function () {
-
-			var offset = new _three2.default.Vector3();
-
-			return function (deltaX, deltaY) {
-
-				var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
-
-				if (scope.object instanceof _three2.default.PerspectiveCamera) {
-
-					// perspective
-					var position = scope.object.position;
-					offset.copy(position).sub(scope.target);
-					var targetDistance = offset.length();
-
-					// half of the fov is center to top of screen
-					targetDistance *= Math.tan(scope.object.fov / 2 * Math.PI / 180.0);
-
-					// we actually don't use screenWidth, since perspective camera is fixed to screen height
-					panLeft(2 * deltaX * targetDistance / element.clientHeight, scope.object.matrix);
-					panUp(2 * deltaY * targetDistance / element.clientHeight, scope.object.matrix);
-				} else if (scope.object instanceof _three2.default.OrthographicCamera) {
-
-					// orthographic
-					panLeft(deltaX * (scope.object.right - scope.object.left) / element.clientWidth, scope.object.matrix);
-					panUp(deltaY * (scope.object.top - scope.object.bottom) / element.clientHeight, scope.object.matrix);
-				} else {
-
-					// camera neither orthographic nor perspective
-					console.warn('WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.');
-					scope.enablePan = false;
-				}
-			};
-		})();
-
-		function dollyIn(dollyScale) {
-
-			if (scope.object instanceof _three2.default.PerspectiveCamera) {
-
-				scale /= dollyScale;
-			} else if (scope.object instanceof _three2.default.OrthographicCamera) {
-
-				scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom * dollyScale));
-				scope.object.updateProjectionMatrix();
-				zoomChanged = true;
-			} else {
-
-				console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
-				scope.enableZoom = false;
-			}
-		}
-
-		function dollyOut(dollyScale) {
-
-			if (scope.object instanceof _three2.default.PerspectiveCamera) {
-
-				scale *= dollyScale;
-			} else if (scope.object instanceof _three2.default.OrthographicCamera) {
-
-				scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom / dollyScale));
-				scope.object.updateProjectionMatrix();
-				zoomChanged = true;
-			} else {
-
-				console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
-				scope.enableZoom = false;
-			}
-		}
-
-		//
-		// event callbacks - update the object state
-		//
-
-		function handleMouseDownRotate(event) {
-
-			//console.log( 'handleMouseDownRotate' );
-
-			rotateStart.set(event.clientX, event.clientY);
-		}
-
-		function handleMouseDownDolly(event) {
-
-			//console.log( 'handleMouseDownDolly' );
-
-			dollyStart.set(event.clientX, event.clientY);
-		}
-
-		function handleMouseDownPan(event) {
-
-			//console.log( 'handleMouseDownPan' );
-
-			panStart.set(event.clientX, event.clientY);
-		}
-
-		function handleMouseMoveRotate(event) {
-
-			//console.log( 'handleMouseMoveRotate' );
-
-			rotateEnd.set(event.clientX, event.clientY);
-			rotateDelta.subVectors(rotateEnd, rotateStart);
-
-			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
-
-			// rotating across whole screen goes 360 degrees around
-			rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
-
-			// rotating up and down along whole screen attempts to go 360, but limited to 180
-			rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed);
-
-			rotateStart.copy(rotateEnd);
-
-			scope.update();
-		}
-
-		function handleMouseMoveDolly(event) {
-
-			//console.log( 'handleMouseMoveDolly' );
-
-			dollyEnd.set(event.clientX, event.clientY);
-
-			dollyDelta.subVectors(dollyEnd, dollyStart);
-
-			if (dollyDelta.y > 0) {
-
-				dollyIn(getZoomScale());
-			} else if (dollyDelta.y < 0) {
-
-				dollyOut(getZoomScale());
-			}
-
-			dollyStart.copy(dollyEnd);
-
-			scope.update();
-		}
-
-		function handleMouseMovePan(event) {
-
-			//console.log( 'handleMouseMovePan' );
-
-			panEnd.set(event.clientX, event.clientY);
-
-			panDelta.subVectors(panEnd, panStart);
-
-			pan(panDelta.x, panDelta.y);
-
-			panStart.copy(panEnd);
-
-			scope.update();
-		}
-
-		function handleMouseUp(event) {
-
-			//console.log( 'handleMouseUp' );
-
-		}
-
-		function handleMouseWheel(event) {
-
-			//console.log( 'handleMouseWheel' );
-
-			var delta = 0;
-
-			if (event.wheelDelta !== undefined) {
-
-				// WebKit / Opera / Explorer 9
-
-				delta = event.wheelDelta;
-			} else if (event.detail !== undefined) {
-
-				// Firefox
-
-				delta = -event.detail;
-			}
-
-			if (delta > 0) {
-
-				dollyOut(getZoomScale());
-			} else if (delta < 0) {
-
-				dollyIn(getZoomScale());
-			}
-
-			scope.update();
-		}
-
-		function handleKeyDown(event) {
-
-			//console.log( 'handleKeyDown' );
-
-			switch (event.keyCode) {
-
-				case scope.keys.UP:
-					pan(0, scope.keyPanSpeed);
-					scope.update();
-					break;
-
-				case scope.keys.BOTTOM:
-					pan(0, -scope.keyPanSpeed);
-					scope.update();
-					break;
-
-				case scope.keys.LEFT:
-					pan(scope.keyPanSpeed, 0);
-					scope.update();
-					break;
-
-				case scope.keys.RIGHT:
-					pan(-scope.keyPanSpeed, 0);
-					scope.update();
-					break;
-
-			}
-		}
-
-		function handleTouchStartRotate(event) {
-
-			//console.log( 'handleTouchStartRotate' );
-
-			rotateStart.set(event.touches[0].pageX, event.touches[0].pageY);
-		}
-
-		function handleTouchStartDolly(event) {
-
-			//console.log( 'handleTouchStartDolly' );
-
-			var dx = event.touches[0].pageX - event.touches[1].pageX;
-			var dy = event.touches[0].pageY - event.touches[1].pageY;
-
-			var distance = Math.sqrt(dx * dx + dy * dy);
-
-			dollyStart.set(0, distance);
-		}
-
-		function handleTouchStartPan(event) {
-
-			//console.log( 'handleTouchStartPan' );
-
-			panStart.set(event.touches[0].pageX, event.touches[0].pageY);
-		}
-
-		function handleTouchMoveRotate(event) {
-
-			//console.log( 'handleTouchMoveRotate' );
-
-			rotateEnd.set(event.touches[0].pageX, event.touches[0].pageY);
-			rotateDelta.subVectors(rotateEnd, rotateStart);
-
-			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
-
-			// rotating across whole screen goes 360 degrees around
-			rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
-
-			// rotating up and down along whole screen attempts to go 360, but limited to 180
-			rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed);
-
-			rotateStart.copy(rotateEnd);
-
-			scope.update();
-		}
-
-		function handleTouchMoveDolly(event) {
-
-			//console.log( 'handleTouchMoveDolly' );
-
-			var dx = event.touches[0].pageX - event.touches[1].pageX;
-			var dy = event.touches[0].pageY - event.touches[1].pageY;
-
-			var distance = Math.sqrt(dx * dx + dy * dy);
-
-			dollyEnd.set(0, distance);
-
-			dollyDelta.subVectors(dollyEnd, dollyStart);
-
-			if (dollyDelta.y > 0) {
-
-				dollyOut(getZoomScale());
-			} else if (dollyDelta.y < 0) {
-
-				dollyIn(getZoomScale());
-			}
-
-			dollyStart.copy(dollyEnd);
-
-			scope.update();
-		}
-
-		function handleTouchMovePan(event) {
-
-			//console.log( 'handleTouchMovePan' );
-
-			panEnd.set(event.touches[0].pageX, event.touches[0].pageY);
-
-			panDelta.subVectors(panEnd, panStart);
-
-			pan(panDelta.x, panDelta.y);
-
-			panStart.copy(panEnd);
-
-			scope.update();
-		}
-
-		function handleTouchEnd(event) {}
-
-		//console.log( 'handleTouchEnd' );
-
-		//
-		// event handlers - FSM: listen for events and reset state
-		//
-
-		function onMouseDown(event) {
-
-			if (scope.enabled === false) return;
-
-			event.preventDefault();
-
-			if (event.button === scope.mouseButtons.ORBIT) {
-
-				if (scope.enableRotate === false) return;
-
-				handleMouseDownRotate(event);
-
-				state = STATE.ROTATE;
-			} else if (event.button === scope.mouseButtons.ZOOM) {
-
-				if (scope.enableZoom === false) return;
-
-				handleMouseDownDolly(event);
-
-				state = STATE.DOLLY;
-			} else if (event.button === scope.mouseButtons.PAN) {
-
-				if (scope.enablePan === false) return;
-
-				handleMouseDownPan(event);
-
-				state = STATE.PAN;
-			}
-
-			if (state !== STATE.NONE) {
-
-				document.addEventListener('mousemove', onMouseMove, false);
-				document.addEventListener('mouseup', onMouseUp, false);
-				document.addEventListener('mouseout', onMouseUp, false);
-
-				scope.dispatchEvent(startEvent);
-			}
-		}
-
-		function onMouseMove(event) {
-
-			if (scope.enabled === false) return;
-
-			event.preventDefault();
-
-			if (state === STATE.ROTATE) {
-
-				if (scope.enableRotate === false) return;
-
-				handleMouseMoveRotate(event);
-			} else if (state === STATE.DOLLY) {
-
-				if (scope.enableZoom === false) return;
-
-				handleMouseMoveDolly(event);
-			} else if (state === STATE.PAN) {
-
-				if (scope.enablePan === false) return;
-
-				handleMouseMovePan(event);
-			}
-		}
-
-		function onMouseUp(event) {
-
-			if (scope.enabled === false) return;
-
-			handleMouseUp(event);
-
-			document.removeEventListener('mousemove', onMouseMove, false);
-			document.removeEventListener('mouseup', onMouseUp, false);
-			document.removeEventListener('mouseout', onMouseUp, false);
-
-			scope.dispatchEvent(endEvent);
-
-			state = STATE.NONE;
-		}
-
-		function onMouseWheel(event) {
-
-			if (scope.enabled === false || scope.enableZoom === false || state !== STATE.NONE) return;
-
-			event.preventDefault();
-			event.stopPropagation();
-
-			handleMouseWheel(event);
-
-			scope.dispatchEvent(startEvent); // not sure why these are here...
-			scope.dispatchEvent(endEvent);
-		}
-
-		function onKeyDown(event) {
-
-			if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
-
-			handleKeyDown(event);
-		}
-
-		function onTouchStart(event) {
-
-			if (scope.enabled === false) return;
-
-			switch (event.touches.length) {
-
-				case 1:
-					// one-fingered touch: rotate
-
-					if (scope.enableRotate === false) return;
-
-					handleTouchStartRotate(event);
-
-					state = STATE.TOUCH_ROTATE;
-
-					break;
-
-				case 2:
-					// two-fingered touch: dolly
-
-					if (scope.enableZoom === false) return;
-
-					handleTouchStartDolly(event);
-
-					state = STATE.TOUCH_DOLLY;
-
-					break;
-
-				case 3:
-					// three-fingered touch: pan
-
-					if (scope.enablePan === false) return;
-
-					handleTouchStartPan(event);
-
-					state = STATE.TOUCH_PAN;
-
-					break;
-
-				default:
-
-					state = STATE.NONE;
-
-			}
-
-			if (state !== STATE.NONE) {
-
-				scope.dispatchEvent(startEvent);
-			}
-		}
-
-		function onTouchMove(event) {
-
-			if (scope.enabled === false) return;
-
-			event.preventDefault();
-			event.stopPropagation();
-
-			switch (event.touches.length) {
-
-				case 1:
-					// one-fingered touch: rotate
-
-					if (scope.enableRotate === false) return;
-					if (state !== STATE.TOUCH_ROTATE) return; // is this needed?...
-
-					handleTouchMoveRotate(event);
-
-					break;
-
-				case 2:
-					// two-fingered touch: dolly
-
-					if (scope.enableZoom === false) return;
-					if (state !== STATE.TOUCH_DOLLY) return; // is this needed?...
-
-					handleTouchMoveDolly(event);
-
-					break;
-
-				case 3:
-					// three-fingered touch: pan
-
-					if (scope.enablePan === false) return;
-					if (state !== STATE.TOUCH_PAN) return; // is this needed?...
-
-					handleTouchMovePan(event);
-
-					break;
-
-				default:
-
-					state = STATE.NONE;
-
-			}
-		}
-
-		function onTouchEnd(event) {
-
-			if (scope.enabled === false) return;
-
-			handleTouchEnd(event);
-
-			scope.dispatchEvent(endEvent);
-
-			state = STATE.NONE;
-		}
-
-		function onContextMenu(event) {
-
-			event.preventDefault();
-		}
-
-		//
-
-		scope.domElement.addEventListener('contextmenu', onContextMenu, false);
-
-		scope.domElement.addEventListener('mousedown', onMouseDown, false);
-		scope.domElement.addEventListener('mousewheel', onMouseWheel, false);
-		scope.domElement.addEventListener('MozMousePixelScroll', onMouseWheel, false); // firefox
-
-		scope.domElement.addEventListener('touchstart', onTouchStart, false);
-		scope.domElement.addEventListener('touchend', onTouchEnd, false);
-		scope.domElement.addEventListener('touchmove', onTouchMove, false);
-
-		window.addEventListener('keydown', onKeyDown, false);
-
-		// force an update at start
-
-		this.update();
-	}; /**
-	    * @author qiao / https://github.com/qiao
-	    * @author mrdoob / http://mrdoob.com
-	    * @author alteredq / http://alteredqualia.com/
-	    * @author WestLangley / http://github.com/WestLangley
-	    * @author erich666 / http://erichaines.com
-	    */
-
-	// This set of controls performs orbiting, dollying (zooming), and panning.
-	// Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
-	//
-	//    Orbit - left mouse / touch: one finger move
-	//    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
-	//    Pan - right mouse, or arrow keys / touch: three finter swipe
-
-	_three2.default.OrbitControls.prototype = Object.create(_three2.default.EventDispatcher.prototype);
-	_three2.default.OrbitControls.prototype.constructor = _three2.default.OrbitControls;
-
-	Object.defineProperties(_three2.default.OrbitControls.prototype, {
-
-		center: {
-
-			get: function get() {
-
-				console.warn('THREE.OrbitControls: .center has been renamed to .target');
-				return this.target;
-			}
-
-		},
-
-		// backward compatibility
-
-		noZoom: {
-
-			get: function get() {
-
-				console.warn('THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.');
-				return !this.enableZoom;
-			},
-
-			set: function set(value) {
-
-				console.warn('THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.');
-				this.enableZoom = !value;
-			}
-
-		},
-
-		noRotate: {
-
-			get: function get() {
-
-				console.warn('THREE.OrbitControls: .noRotate has been deprecated. Use .enableRotate instead.');
-				return !this.enableRotate;
-			},
-
-			set: function set(value) {
-
-				console.warn('THREE.OrbitControls: .noRotate has been deprecated. Use .enableRotate instead.');
-				this.enableRotate = !value;
-			}
-
-		},
-
-		noPan: {
-
-			get: function get() {
-
-				console.warn('THREE.OrbitControls: .noPan has been deprecated. Use .enablePan instead.');
-				return !this.enablePan;
-			},
-
-			set: function set(value) {
-
-				console.warn('THREE.OrbitControls: .noPan has been deprecated. Use .enablePan instead.');
-				this.enablePan = !value;
-			}
-
-		},
-
-		noKeys: {
-
-			get: function get() {
-
-				console.warn('THREE.OrbitControls: .noKeys has been deprecated. Use .enableKeys instead.');
-				return !this.enableKeys;
-			},
-
-			set: function set(value) {
-
-				console.warn('THREE.OrbitControls: .noKeys has been deprecated. Use .enableKeys instead.');
-				this.enableKeys = !value;
-			}
-
-		},
-
-		staticMoving: {
-
-			get: function get() {
-
-				console.warn('THREE.OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead.');
-				return !this.constraint.enableDamping;
-			},
-
-			set: function set(value) {
-
-				console.warn('THREE.OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead.');
-				this.constraint.enableDamping = !value;
-			}
-
-		},
-
-		dynamicDampingFactor: {
-
-			get: function get() {
-
-				console.warn('THREE.OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.');
-				return this.constraint.dampingFactor;
-			},
-
-			set: function set(value) {
-
-				console.warn('THREE.OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.');
-				this.constraint.dampingFactor = value;
-			}
-
-		}
-
-	});
-
-	exports.default = _three2.default.OrbitControls;
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _three = __webpack_require__(3);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	var _bScene = __webpack_require__(13);
-
-	var _bScene2 = _interopRequireDefault(_bScene);
-
-	var _OBJLoader = __webpack_require__(23);
-
-	var _OBJLoader2 = _interopRequireDefault(_OBJLoader);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; } // b2.js
-
-	var b2 = {
-	  init: function init(_ref) {
-	    var container = _ref.container;
-	    var renderer = _ref.renderer;
-
-	    console.log('initialized b2!');
-	    var b2Scene = _bScene2.default.create({ container: container, renderer: renderer });
-
-	    b2Scene.applyMaterial = function (object, color) {
-	      var material = new _three2.default.MeshPhongMaterial({
-	        shading: _three2.default.FlatShading,
-	        color: color
-	      });
-
-	      object.material = material;
-	      return object;
-	    };
-
-	    b2Scene.crystalClicked = function () {
-	      this.counters.clicked = this.counters.frame;
-	      // render method calls switchActiveCrystal when seven frames have passed
-	    };
-
-	    b2Scene.handleRaycasterIntersection = function () {
-	      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera);
-	      var intersects = this.raycaster.raycaster.intersectObjects(this.scene.children);
-
-	      var tempIntersection = false;
-	      if (intersects.length > 0) {
-	        for (var i = 0; i < this.objects.crystals.length; i++) {
-	          if (this.objects.crystals[i] === intersects[0].object) {
-	            tempIntersection = true;
-	          }
-	        }
-	        this.raycaster.intersection = tempIntersection;
-	        if (this.raycaster.intersection === false) {
-	          this.mouseleaveCrystal();
-	        } else {
-	          this.mouseenterCrystal();
-	        }
-	      } else {
-	        this.raycaster.intersection = tempIntersection;
-	        if (this.raycaster.intersection === false) {
-	          this.mouseleaveCrystal();
-	        }
-	      }
-
-	      if (this.raycaster.intersection) {
-	        var val = this.counters.frame % 2 === 0 ? Math.cos(this.counters.cosY) * 2 : -(Math.cos(this.counters.cosY) * 2);
-	        this.objects.crystals[this.objects.activeCrystal].position.x += val;
-	      }
-	    };
-
-	    b2Scene.mouseenterCrystal = function () {
-	      document.body.style.cursor = "pointer";
-	    };
-
-	    b2Scene.mouseleaveCrystal = function () {
-	      if (this.objects.crystals[this.objects.activeCrystal] && this.raycaster.intersection === false) {
-	        this.objects.crystals[this.objects.activeCrystal].position.x = 0;
-	        document.body.style.cursor = "initial";
-	      }
-	    };
-
-	    b2Scene.onMouseClick = function () {
-	      if (this.raycaster.intersection) {
-	        this.crystalClicked();
-	      }
-	    }, b2Scene.prepCamera = function () {
-	      var camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
-	      camera.position.set(0, 0, 800);
-	      camera.lookAt(0, 0, 0);
-
-	      this.camera = camera;
-	    };
-
-	    b2Scene.prepCrystals = function () {
-	      var self = this;
-
-	      var manager = new _three2.default.LoadingManager();
-	      manager.onProgress = function (item, loaded, total) {
-	        console.log(item, loaded, total);
-	      };
-
-	      var onProgress = function onProgress(xhr) {
-	        if (xhr.lengthComputable) {
-	          var percentComplete = xhr.loaded / xhr.total * 100;
-	          console.log(Math.round(percentComplete, 2) + '% downloaded');
-	        }
-	      };
-
-	      var onError = function onError(xhr) {};
-
-	      self.objects.crystals = [];
-
-	      var icosahedronGeom = new _three2.default.IcosahedronGeometry(250, 3);
-	      var icosahedronMat = new _three2.default.MeshDepthMaterial({
-	        wireframe: true
-	      });
-	      var icosahedron = new _three2.default.Mesh(icosahedronGeom, icosahedronMat);
-	      icosahedron.position.set(0, 0, 700);
-	      this.scene.add(icosahedron);
-	      this.objects.icosahedron = icosahedron;
-
-	      var loadedCount = 0;
-	      var crystalObjects = ['./obj/b2_1.obj', './obj/b2_2.obj', './obj/b2_3.obj'];
-	      var colors = [0xaaaaaa, 0x777777, 0xaaaaaa];
-	      var loader = new _three2.default.OBJLoader(manager);
-
-	      var _loop = function _loop(i) {
-	        loader.load(crystalObjects[i], function (object) {
-	          object.traverse(function (child) {
-	            if (child instanceof _three2.default.Mesh) {
-	              child = self.applyMaterial(child, colors[i]);
-	              child.position.set(0, 0, 700);
-	              child.scale.set(0.15, 0.15, 0.15);
-	              self.objects.crystals.push(child);
-	              loadedCount++;
-	            }
-	          });
-
-	          if (loadedCount === crystalObjects.length) {
-	            self.objects.activeCrystal = 0;
-	            self.scene.add(self.objects.crystals[self.objects.activeCrystal]);
-	          }
-	        }, onProgress, onError);
-	      };
-
-	      for (var i = 0; i < crystalObjects.length; i++) {
-	        _loop(i);
-	      }
-	    };
-
-	    b2Scene.prepLights = function () {
-	      var primLight = new _three2.default.PointLight(0xffffff, 1, 2000);
-	      primLight.position.set(0, 0, 900);
-	      this.scene.add(primLight);
-
-	      var lightParameters = [[0xff0000, 0.5, [-100, 0, 900]], [0x7700FF, 0.5, [100, 0, 900]]];
-
-	      this.lights.colors = [[0xff0000, 0x7700ff], [0xcc00ff, 0x00aaff], [0x0000ff, 0x00ff00]];
-
-	      var lights = [];
-	      for (var i = 0; i < lightParameters.length; i++) {
-	        var light = new _three2.default.PointLight(lightParameters[i][0], lightParameters[i][1], 2000);
-
-	        light.position.set(lightParameters[i][2][0], lightParameters[i][2][1], lightParameters[i][2][2]);
-
-	        lights.push(light);
-	        this.scene.add(light);
-	      }
-
-	      this.lights.lights = lights;
-	    }, b2Scene.pulsateLights = function () {
-	      for (var i = 0; i < this.lights.lights.length; i++) {
-	        var intensities = Math.abs(Math.cos(this.counters.cosY * 10 + i));
-	        var calculation = 1 - Math.abs(this.mouse.x);
-	        var intensity = calculation > 0.3 ? (calculation - 0.3) * 2 : 0;
-	        this.lights.lights[i].intensity = intensities * intensity;
-	      }
-	    };
-
-	    b2Scene.rollIcosahedron = function () {
-	      this.objects.icosahedron.rotation.y += this.mouse.x * 0.004;
-	      this.objects.icosahedron.rotation.x += this.mouse.y * 0.004;
-	    };
-
-	    b2Scene.uniqueSetup = function () {
-	      this.counters.cosY = 0;
-	      this.counters.frame = 0;
-	      this.counters.floatingCrystalPos = 0;
-	      this.counters.clicked = -4;
-	      this.prepCamera();
-	      this.prepLights();
-	      this.prepCrystals();
-
-	      var self = this;
-	      window.addEventListener('click', function () {
-	        self.onMouseClick();
-	      }, false);
-
-	      return (function () {
-	        this.counters.floatingCrystalPos += Math.cos(this.counters.cosY) * 0.2;
-	        this.counters.cosY += 0.02;
-
-	        this.shakeOrSwapCrystal();
-	        this.pulsateLights();
-	        this.handleRaycasterIntersection();
-	        this.rollIcosahedron();
-
-	        this.counters.frame++;
-	      }).bind(this);
-	    };
-
-	    b2Scene.shakeOrSwapCrystal = function () {
-	      if (_typeof(this.objects.activeCrystal) === _typeof(1)) {
-	        this.objects.crystals[this.objects.activeCrystal].rotation.y += 0.05;
-	        this.objects.crystals[this.objects.activeCrystal].position.y = this.counters.floatingCrystalPos;
-	        if (this.counters.frame <= this.counters.clicked + 7 && this.counters.frame > this.counters.clicked) {
-	          switch (Math.floor(Math.random() * 3)) {
-	            case 0:
-	              this.renderer.setClearColor(0x222222);
-	              break;
-	            case 1:
-	              this.renderer.setClearColor(this.lights.colors[this.objects.activeCrystal][0]);
-	              break;
-	            case 2:
-	              this.renderer.setClearColor(this.lights.colors[this.objects.activeCrystal][1]);
-	              break;
-	          }
-	          this.objects.crystals[this.objects.activeCrystal].position.x += Math.random() * 10 - 5;
-	          this.objects.crystals[this.objects.activeCrystal].position.y += Math.random() * 10 - 5;
-	        } else if (this.counters.frame === this.counters.clicked + 8) {
-	          this.switchActiveCrystal();
-	          renderer.setClearColor(0x222222);
-	        }
-	      }
-	    };
-
-	    b2Scene.switchActiveCrystal = function () {
-	      this.objects.crystals[this.objects.activeCrystal].position.x = 0;
-	      this.scene.remove(this.objects.crystals[this.objects.activeCrystal]);
-	      this.objects.activeCrystal = (this.objects.activeCrystal + 1) % this.objects.crystals.length;
-	      this.scene.add(this.objects.crystals[this.objects.activeCrystal]);
-
-	      for (var i = 0; i < this.lights.lights.length; i++) {
-	        this.lights.lights[i].color = new _three2.default.Color(this.lights.colors[this.objects.activeCrystal][i]);
-	      }
-	    };
-
-	    b2Scene.init();
-
-	    return b2Scene;
-	  }
-
-	};
-
-	module.exports = b2;
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _three = __webpack_require__(3);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	var _OrbitControls = __webpack_require__(9);
-
-	var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// b3.js
-
-	var b3 = {
-	  usefulThings: null,
-	  animate: function animate(usefulThings) {
-	    var self = this;
-
-	    var newThings = this.render(usefulThings);
-
-	    if (document.querySelector('canvas')) {
-	      requestAnimationFrame(function () {
-	        self.animate(newThings);
-	      });
-	    }
-	  },
-	  changeMaterial: function changeMaterial(mesh, shading) {
-	    var shadingType = undefined;
-	    shadingType = shading === "smooth" ? _three2.default.SmoothShading : _three2.default.FlatShading;
-	    var material = new _three2.default.MeshPhongMaterial({
-	      color: 0x333333,
-	      shading: shadingType
-	    });
-	    mesh.material = material;
-	  },
-	  endDemo: function endDemo(usefulThings) {
-	    var renderer = usefulThings.renderer;
-	    var scene = usefulThings.scene;
-	    var camera = usefulThings.camera;
-
-	    renderer.domElement.addEventListener('dblclick', null, false);
-	    scene = null;
-	    camera = null;
-	  },
-	  handleIntersection: function handleIntersection(_ref) {
-	    var raycasterObj = _ref.raycasterObj;
-	    var objects = _ref.objects;
-	    var scene = _ref.scene;
-	    var mouse = _ref.mouse;
-	    var camera = _ref.camera;
-
-	    raycasterObj.raycaster.setFromCamera(mouse, camera);
-	    var intersects = raycasterObj.raycaster.intersectObjects(scene.children);
-
-	    var tempIntersection = undefined;
-	    tempIntersection = intersects[0] && intersects[0].object === objects.bigSphere ? true : false;
-
-	    if (raycasterObj.intersection !== tempIntersection) {
-	      raycasterObj.intersection = tempIntersection;
-	      if (raycasterObj.intersection) {
-	        raycasterObj.intersected = intersects[0].object;
-	      }
-	      this.mouseToggle(raycasterObj);
-	    }
-	  },
-	  init: function init(_ref2) {
-	    var container = _ref2.container;
-	    var renderer = _ref2.renderer;
-
-	    var usefulThings = this.setup(container, renderer);
-	    this.animate(usefulThings);
-	  },
-	  mouseToggle: function mouseToggle(raycasterObj) {
-	    var intersection = raycasterObj.intersection;
-	    var intersected = raycasterObj.intersected;
-
-	    if (intersection) {
-	      document.body.style.cursor = "pointer";
-	      this.changeMaterial(intersected, "flat");
-	    } else {
-	      document.body.style.cursor = "initial";
-	      this.changeMaterial(intersected, "smooth");
-	    }
-	  },
-	  moveSmallSpheres: function moveSmallSpheres(spheres) {
-	    for (var i = 0; i < spheres.length; i++) {
-	      var sphere = spheres[i];
-
-	      sphere.position.x += sphere.pace.x;
-	      sphere.position.y += sphere.pace.y;
-
-	      if (sphere.position.x > 400 || sphere.position.y > 300) {
-	        sphere.position.set(sphere.initialPosition[0], sphere.initialPosition[1], sphere.initialPosition[2]);
-	      }
-	    }
-	  },
-	  onMouseMove: function onMouseMove(mouse) {
-	    event.preventDefault();
-	    mouse.x = event.clientX / window.innerWidth * 2 - 1;
-	    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-	  },
-	  onWindowResize: function onWindowResize(_ref3) {
-	    var camera = _ref3.camera;
-	    var renderer = _ref3.renderer;
-
-	    camera.aspect = window.innerWidth / window.innerHeight;
-	    camera.updateProjectionMatrix();
-
-	    renderer.setSize(window.innerWidth, window.innerHeight);
-	  },
-	  prepBigSphere: function prepBigSphere(_ref4) {
-	    var scene = _ref4.scene;
-	    var counters = _ref4.counters;
-
-	    var bigSphereGeom = new _three2.default.SphereGeometry(50, 32, 32);
-	    var material = new _three2.default.MeshPhongMaterial({
-	      color: 0x333333,
-	      shading: _three2.default.SmoothShading
-	    });
-	    var bigSphere = new _three2.default.Mesh(bigSphereGeom, material);
-	    bigSphere.geometry.verticesNeedUpdate = true;
-	    bigSphere.geometry.dynamic = true;
-	    bigSphere.position.set(0, 0, 0);
-	    bigSphere.motion = [function (i) {
-	      return Math.cos(counters.a * 4 - i) * 0.2;
-	    }, function (i) {
-	      return -(Math.cos(counters.a * 4 + i) * 0.2);
-	    }];
-	    bigSphere.rotation.y += 0.5;
-	    scene.add(bigSphere);
-
-	    return bigSphere;
-	  },
-	  prepCamera: function prepCamera() {
-	    var camera = undefined;
-
-	    camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
-	    camera.position.set(0, 0, 125);
-	    camera.lookAt(0, 0, 0);
-
-	    return camera;
-	  },
-	  prepControls: function prepControls(_ref5) {
-	    var camera = _ref5.camera;
-	    var renderer = _ref5.renderer;
-
-	    var controls = new _OrbitControls2.default(camera, renderer.domElement);
-	    controls.enableZoom = false;
-	    controls.enablePan = false;
-	    controls.rotateSpeed = 1;
-	    return controls;
-	  },
-	  prepLights: function prepLights(scene) {
-	    var lightOne = new _three2.default.PointLight(0xffffff, 1, 2000);
-	    lightOne.position.set(0, 0, -75);
-	    scene.add(lightOne);
-
-	    var lightTwo = new _three2.default.PointLight(0xffffff, 1, 2000);
-	    lightTwo.position.set(-100, -100, 225);
-	    scene.add(lightTwo);
-
-	    return [lightOne, lightTwo];
-	  },
-	  prepScene: function prepScene() {
-	    var scene = new _three2.default.Scene();
-	    return scene;
-	  },
-	  prepRenderer: function prepRenderer(_ref6) {
-	    var container = _ref6.container;
-	    var renderer = _ref6.renderer;
-
-	    renderer.setClearColor(0x222222);
-	    renderer.setPixelRatio(window.devicePixelRatio);
-	    renderer.setSize(window.innerWidth, window.innerHeight);
-	    container.appendChild(renderer.domElement);
-
-	    return renderer;
-	  },
-	  prepSmallSpheres: function prepSmallSpheres(_ref7) {
-	    var info = _ref7.info;
-	    var scene = _ref7.scene;
-
-	    var spheres = [];
-	    for (var i = 0; i < info.count; i++) {
-	      var sphere = new _three2.default.Mesh(new _three2.default.SphereGeometry(Math.random() * 2, 8, 8), new _three2.default.MeshPhongMaterial({
-	        color: 0x333333,
-	        shading: _three2.default.SmoothShading
-	      }));
-
-	      var pos = [Math.random() * 200 - 300, Math.random() * 100 - 150, Math.random() * 200 - 100];
-	      var xRate = (1 - (pos[2] - 100) * 0.01) * Math.random() * 2 * 0.4;
-
-	      sphere.position.set(pos[0], pos[1], pos[2]);
-
-	      sphere.initialPosition = pos;
-
-	      sphere.pace = {
-	        x: xRate,
-	        y: xRate * 0.5
-	      };
-
-	      spheres.push(sphere);
-	      scene.add(sphere);
-	    }
-	    return spheres;
-	  },
-	  pulsateBigSphere: function pulsateBigSphere(bigSphere) {
-	    for (var i = 0; i < bigSphere.geometry.vertices.length; i++) {
-	      var vertex = bigSphere.geometry.vertices[i];
-
-	      vertex.set(vertex.x += bigSphere.motion[0](i), vertex.y += bigSphere.motion[0](i), vertex.z += bigSphere.motion[0](i));
-	    }
-
-	    bigSphere.geometry.verticesNeedUpdate = true;
-	    bigSphere.geometry.dynamic = true;
-	  },
-	  render: function render(usefulThings) {
-	    var controls = usefulThings.controls;
-	    var objects = usefulThings.objects;
-	    var camera = usefulThings.camera;
-	    var counters = usefulThings.counters;
-	    var renderer = usefulThings.renderer;
-	    var scene = usefulThings.scene;
-	    var mouse = usefulThings.mouse;
-	    var lightsObj = usefulThings.lightsObj;
-	    var raycasterObj = usefulThings.raycasterObj;
-
-	    scene.updateMatrixWorld();
-	    controls.update();
-
-	    counters.a += 0.02;
-
-	    this.handleIntersection({ raycasterObj: raycasterObj, objects: objects, mouse: mouse, camera: camera, scene: scene });
-	    this.moveSmallSpheres(objects.smallSpheres);
-	    this.pulsateBigSphere(objects.bigSphere);
-
-	    renderer.render(scene, camera);
-
-	    return { controls: controls, camera: camera, scene: scene, renderer: renderer, mouse: mouse, objects: objects, counters: counters, lightsObj: lightsObj, raycasterObj: raycasterObj };
-	  },
-	  setup: function setup(container, renderer) {
-	    console.log('initialized b3!');
-
-	    var self = this;
-	    var mouse = new _three2.default.Vector2();
-	    var objects = new Object();
-	    var usefulThings = new Object();
-	    var objectsInfo = {
-	      bubbles: { count: 100, radius: 16 }
-	    };
-	    var counters = new Object();
-	    var lightsObj = new Object();
-	    var raycasterObj = new Object();
-	    counters.a = 0;
-
-	    var scene = this.prepScene();
-	    var camera = this.prepCamera();
-	    renderer = this.prepRenderer({ container: container, renderer: renderer });
-	    var controls = this.prepControls({ camera: camera, renderer: renderer });
-
-	    raycasterObj.raycaster = new _three2.default.Raycaster();
-	    raycasterObj.intersection = false;
-
-	    lightsObj.lights = this.prepLights(scene);
-	    objects.bigSphere = this.prepBigSphere({ scene: scene, counters: counters });
-
-	    var bubbles = objectsInfo.bubbles;
-	    objects.smallSpheres = this.prepSmallSpheres({ info: bubbles, scene: scene });
-
-	    usefulThings = {
-	      controls: controls,
-	      camera: camera,
-	      scene: scene,
-	      renderer: renderer,
-	      mouse: mouse,
-	      objects: objects,
-	      counters: counters,
-	      lightsObj: lightsObj,
-	      raycasterObj: raycasterObj
-	    };
-
-	    this.usefulThings = usefulThings;
-
-	    window.addEventListener('resize', function () {
-	      self.onWindowResize({ camera: camera, renderer: renderer });
-	    }, false);
-	    window.addEventListener('mousemove', function () {
-	      self.onMouseMove(mouse);
-	    }, false);
-
-	    return usefulThings;
-	  }
-	};
-
-	module.exports = b3;
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(4);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _bScene = __webpack_require__(13);
-
-	var _bScene2 = _interopRequireDefault(_bScene);
-
-	var _gsap = __webpack_require__(14);
-
-	var _gsap2 = _interopRequireDefault(_gsap);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var b4 = {
-	  init: function init(_ref) {
-	    var container = _ref.container;
-	    var renderer = _ref.renderer;
-
-	    console.log('initialized b4!');
-	    var b4Scene = _bScene2.default.create({ container: container, renderer: renderer });
-
-	    b4Scene.incrementCounters = function () {
-	      this.counters.a += 0.02;
-	    };
-
-	    b4Scene.prepLights = function () {
-	      var light = new _three2.default.PointLight(0x00ffff, 0.5, 1000);
-	      light.position.set(0, 0, 200);
-	      this.scene.add(light);
-
-	      this.lights.lights = [light];
-	    };
-
-	    b4Scene.prepObjects = function () {
-	      var objs = [];
-
-	      var mesh = new _three2.default.Mesh(new _three2.default.TetrahedronGeometry(25, 0), new _three2.default.MeshPhongMaterial({
-	        color: 0xffffff,
-	        shading: _three2.default.FlatShading
-	      }));
-	      mesh.position.set(0, 0, 0);
-	      mesh.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
-	      mesh.geometry.verticesNeedUpdate = true;
-	      mesh.geometry.dynamic = true;
-	      mesh.motion = (function (i) {
-	        return Math.cos(this.counters.a * 4 - i) * 0.02;
-	      }).bind(this);
-
-	      this.scene.add(mesh);
-	      objs.push(mesh);
-
-	      this.objects.objs = objs;
-	    };
-
-	    b4Scene.pulsateBigSphere = function (objs) {
-	      for (var i = 0; i < objs[0].geometry.vertices.length; i++) {
-	        var vertex = objs[0].geometry.vertices[i];
-
-	        vertex.set(vertex.x += objs[0].motion(i), vertex.y += objs[0].motion(i), vertex.z += objs[0].motion(i));
-	      }
-
-	      objs[0].geometry.verticesNeedUpdate = true;
-	      objs[0].geometry.dynamic = true;
-	    };
-
-	    b4Scene.uniqueSetup = function () {
-	      this.prepLights();
-	      this.prepObjects();
-
-	      this.renderer.setClearColor(0xf7f7f7);
-
-	      return (function () {
-	        this.incrementCounters();
-	        this.pulsateBigSphere(this.objects.objs);
-	      }).bind(this);
-	    };
-
-	    b4Scene.init();
-
-	    return b4Scene;
-	  }
-	}; // b4.js
-
-	exports.default = b4;
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _three = __webpack_require__(3);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	var _OrbitControls = __webpack_require__(9);
+	var _OrbitControls = __webpack_require__(6);
 
 	var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
 
@@ -38806,9 +37001,9 @@
 	    this.render(fn);
 
 	    if (document.querySelectorAll('canvas')[0]) {
-	      requestAnimationFrame((function () {
+	      this.animFrameReq = requestAnimationFrame(function () {
 	        this.animate(fn);
-	      }).bind(this));
+	      }.bind(this));
 	    }
 	  },
 	  create: function create(_ref) {
@@ -38820,9 +37015,8 @@
 	    bScene.renderer = renderer;
 	    return bScene;
 	  },
-	  endDemo: function endDemo() {
-	    cancelAnimationFrame(this.id);
-	    this.renderer.domElement.addEventListener('dblclick', null, false);
+	  destroy: function destroy() {
+	    cancelAnimationFrame(this.animFrameReq);
 	    this.scene = null;
 	    this.projector = null;
 	    this.camera = null;
@@ -38883,14 +37077,14 @@
 	    this.prepRenderer();
 	    this.prepScene();
 	    this.prepCamera();
-	    // this.prepControls()
+	    this.prepControls();
 
-	    window.addEventListener('resize', (function () {
+	    window.addEventListener('resize', function () {
 	      this.onWindowResize();
-	    }).bind(this), false);
-	    window.addEventListener('mousemove', (function () {
+	    }.bind(this), false);
+	    window.addEventListener('mousemove', function () {
 	      this.onMouseMove();
-	    }).bind(this), false);
+	    }.bind(this), false);
 	  },
 	  uniqueSetup: function uniqueSetup() {
 	    // prep this scene
@@ -38900,7 +37094,1611 @@
 	exports.default = bScene;
 
 /***/ },
-/* 14 */
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+			value: true
+	});
+
+	var _three = __webpack_require__(4);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_three2.default.OrbitControls = function (object, domElement) {
+
+			this.object = object;
+
+			this.domElement = domElement !== undefined ? domElement : document;
+
+			// Set to false to disable this control
+			this.enabled = true;
+
+			// "target" sets the location of focus, where the object orbits around
+			this.target = new _three2.default.Vector3();
+
+			// How far you can dolly in and out ( PerspectiveCamera only )
+			this.minDistance = 0;
+			this.maxDistance = Infinity;
+
+			// How far you can zoom in and out ( OrthographicCamera only )
+			this.minZoom = 0;
+			this.maxZoom = Infinity;
+
+			// How far you can orbit vertically, upper and lower limits.
+			// Range is 0 to Math.PI radians.
+			this.minPolarAngle = 0; // radians
+			this.maxPolarAngle = Math.PI; // radians
+
+			// How far you can orbit horizontally, upper and lower limits.
+			// If set, must be a sub-interval of the interval [ - Math.PI, Math.PI ].
+			this.minAzimuthAngle = -Infinity; // radians
+			this.maxAzimuthAngle = Infinity; // radians
+
+			// Set to true to enable damping (inertia)
+			// If damping is enabled, you must call controls.update() in your animation loop
+			this.enableDamping = false;
+			this.dampingFactor = 0.25;
+
+			// This option actually enables dollying in and out; left as "zoom" for backwards compatibility.
+			// Set to false to disable zooming
+			this.enableZoom = true;
+			this.zoomSpeed = 1.0;
+
+			// Set to false to disable rotating
+			this.enableRotate = true;
+			this.rotateSpeed = 1.0;
+
+			// Set to false to disable panning
+			this.enablePan = true;
+			this.keyPanSpeed = 7.0; // pixels moved per arrow key push
+
+			// Set to true to automatically rotate around the target
+			// If auto-rotate is enabled, you must call controls.update() in your animation loop
+			this.autoRotate = false;
+			this.autoRotateSpeed = 2.0; // 30 seconds per round when fps is 60
+
+			// Set to false to disable use of the keys
+			this.enableKeys = true;
+
+			// The four arrow keys
+			this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
+
+			// Mouse buttons
+			this.mouseButtons = { ORBIT: _three2.default.MOUSE.LEFT, ZOOM: _three2.default.MOUSE.MIDDLE, PAN: _three2.default.MOUSE.RIGHT };
+
+			// for reset
+			this.target0 = this.target.clone();
+			this.position0 = this.object.position.clone();
+			this.zoom0 = this.object.zoom;
+
+			//
+			// public methods
+			//
+
+			this.getPolarAngle = function () {
+
+					return phi;
+			};
+
+			this.getAzimuthalAngle = function () {
+
+					return theta;
+			};
+
+			this.reset = function () {
+
+					scope.target.copy(scope.target0);
+					scope.object.position.copy(scope.position0);
+					scope.object.zoom = scope.zoom0;
+
+					scope.object.updateProjectionMatrix();
+					scope.dispatchEvent(changeEvent);
+
+					scope.update();
+
+					state = STATE.NONE;
+			};
+
+			// this method is exposed, but perhaps it would be better if we can make it private...
+			this.update = function () {
+
+					var offset = new _three2.default.Vector3();
+
+					// so camera.up is the orbit axis
+					var quat = new _three2.default.Quaternion().setFromUnitVectors(object.up, new _three2.default.Vector3(0, 1, 0));
+					var quatInverse = quat.clone().inverse();
+
+					var lastPosition = new _three2.default.Vector3();
+					var lastQuaternion = new _three2.default.Quaternion();
+
+					return function () {
+
+							var position = scope.object.position;
+
+							offset.copy(position).sub(scope.target);
+
+							// rotate offset to "y-axis-is-up" space
+							offset.applyQuaternion(quat);
+
+							// angle from z-axis around y-axis
+
+							theta = Math.atan2(offset.x, offset.z);
+
+							// angle from y-axis
+
+							phi = Math.atan2(Math.sqrt(offset.x * offset.x + offset.z * offset.z), offset.y);
+
+							if (scope.autoRotate && state === STATE.NONE) {
+
+									rotateLeft(getAutoRotationAngle());
+							}
+
+							theta += thetaDelta;
+							phi += phiDelta;
+
+							// restrict theta to be between desired limits
+							theta = Math.max(scope.minAzimuthAngle, Math.min(scope.maxAzimuthAngle, theta));
+
+							// restrict phi to be between desired limits
+							phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, phi));
+
+							// restrict phi to be betwee EPS and PI-EPS
+							phi = Math.max(EPS, Math.min(Math.PI - EPS, phi));
+
+							var radius = offset.length() * scale;
+
+							// restrict radius to be between desired limits
+							radius = Math.max(scope.minDistance, Math.min(scope.maxDistance, radius));
+
+							// move target to panned location
+							scope.target.add(panOffset);
+
+							offset.x = radius * Math.sin(phi) * Math.sin(theta);
+							offset.y = radius * Math.cos(phi);
+							offset.z = radius * Math.sin(phi) * Math.cos(theta);
+
+							// rotate offset back to "camera-up-vector-is-up" space
+							offset.applyQuaternion(quatInverse);
+
+							position.copy(scope.target).add(offset);
+
+							scope.object.lookAt(scope.target);
+
+							if (scope.enableDamping === true) {
+
+									thetaDelta *= 1 - scope.dampingFactor;
+									phiDelta *= 1 - scope.dampingFactor;
+							} else {
+
+									thetaDelta = 0;
+									phiDelta = 0;
+							}
+
+							scale = 1;
+							panOffset.set(0, 0, 0);
+
+							// update condition is:
+							// min(camera displacement, camera rotation in radians)^2 > EPS
+							// using small-angle approximation cos(x/2) = 1 - x^2 / 8
+
+							if (zoomChanged || lastPosition.distanceToSquared(scope.object.position) > EPS || 8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS) {
+
+									scope.dispatchEvent(changeEvent);
+
+									lastPosition.copy(scope.object.position);
+									lastQuaternion.copy(scope.object.quaternion);
+									zoomChanged = false;
+
+									return true;
+							}
+
+							return false;
+					};
+			}();
+
+			this.dispose = function () {
+
+					scope.domElement.removeEventListener('contextmenu', onContextMenu, false);
+					scope.domElement.removeEventListener('mousedown', onMouseDown, false);
+					scope.domElement.removeEventListener('mousewheel', onMouseWheel, false);
+					scope.domElement.removeEventListener('MozMousePixelScroll', onMouseWheel, false); // firefox
+
+					scope.domElement.removeEventListener('touchstart', onTouchStart, false);
+					scope.domElement.removeEventListener('touchend', onTouchEnd, false);
+					scope.domElement.removeEventListener('touchmove', onTouchMove, false);
+
+					document.removeEventListener('mousemove', onMouseMove, false);
+					document.removeEventListener('mouseup', onMouseUp, false);
+					document.removeEventListener('mouseout', onMouseUp, false);
+
+					window.removeEventListener('keydown', onKeyDown, false);
+
+					//scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
+			};
+
+			//
+			// internals
+			//
+
+			var scope = this;
+
+			var changeEvent = { type: 'change' };
+			var startEvent = { type: 'start' };
+			var endEvent = { type: 'end' };
+
+			var STATE = { NONE: -1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY: 4, TOUCH_PAN: 5 };
+
+			var state = STATE.NONE;
+
+			var EPS = 0.000001;
+
+			// current position in spherical coordinates
+			var theta;
+			var phi;
+
+			var phiDelta = 0;
+			var thetaDelta = 0;
+			var scale = 1;
+			var panOffset = new _three2.default.Vector3();
+			var zoomChanged = false;
+
+			var rotateStart = new _three2.default.Vector2();
+			var rotateEnd = new _three2.default.Vector2();
+			var rotateDelta = new _three2.default.Vector2();
+
+			var panStart = new _three2.default.Vector2();
+			var panEnd = new _three2.default.Vector2();
+			var panDelta = new _three2.default.Vector2();
+
+			var dollyStart = new _three2.default.Vector2();
+			var dollyEnd = new _three2.default.Vector2();
+			var dollyDelta = new _three2.default.Vector2();
+
+			function getAutoRotationAngle() {
+
+					return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
+			}
+
+			function getZoomScale() {
+
+					return Math.pow(0.95, scope.zoomSpeed);
+			}
+
+			function rotateLeft(angle) {
+
+					thetaDelta -= angle;
+			}
+
+			function rotateUp(angle) {
+
+					phiDelta -= angle;
+			}
+
+			var panLeft = function () {
+
+					var v = new _three2.default.Vector3();
+
+					return function panLeft(distance, objectMatrix) {
+
+							var te = objectMatrix.elements;
+
+							// get X column of objectMatrix
+							v.set(te[0], te[1], te[2]);
+
+							v.multiplyScalar(-distance);
+
+							panOffset.add(v);
+					};
+			}();
+
+			var panUp = function () {
+
+					var v = new _three2.default.Vector3();
+
+					return function panUp(distance, objectMatrix) {
+
+							var te = objectMatrix.elements;
+
+							// get Y column of objectMatrix
+							v.set(te[4], te[5], te[6]);
+
+							v.multiplyScalar(distance);
+
+							panOffset.add(v);
+					};
+			}();
+
+			// deltaX and deltaY are in pixels; right and down are positive
+			var pan = function () {
+
+					var offset = new _three2.default.Vector3();
+
+					return function (deltaX, deltaY) {
+
+							var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+
+							if (scope.object instanceof _three2.default.PerspectiveCamera) {
+
+									// perspective
+									var position = scope.object.position;
+									offset.copy(position).sub(scope.target);
+									var targetDistance = offset.length();
+
+									// half of the fov is center to top of screen
+									targetDistance *= Math.tan(scope.object.fov / 2 * Math.PI / 180.0);
+
+									// we actually don't use screenWidth, since perspective camera is fixed to screen height
+									panLeft(2 * deltaX * targetDistance / element.clientHeight, scope.object.matrix);
+									panUp(2 * deltaY * targetDistance / element.clientHeight, scope.object.matrix);
+							} else if (scope.object instanceof _three2.default.OrthographicCamera) {
+
+									// orthographic
+									panLeft(deltaX * (scope.object.right - scope.object.left) / element.clientWidth, scope.object.matrix);
+									panUp(deltaY * (scope.object.top - scope.object.bottom) / element.clientHeight, scope.object.matrix);
+							} else {
+
+									// camera neither orthographic nor perspective
+									console.warn('WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.');
+									scope.enablePan = false;
+							}
+					};
+			}();
+
+			function dollyIn(dollyScale) {
+
+					if (scope.object instanceof _three2.default.PerspectiveCamera) {
+
+							scale /= dollyScale;
+					} else if (scope.object instanceof _three2.default.OrthographicCamera) {
+
+							scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom * dollyScale));
+							scope.object.updateProjectionMatrix();
+							zoomChanged = true;
+					} else {
+
+							console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+							scope.enableZoom = false;
+					}
+			}
+
+			function dollyOut(dollyScale) {
+
+					if (scope.object instanceof _three2.default.PerspectiveCamera) {
+
+							scale *= dollyScale;
+					} else if (scope.object instanceof _three2.default.OrthographicCamera) {
+
+							scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom / dollyScale));
+							scope.object.updateProjectionMatrix();
+							zoomChanged = true;
+					} else {
+
+							console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+							scope.enableZoom = false;
+					}
+			}
+
+			//
+			// event callbacks - update the object state
+			//
+
+			function handleMouseDownRotate(event) {
+
+					//console.log( 'handleMouseDownRotate' );
+
+					rotateStart.set(event.clientX, event.clientY);
+			}
+
+			function handleMouseDownDolly(event) {
+
+					//console.log( 'handleMouseDownDolly' );
+
+					dollyStart.set(event.clientX, event.clientY);
+			}
+
+			function handleMouseDownPan(event) {
+
+					//console.log( 'handleMouseDownPan' );
+
+					panStart.set(event.clientX, event.clientY);
+			}
+
+			function handleMouseMoveRotate(event) {
+
+					//console.log( 'handleMouseMoveRotate' );
+
+					rotateEnd.set(event.clientX, event.clientY);
+					rotateDelta.subVectors(rotateEnd, rotateStart);
+
+					var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+
+					// rotating across whole screen goes 360 degrees around
+					rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
+
+					// rotating up and down along whole screen attempts to go 360, but limited to 180
+					rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed);
+
+					rotateStart.copy(rotateEnd);
+
+					scope.update();
+			}
+
+			function handleMouseMoveDolly(event) {
+
+					//console.log( 'handleMouseMoveDolly' );
+
+					dollyEnd.set(event.clientX, event.clientY);
+
+					dollyDelta.subVectors(dollyEnd, dollyStart);
+
+					if (dollyDelta.y > 0) {
+
+							dollyIn(getZoomScale());
+					} else if (dollyDelta.y < 0) {
+
+							dollyOut(getZoomScale());
+					}
+
+					dollyStart.copy(dollyEnd);
+
+					scope.update();
+			}
+
+			function handleMouseMovePan(event) {
+
+					//console.log( 'handleMouseMovePan' );
+
+					panEnd.set(event.clientX, event.clientY);
+
+					panDelta.subVectors(panEnd, panStart);
+
+					pan(panDelta.x, panDelta.y);
+
+					panStart.copy(panEnd);
+
+					scope.update();
+			}
+
+			function handleMouseUp(event) {
+
+					//console.log( 'handleMouseUp' );
+
+			}
+
+			function handleMouseWheel(event) {
+
+					//console.log( 'handleMouseWheel' );
+
+					var delta = 0;
+
+					if (event.wheelDelta !== undefined) {
+
+							// WebKit / Opera / Explorer 9
+
+							delta = event.wheelDelta;
+					} else if (event.detail !== undefined) {
+
+							// Firefox
+
+							delta = -event.detail;
+					}
+
+					if (delta > 0) {
+
+							dollyOut(getZoomScale());
+					} else if (delta < 0) {
+
+							dollyIn(getZoomScale());
+					}
+
+					scope.update();
+			}
+
+			function handleKeyDown(event) {
+
+					//console.log( 'handleKeyDown' );
+
+					switch (event.keyCode) {
+
+							case scope.keys.UP:
+									pan(0, scope.keyPanSpeed);
+									scope.update();
+									break;
+
+							case scope.keys.BOTTOM:
+									pan(0, -scope.keyPanSpeed);
+									scope.update();
+									break;
+
+							case scope.keys.LEFT:
+									pan(scope.keyPanSpeed, 0);
+									scope.update();
+									break;
+
+							case scope.keys.RIGHT:
+									pan(-scope.keyPanSpeed, 0);
+									scope.update();
+									break;
+
+					}
+			}
+
+			function handleTouchStartRotate(event) {
+
+					//console.log( 'handleTouchStartRotate' );
+
+					rotateStart.set(event.touches[0].pageX, event.touches[0].pageY);
+			}
+
+			function handleTouchStartDolly(event) {
+
+					//console.log( 'handleTouchStartDolly' );
+
+					var dx = event.touches[0].pageX - event.touches[1].pageX;
+					var dy = event.touches[0].pageY - event.touches[1].pageY;
+
+					var distance = Math.sqrt(dx * dx + dy * dy);
+
+					dollyStart.set(0, distance);
+			}
+
+			function handleTouchStartPan(event) {
+
+					//console.log( 'handleTouchStartPan' );
+
+					panStart.set(event.touches[0].pageX, event.touches[0].pageY);
+			}
+
+			function handleTouchMoveRotate(event) {
+
+					//console.log( 'handleTouchMoveRotate' );
+
+					rotateEnd.set(event.touches[0].pageX, event.touches[0].pageY);
+					rotateDelta.subVectors(rotateEnd, rotateStart);
+
+					var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+
+					// rotating across whole screen goes 360 degrees around
+					rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
+
+					// rotating up and down along whole screen attempts to go 360, but limited to 180
+					rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed);
+
+					rotateStart.copy(rotateEnd);
+
+					scope.update();
+			}
+
+			function handleTouchMoveDolly(event) {
+
+					//console.log( 'handleTouchMoveDolly' );
+
+					var dx = event.touches[0].pageX - event.touches[1].pageX;
+					var dy = event.touches[0].pageY - event.touches[1].pageY;
+
+					var distance = Math.sqrt(dx * dx + dy * dy);
+
+					dollyEnd.set(0, distance);
+
+					dollyDelta.subVectors(dollyEnd, dollyStart);
+
+					if (dollyDelta.y > 0) {
+
+							dollyOut(getZoomScale());
+					} else if (dollyDelta.y < 0) {
+
+							dollyIn(getZoomScale());
+					}
+
+					dollyStart.copy(dollyEnd);
+
+					scope.update();
+			}
+
+			function handleTouchMovePan(event) {
+
+					//console.log( 'handleTouchMovePan' );
+
+					panEnd.set(event.touches[0].pageX, event.touches[0].pageY);
+
+					panDelta.subVectors(panEnd, panStart);
+
+					pan(panDelta.x, panDelta.y);
+
+					panStart.copy(panEnd);
+
+					scope.update();
+			}
+
+			function handleTouchEnd(event) {}
+
+			//console.log( 'handleTouchEnd' );
+
+			//
+			// event handlers - FSM: listen for events and reset state
+			//
+
+			function onMouseDown(event) {
+
+					if (scope.enabled === false) return;
+
+					event.preventDefault();
+
+					if (event.button === scope.mouseButtons.ORBIT) {
+
+							if (scope.enableRotate === false) return;
+
+							handleMouseDownRotate(event);
+
+							state = STATE.ROTATE;
+					} else if (event.button === scope.mouseButtons.ZOOM) {
+
+							if (scope.enableZoom === false) return;
+
+							handleMouseDownDolly(event);
+
+							state = STATE.DOLLY;
+					} else if (event.button === scope.mouseButtons.PAN) {
+
+							if (scope.enablePan === false) return;
+
+							handleMouseDownPan(event);
+
+							state = STATE.PAN;
+					}
+
+					if (state !== STATE.NONE) {
+
+							document.addEventListener('mousemove', onMouseMove, false);
+							document.addEventListener('mouseup', onMouseUp, false);
+							document.addEventListener('mouseout', onMouseUp, false);
+
+							scope.dispatchEvent(startEvent);
+					}
+			}
+
+			function onMouseMove(event) {
+
+					if (scope.enabled === false) return;
+
+					event.preventDefault();
+
+					if (state === STATE.ROTATE) {
+
+							if (scope.enableRotate === false) return;
+
+							handleMouseMoveRotate(event);
+					} else if (state === STATE.DOLLY) {
+
+							if (scope.enableZoom === false) return;
+
+							handleMouseMoveDolly(event);
+					} else if (state === STATE.PAN) {
+
+							if (scope.enablePan === false) return;
+
+							handleMouseMovePan(event);
+					}
+			}
+
+			function onMouseUp(event) {
+
+					if (scope.enabled === false) return;
+
+					handleMouseUp(event);
+
+					document.removeEventListener('mousemove', onMouseMove, false);
+					document.removeEventListener('mouseup', onMouseUp, false);
+					document.removeEventListener('mouseout', onMouseUp, false);
+
+					scope.dispatchEvent(endEvent);
+
+					state = STATE.NONE;
+			}
+
+			function onMouseWheel(event) {
+
+					if (scope.enabled === false || scope.enableZoom === false || state !== STATE.NONE) return;
+
+					event.preventDefault();
+					event.stopPropagation();
+
+					handleMouseWheel(event);
+
+					scope.dispatchEvent(startEvent); // not sure why these are here...
+					scope.dispatchEvent(endEvent);
+			}
+
+			function onKeyDown(event) {
+
+					if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
+
+					handleKeyDown(event);
+			}
+
+			function onTouchStart(event) {
+
+					if (scope.enabled === false) return;
+
+					switch (event.touches.length) {
+
+							case 1:
+									// one-fingered touch: rotate
+
+									if (scope.enableRotate === false) return;
+
+									handleTouchStartRotate(event);
+
+									state = STATE.TOUCH_ROTATE;
+
+									break;
+
+							case 2:
+									// two-fingered touch: dolly
+
+									if (scope.enableZoom === false) return;
+
+									handleTouchStartDolly(event);
+
+									state = STATE.TOUCH_DOLLY;
+
+									break;
+
+							case 3:
+									// three-fingered touch: pan
+
+									if (scope.enablePan === false) return;
+
+									handleTouchStartPan(event);
+
+									state = STATE.TOUCH_PAN;
+
+									break;
+
+							default:
+
+									state = STATE.NONE;
+
+					}
+
+					if (state !== STATE.NONE) {
+
+							scope.dispatchEvent(startEvent);
+					}
+			}
+
+			function onTouchMove(event) {
+
+					if (scope.enabled === false) return;
+
+					event.preventDefault();
+					event.stopPropagation();
+
+					switch (event.touches.length) {
+
+							case 1:
+									// one-fingered touch: rotate
+
+									if (scope.enableRotate === false) return;
+									if (state !== STATE.TOUCH_ROTATE) return; // is this needed?...
+
+									handleTouchMoveRotate(event);
+
+									break;
+
+							case 2:
+									// two-fingered touch: dolly
+
+									if (scope.enableZoom === false) return;
+									if (state !== STATE.TOUCH_DOLLY) return; // is this needed?...
+
+									handleTouchMoveDolly(event);
+
+									break;
+
+							case 3:
+									// three-fingered touch: pan
+
+									if (scope.enablePan === false) return;
+									if (state !== STATE.TOUCH_PAN) return; // is this needed?...
+
+									handleTouchMovePan(event);
+
+									break;
+
+							default:
+
+									state = STATE.NONE;
+
+					}
+			}
+
+			function onTouchEnd(event) {
+
+					if (scope.enabled === false) return;
+
+					handleTouchEnd(event);
+
+					scope.dispatchEvent(endEvent);
+
+					state = STATE.NONE;
+			}
+
+			function onContextMenu(event) {
+
+					event.preventDefault();
+			}
+
+			//
+
+			scope.domElement.addEventListener('contextmenu', onContextMenu, false);
+
+			scope.domElement.addEventListener('mousedown', onMouseDown, false);
+			scope.domElement.addEventListener('mousewheel', onMouseWheel, false);
+			scope.domElement.addEventListener('MozMousePixelScroll', onMouseWheel, false); // firefox
+
+			scope.domElement.addEventListener('touchstart', onTouchStart, false);
+			scope.domElement.addEventListener('touchend', onTouchEnd, false);
+			scope.domElement.addEventListener('touchmove', onTouchMove, false);
+
+			window.addEventListener('keydown', onKeyDown, false);
+
+			// force an update at start
+
+			this.update();
+	}; /**
+	    * @author qiao / https://github.com/qiao
+	    * @author mrdoob / http://mrdoob.com
+	    * @author alteredq / http://alteredqualia.com/
+	    * @author WestLangley / http://github.com/WestLangley
+	    * @author erich666 / http://erichaines.com
+	    */
+
+	// This set of controls performs orbiting, dollying (zooming), and panning.
+	// Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
+	//
+	//    Orbit - left mouse / touch: one finger move
+	//    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
+	//    Pan - right mouse, or arrow keys / touch: three finter swipe
+
+	_three2.default.OrbitControls.prototype = Object.create(_three2.default.EventDispatcher.prototype);
+	_three2.default.OrbitControls.prototype.constructor = _three2.default.OrbitControls;
+
+	Object.defineProperties(_three2.default.OrbitControls.prototype, {
+
+			center: {
+
+					get: function get() {
+
+							console.warn('THREE.OrbitControls: .center has been renamed to .target');
+							return this.target;
+					}
+
+			},
+
+			// backward compatibility
+
+			noZoom: {
+
+					get: function get() {
+
+							console.warn('THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.');
+							return !this.enableZoom;
+					},
+
+					set: function set(value) {
+
+							console.warn('THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.');
+							this.enableZoom = !value;
+					}
+
+			},
+
+			noRotate: {
+
+					get: function get() {
+
+							console.warn('THREE.OrbitControls: .noRotate has been deprecated. Use .enableRotate instead.');
+							return !this.enableRotate;
+					},
+
+					set: function set(value) {
+
+							console.warn('THREE.OrbitControls: .noRotate has been deprecated. Use .enableRotate instead.');
+							this.enableRotate = !value;
+					}
+
+			},
+
+			noPan: {
+
+					get: function get() {
+
+							console.warn('THREE.OrbitControls: .noPan has been deprecated. Use .enablePan instead.');
+							return !this.enablePan;
+					},
+
+					set: function set(value) {
+
+							console.warn('THREE.OrbitControls: .noPan has been deprecated. Use .enablePan instead.');
+							this.enablePan = !value;
+					}
+
+			},
+
+			noKeys: {
+
+					get: function get() {
+
+							console.warn('THREE.OrbitControls: .noKeys has been deprecated. Use .enableKeys instead.');
+							return !this.enableKeys;
+					},
+
+					set: function set(value) {
+
+							console.warn('THREE.OrbitControls: .noKeys has been deprecated. Use .enableKeys instead.');
+							this.enableKeys = !value;
+					}
+
+			},
+
+			staticMoving: {
+
+					get: function get() {
+
+							console.warn('THREE.OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead.');
+							return !this.constraint.enableDamping;
+					},
+
+					set: function set(value) {
+
+							console.warn('THREE.OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead.');
+							this.constraint.enableDamping = !value;
+					}
+
+			},
+
+			dynamicDampingFactor: {
+
+					get: function get() {
+
+							console.warn('THREE.OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.');
+							return this.constraint.dampingFactor;
+					},
+
+					set: function set(value) {
+
+							console.warn('THREE.OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.');
+							this.constraint.dampingFactor = value;
+					}
+
+			}
+
+	});
+
+	exports.default = _three2.default.OrbitControls;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(4);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_three2.default.OBJLoader = function (manager) {
+
+				this.manager = manager !== undefined ? manager : _three2.default.DefaultLoadingManager;
+	}; /**
+	    * @author mrdoob / http://mrdoob.com/
+	    */
+
+	_three2.default.OBJLoader.prototype = {
+
+				constructor: _three2.default.OBJLoader,
+
+				load: function load(url, onLoad, onProgress, onError) {
+
+							var scope = this;
+
+							var loader = new _three2.default.XHRLoader(scope.manager);
+							loader.setCrossOrigin(this.crossOrigin);
+							loader.load(url, function (text) {
+
+										onLoad(scope.parse(text));
+							}, onProgress, onError);
+				},
+
+				setCrossOrigin: function setCrossOrigin(value) {
+
+							this.crossOrigin = value;
+				},
+
+				parse: function parse(text) {
+
+							console.time('OBJLoader');
+
+							var object,
+							    objects = [];
+							var geometry, material;
+
+							function parseVertexIndex(value) {
+
+										var index = parseInt(value);
+
+										return (index >= 0 ? index - 1 : index + vertices.length / 3) * 3;
+							}
+
+							function parseNormalIndex(value) {
+
+										var index = parseInt(value);
+
+										return (index >= 0 ? index - 1 : index + normals.length / 3) * 3;
+							}
+
+							function parseUVIndex(value) {
+
+										var index = parseInt(value);
+
+										return (index >= 0 ? index - 1 : index + uvs.length / 2) * 2;
+							}
+
+							function addVertex(a, b, c) {
+
+										geometry.vertices.push(vertices[a], vertices[a + 1], vertices[a + 2], vertices[b], vertices[b + 1], vertices[b + 2], vertices[c], vertices[c + 1], vertices[c + 2]);
+							}
+
+							function addNormal(a, b, c) {
+
+										geometry.normals.push(normals[a], normals[a + 1], normals[a + 2], normals[b], normals[b + 1], normals[b + 2], normals[c], normals[c + 1], normals[c + 2]);
+							}
+
+							function addUV(a, b, c) {
+
+										geometry.uvs.push(uvs[a], uvs[a + 1], uvs[b], uvs[b + 1], uvs[c], uvs[c + 1]);
+							}
+
+							function addFace(a, b, c, d, ua, ub, uc, ud, na, nb, nc, nd) {
+
+										var ia = parseVertexIndex(a);
+										var ib = parseVertexIndex(b);
+										var ic = parseVertexIndex(c);
+										var id;
+
+										if (d === undefined) {
+
+													addVertex(ia, ib, ic);
+										} else {
+
+													id = parseVertexIndex(d);
+
+													addVertex(ia, ib, id);
+													addVertex(ib, ic, id);
+										}
+
+										if (ua !== undefined) {
+
+													ia = parseUVIndex(ua);
+													ib = parseUVIndex(ub);
+													ic = parseUVIndex(uc);
+
+													if (d === undefined) {
+
+																addUV(ia, ib, ic);
+													} else {
+
+																id = parseUVIndex(ud);
+
+																addUV(ia, ib, id);
+																addUV(ib, ic, id);
+													}
+										}
+
+										if (na !== undefined) {
+
+													ia = parseNormalIndex(na);
+													ib = parseNormalIndex(nb);
+													ic = parseNormalIndex(nc);
+
+													if (d === undefined) {
+
+																addNormal(ia, ib, ic);
+													} else {
+
+																id = parseNormalIndex(nd);
+
+																addNormal(ia, ib, id);
+																addNormal(ib, ic, id);
+													}
+										}
+							}
+
+							// create mesh if no objects in text
+
+							if (/^o /gm.test(text) === false) {
+
+										geometry = {
+													vertices: [],
+													normals: [],
+													uvs: []
+										};
+
+										material = {
+													name: ''
+										};
+
+										object = {
+													name: '',
+													geometry: geometry,
+													material: material
+										};
+
+										objects.push(object);
+							}
+
+							var vertices = [];
+							var normals = [];
+							var uvs = [];
+
+							// v float float float
+
+							var vertex_pattern = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+							// vn float float float
+
+							var normal_pattern = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+							// vt float float
+
+							var uv_pattern = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+							// f vertex vertex vertex ...
+
+							var face_pattern1 = /f( +-?\d+)( +-?\d+)( +-?\d+)( +-?\d+)?/;
+
+							// f vertex/uv vertex/uv vertex/uv ...
+
+							var face_pattern2 = /f( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))?/;
+
+							// f vertex/uv/normal vertex/uv/normal vertex/uv/normal ...
+
+							var face_pattern3 = /f( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))?/;
+
+							// f vertex//normal vertex//normal vertex//normal ...
+
+							var face_pattern4 = /f( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))?/;
+
+							//
+
+							var lines = text.split('\n');
+
+							for (var i = 0; i < lines.length; i++) {
+
+										var line = lines[i];
+										line = line.trim();
+
+										var result;
+
+										if (line.length === 0 || line.charAt(0) === '#') {
+
+													continue;
+										} else if ((result = vertex_pattern.exec(line)) !== null) {
+
+													// ["v 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
+
+													vertices.push(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3]));
+										} else if ((result = normal_pattern.exec(line)) !== null) {
+
+													// ["vn 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
+
+													normals.push(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3]));
+										} else if ((result = uv_pattern.exec(line)) !== null) {
+
+													// ["vt 0.1 0.2", "0.1", "0.2"]
+
+													uvs.push(parseFloat(result[1]), parseFloat(result[2]));
+										} else if ((result = face_pattern1.exec(line)) !== null) {
+
+													// ["f 1 2 3", "1", "2", "3", undefined]
+
+													addFace(result[1], result[2], result[3], result[4]);
+										} else if ((result = face_pattern2.exec(line)) !== null) {
+
+													// ["f 1/1 2/2 3/3", " 1/1", "1", "1", " 2/2", "2", "2", " 3/3", "3", "3", undefined, undefined, undefined]
+
+													addFace(result[2], result[5], result[8], result[11], result[3], result[6], result[9], result[12]);
+										} else if ((result = face_pattern3.exec(line)) !== null) {
+
+													// ["f 1/1/1 2/2/2 3/3/3", " 1/1/1", "1", "1", "1", " 2/2/2", "2", "2", "2", " 3/3/3", "3", "3", "3", undefined, undefined, undefined, undefined]
+
+													addFace(result[2], result[6], result[10], result[14], result[3], result[7], result[11], result[15], result[4], result[8], result[12], result[16]);
+										} else if ((result = face_pattern4.exec(line)) !== null) {
+
+													// ["f 1//1 2//2 3//3", " 1//1", "1", "1", " 2//2", "2", "2", " 3//3", "3", "3", undefined, undefined, undefined]
+
+													addFace(result[2], result[5], result[8], result[11], undefined, undefined, undefined, undefined, result[3], result[6], result[9], result[12]);
+										} else if (/^o /.test(line)) {
+
+													geometry = {
+																vertices: [],
+																normals: [],
+																uvs: []
+													};
+
+													material = {
+																name: ''
+													};
+
+													object = {
+																name: line.substring(2).trim(),
+																geometry: geometry,
+																material: material
+													};
+
+													objects.push(object);
+										} else if (/^g /.test(line)) {
+
+													// group
+
+										} else if (/^usemtl /.test(line)) {
+
+																// material
+
+																material.name = line.substring(7).trim();
+													} else if (/^mtllib /.test(line)) {
+
+																// mtl file
+
+													} else if (/^s /.test(line)) {
+
+																			// smooth shading
+
+																} else {
+
+																						// console.log( "THREE.OBJLoader: Unhandled line " + line );
+
+																			}
+							}
+
+							var container = new _three2.default.Object3D();
+
+							for (var i = 0, l = objects.length; i < l; i++) {
+
+										object = objects[i];
+										geometry = object.geometry;
+
+										var buffergeometry = new _three2.default.BufferGeometry();
+
+										buffergeometry.addAttribute('position', new _three2.default.BufferAttribute(new Float32Array(geometry.vertices), 3));
+
+										if (geometry.normals.length > 0) {
+
+													buffergeometry.addAttribute('normal', new _three2.default.BufferAttribute(new Float32Array(geometry.normals), 3));
+										}
+
+										if (geometry.uvs.length > 0) {
+
+													buffergeometry.addAttribute('uv', new _three2.default.BufferAttribute(new Float32Array(geometry.uvs), 2));
+										}
+
+										material = new _three2.default.MeshLambertMaterial();
+										material.name = object.material.name;
+
+										var mesh = new _three2.default.Mesh(buffergeometry, material);
+										mesh.name = object.name;
+
+										container.add(mesh);
+							}
+
+							console.timeEnd('OBJLoader');
+
+							return container;
+				}
+
+	};
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(4);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	var _bScene = __webpack_require__(5);
+
+	var _bScene2 = _interopRequireDefault(_bScene);
+
+	var _OrbitControls = __webpack_require__(6);
+
+	var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var b3 = {
+	  init: function init(_ref) {
+	    var container = _ref.container;
+	    var renderer = _ref.renderer;
+
+	    console.log('initialized b3!');
+	    var b3Scene = _bScene2.default.create({ container: container, renderer: renderer });
+
+	    b3Scene.changeMaterial = function (mesh, shading) {
+	      var shadingType = undefined;
+	      shadingType = shading === "smooth" ? _three2.default.SmoothShading : _three2.default.FlatShading;
+	      var material = new _three2.default.MeshPhongMaterial({
+	        color: 0x333333,
+	        shading: shadingType
+	      });
+	      mesh.material = material;
+	    };
+
+	    b3Scene.handleIntersection = function () {
+	      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera);
+	      var intersects = this.raycaster.raycaster.intersectObjects(this.scene.children);
+
+	      var tempIntersection = undefined;
+	      tempIntersection = intersects[0] && intersects[0].object === this.objects.bigSphere ? true : false;
+
+	      if (this.raycaster.intersection !== tempIntersection) {
+	        this.raycaster.intersection = tempIntersection;
+	        if (this.raycaster.intersection) {
+	          this.raycaster.intersected = intersects[0].object;
+	        }
+	        this.mouseToggle();
+	      }
+	    };
+
+	    b3Scene.incrementCounters = function () {
+	      this.counters.a += 0.02;
+	    };
+
+	    b3Scene.mouseToggle = function () {
+	      if (this.raycaster.intersection) {
+	        document.body.style.cursor = "pointer";
+	        this.changeMaterial(this.raycaster.intersected, "flat");
+	      } else {
+	        document.body.style.cursor = "initial";
+	        this.changeMaterial(this.objects.bigSphere, "smooth");
+	      }
+	    };
+
+	    b3Scene.moveSmallSpheres = function (spheres) {
+	      for (var i = 0; i < spheres.length; i++) {
+	        var sphere = spheres[i];
+
+	        sphere.position.x += sphere.pace.x;
+	        sphere.position.y += sphere.pace.y;
+
+	        if (sphere.position.x > 400 || sphere.position.y > 300) {
+	          sphere.position.set(sphere.initialPosition[0], sphere.initialPosition[1], sphere.initialPosition[2]);
+	        }
+	      }
+	    };
+
+	    b3Scene.prepBigSphere = function () {
+	      var self = this;
+	      var bigSphereGeom = new _three2.default.SphereGeometry(50, 32, 32);
+	      var material = new _three2.default.MeshPhongMaterial({
+	        color: 0x333333,
+	        shading: _three2.default.SmoothShading
+	      });
+	      var bigSphere = new _three2.default.Mesh(bigSphereGeom, material);
+	      bigSphere.geometry.verticesNeedUpdate = true;
+	      bigSphere.geometry.dynamic = true;
+	      bigSphere.position.set(0, 0, 0);
+	      bigSphere.motion = [function (i) {
+	        return Math.cos(self.counters.a * 4 - i) * 0.2;
+	      }, function (i) {
+	        return -(Math.cos(self.counters.a * 4 + i) * 0.2);
+	      }];
+	      bigSphere.rotation.y += 0.5;
+	      this.scene.add(bigSphere);
+
+	      this.objects.bigSphere = bigSphere;
+	    };
+
+	    b3Scene.prepCamera = function () {
+	      var camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
+	      camera.position.set(0, 0, 125);
+	      camera.lookAt(0, 0, 0);
+
+	      this.camera = camera;
+	    };
+
+	    b3Scene.prepControls = function () {
+	      var controls = new _OrbitControls2.default(this.camera, this.renderer.domElement);
+	      controls.enableZoom = false;
+	      controls.enablePan = false;
+	      controls.rotateSpeed = 1;
+	      this.controls = controls;
+	    };
+
+	    b3Scene.prepLights = function () {
+	      var lightOne = new _three2.default.PointLight(0xffffff, 1, 2000);
+	      lightOne.position.set(0, 0, -75);
+	      this.scene.add(lightOne);
+
+	      var lightTwo = new _three2.default.PointLight(0xffffff, 1, 2000);
+	      lightTwo.position.set(-100, -100, 225);
+	      this.scene.add(lightTwo);
+
+	      this.lights.lights = [lightOne, lightTwo];
+	    };
+
+	    b3Scene.prepSmallSpheres = function () {
+	      var spheres = [];
+	      for (var i = 0; i < this.objects.info.bubbles.count; i++) {
+	        var sphere = new _three2.default.Mesh(new _three2.default.SphereGeometry(Math.random() * 2, 8, 8), new _three2.default.MeshPhongMaterial({
+	          color: 0x333333,
+	          shading: _three2.default.SmoothShading
+	        }));
+
+	        var pos = [Math.random() * 200 - 300, Math.random() * 100 - 150, Math.random() * 200 - 100];
+	        var xRate = (1 - (pos[2] - 100) * 0.01) * Math.random() * 2 * 0.4;
+
+	        sphere.position.set(pos[0], pos[1], pos[2]);
+
+	        sphere.initialPosition = pos;
+
+	        sphere.pace = {
+	          x: xRate,
+	          y: xRate * 0.5
+	        };
+
+	        spheres.push(sphere);
+	        this.scene.add(sphere);
+	      }
+	      this.objects.smallSpheres = spheres;
+	    };
+
+	    b3Scene.pulsateObj = function (obj) {
+	      for (var i = 0; i < obj.geometry.vertices.length; i++) {
+	        var vertex = obj.geometry.vertices[i];
+
+	        vertex.set(vertex.x += obj.motion[0](i), vertex.y += obj.motion[0](i), vertex.z += obj.motion[0](i));
+	      }
+
+	      obj.geometry.verticesNeedUpdate = true;
+	      obj.geometry.dynamic = true;
+	    };
+
+	    b3Scene.uniqueSetup = function () {
+	      this.objects.info = {
+	        bubbles: { count: 100, radius: 16 }
+	      };
+	      this.prepCamera();
+	      this.prepControls();
+	      this.prepLights();
+	      this.prepSmallSpheres();
+	      this.prepBigSphere();
+
+	      return function () {
+	        this.incrementCounters();
+
+	        this.pulsateObj(this.objects.bigSphere);
+	        this.handleIntersection();
+	        this.moveSmallSpheres(this.objects.smallSpheres);
+	      }.bind(this);
+	    };
+
+	    b3Scene.init();
+
+	    return b3Scene;
+	  }
+	}; // b3.js
+
+	module.exports = b3;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _three = __webpack_require__(4);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	var _bScene = __webpack_require__(5);
+
+	var _bScene2 = _interopRequireDefault(_bScene);
+
+	var _gsap = __webpack_require__(10);
+
+	var _gsap2 = _interopRequireDefault(_gsap);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var b4 = {
+	  init: function init(_ref) {
+	    var container = _ref.container;
+	    var renderer = _ref.renderer;
+
+	    console.log('initialized b4!');
+	    var b4Scene = _bScene2.default.create({ container: container, renderer: renderer });
+
+	    b4Scene.incrementCounters = function () {
+	      this.counters.a += 0.02;
+	    };
+
+	    b4Scene.prepLights = function () {
+	      var light = new _three2.default.PointLight(0x00ffff, 0.5, 1000);
+	      light.position.set(0, 0, 200);
+	      this.scene.add(light);
+
+	      this.lights.lights = [light];
+	    };
+
+	    b4Scene.prepObjects = function () {
+	      var objs = [];
+
+	      var mesh = new _three2.default.Mesh(new _three2.default.TetrahedronGeometry(25, 0), new _three2.default.MeshPhongMaterial({
+	        color: 0xffffff,
+	        shading: _three2.default.FlatShading
+	      }));
+	      mesh.position.set(0, 0, 0);
+	      mesh.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+	      mesh.geometry.verticesNeedUpdate = true;
+	      mesh.geometry.dynamic = true;
+	      mesh.motion = function (i) {
+	        return Math.cos(this.counters.a * 4 - i) * 0.02;
+	      }.bind(this);
+
+	      this.scene.add(mesh);
+	      objs.push(mesh);
+
+	      this.objects.objs = objs;
+	    };
+
+	    b4Scene.pulsateBigSphere = function (objs) {
+	      for (var i = 0; i < objs[0].geometry.vertices.length; i++) {
+	        var vertex = objs[0].geometry.vertices[i];
+
+	        vertex.set(vertex.x += objs[0].motion(i), vertex.y += objs[0].motion(i), vertex.z += objs[0].motion(i));
+	      }
+
+	      objs[0].geometry.verticesNeedUpdate = true;
+	      objs[0].geometry.dynamic = true;
+	    };
+
+	    b4Scene.uniqueSetup = function () {
+	      this.prepLights();
+	      this.prepObjects();
+
+	      this.renderer.setClearColor(0xf7f7f7);
+
+	      return function () {
+	        this.incrementCounters();
+	        this.pulsateBigSphere(this.objects.objs);
+	      }.bind(this);
+	    };
+
+	    b4Scene.init();
+
+	    return b4Scene;
+	  }
+	}; // b4.js
+
+	exports.default = b4;
+
+/***/ },
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -44702,7 +44500,7 @@
 							if (global) {
 								_globals[n] = cl; //provides a way to avoid global namespace pollution. By default, the main classes like TweenLite, Power1, Strong, etc. are added to window unless a GreenSockGlobals is defined. So if you want to have things added to a custom object instead, just do something like window.GreenSockGlobals = {} before loading any GreenSock files. You can even set up an alias like window.GreenSockGlobals = windows.gs = {} so that you can access everything like gs.TweenLite. Also remember that ALL classes are added to the window.com.greensock object (in their respective packages, like com.greensock.easing.Power1, com.greensock.TweenLite, etc.)
 								hasModule = (typeof(module) !== "undefined" && module.exports);
-								if (!hasModule && "function" === "function" && __webpack_require__(15)){ //AMD
+								if (!hasModule && "function" === "function" && __webpack_require__(11)){ //AMD
 									!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() { return cl; }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 								} else if (ns === moduleName && hasModule){ //node
 									module.exports = cl;
@@ -46487,7 +46285,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 15 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -46495,21 +46293,21 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 16 */
+/* 12 */
 /***/ function(module, exports) {
 
 	"use strict";
 
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	/** Shrinkwrap URL:
 	 *      /v2/bundles/js?modules=fastclick%401.0.6%2Co-autoinit%401.2.0&shrinkwrap=
 	 */
-	!(function (t) {
+	!function (t) {
 		function e(o) {
 			if (n[o]) return n[o].exports;var i = n[o] = { exports: {}, id: o, loaded: !1 };return t[o].call(i.exports, i, i.exports, e), i.loaded = !0, i.exports;
 		}var n = {};return e.m = t, e.c = n, e.p = "", e(0);
-	})([function (t, e, n) {
+	}([function (t, e, n) {
 		"use strict";
 		n(1), window.Origami = { fastclick: n(2), "o-autoinit": n(4) };
 	}, function (t, e) {
@@ -46518,7 +46316,7 @@
 		t.exports = n(3);
 	}, function (t, e) {
 		"use strict";
-		var n = !1;!(function () {
+		var n = !1;!function () {
 			/**
 	  * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.
 	  *
@@ -46531,7 +46329,7 @@
 					return function () {
 						return t.apply(e, arguments);
 					};
-				}var r;if ((n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t))) {
+				}var r;if (n = n || {}, this.trackingClick = !1, this.trackingClickStart = 0, this.targetElement = null, this.touchStartX = 0, this.touchStartY = 0, this.lastTouchIdentifier = 0, this.touchBoundary = n.touchBoundary || 10, this.layer = t, this.tapDelay = n.tapDelay || 200, this.tapTimeout = n.tapTimeout || 700, !e.notNeeded(t)) {
 					for (var a = ["onMouse", "onClick", "onTouchStart", "onTouchMove", "onTouchEnd", "onTouchCancel"], c = this, s = 0, u = a.length; u > s; s++) {
 						c[a[s]] = o(c[a[s]], c);
 					}i && (t.addEventListener("mouseover", this.onMouse, !0), t.addEventListener("mousedown", this.onMouse, !0), t.addEventListener("mouseup", this.onMouse, !0)), t.addEventListener("click", this.onClick, !0), t.addEventListener("touchstart", this.onTouchStart, !1), t.addEventListener("touchmove", this.onTouchMove, !1), t.addEventListener("touchend", this.onTouchEnd, !1), t.addEventListener("touchcancel", this.onTouchCancel, !1), Event.prototype.stopImmediatePropagation || (t.removeEventListener = function (e, n, o) {
@@ -46570,7 +46368,7 @@
 			}, e.prototype.focus = function (t) {
 				var e;r && t.setSelectionRange && 0 !== t.type.indexOf("date") && "time" !== t.type && "month" !== t.type ? (e = t.value.length, t.setSelectionRange(e, e)) : t.focus();
 			}, e.prototype.updateScrollParent = function (t) {
-				var e, n;if ((e = t.fastClickScrollParent, !e || !e.contains(t))) {
+				var e, n;if (e = t.fastClickScrollParent, !e || !e.contains(t)) {
 					n = t;do {
 						if (n.scrollHeight > n.offsetHeight) {
 							e = n, t.fastClickScrollParent = n;break;
@@ -46580,8 +46378,8 @@
 			}, e.prototype.getTargetElementFromEventTarget = function (t) {
 				return t.nodeType === Node.TEXT_NODE ? t.parentNode : t;
 			}, e.prototype.onTouchStart = function (t) {
-				var e, n, o;if (t.targetTouches.length > 1) return !0;if ((e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r)) {
-					if ((o = window.getSelection(), o.rangeCount && !o.isCollapsed)) return !0;if (!a) {
+				var e, n, o;if (t.targetTouches.length > 1) return !0;if (e = this.getTargetElementFromEventTarget(t.target), n = t.targetTouches[0], r) {
+					if (o = window.getSelection(), o.rangeCount && !o.isCollapsed) return !0;if (!a) {
 						if (n.identifier && n.identifier === this.lastTouchIdentifier) return t.preventDefault(), !1;this.lastTouchIdentifier = n.identifier, this.updateScrollParent(e);
 					}
 				}return this.trackingClick = !0, this.trackingClickStart = t.timeStamp, this.targetElement = e, this.touchStartX = n.pageX, this.touchStartY = n.pageY, t.timeStamp - this.lastClickTime < this.tapDelay && t.preventDefault(), !0;
@@ -46598,9 +46396,9 @@
 				    o,
 				    s,
 				    u,
-				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if ((this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o)) {
+				    l = this.targetElement;if (!this.trackingClick) return !0;if (t.timeStamp - this.lastClickTime < this.tapDelay) return this.cancelNextClick = !0, !0;if (t.timeStamp - this.trackingClickStart > this.tapTimeout) return !0;if (this.cancelNextClick = !1, this.lastClickTime = t.timeStamp, n = this.trackingClickStart, this.trackingClick = !1, this.trackingClickStart = 0, c && (u = t.changedTouches[0], l = document.elementFromPoint(u.pageX - window.pageXOffset, u.pageY - window.pageYOffset) || l, l.fastClickScrollParent = this.targetElement.fastClickScrollParent), o = l.tagName.toLowerCase(), "label" === o) {
 					if (e = this.findControl(l)) {
-						if ((this.focus(l), i)) return !1;l = e;
+						if (this.focus(l), i) return !1;l = e;
 					}
 				} else if (this.needsFocus(l)) return t.timeStamp - n > 100 || r && window.top !== window && "input" === o ? (this.targetElement = null, !1) : (this.focus(l), this.sendClick(l, t), r && "select" === o || (this.targetElement = null, t.preventDefault()), !1);return r && !a && (s = l.fastClickScrollParent, s && s.fastClickLastScrollTop !== s.scrollTop) ? !0 : (this.needsClick(l) || (t.preventDefault(), this.sendClick(l, t)), !1);
 			}, e.prototype.onTouchCancel = function () {
@@ -46624,20 +46422,20 @@
 			}, "function" == typeof n && "object" == _typeof(n.amd) && n.amd ? n(function () {
 				return e;
 			}) : "undefined" != typeof t && t.exports ? (t.exports = e.attach, t.exports.FastClick = e) : window.FastClick = e;
-		})();
+		}();
 	}, function (t, e, n) {
 		t.exports = n(5);
 	}, function (t, e) {
 		"use strict";
 		function n(t) {
 			t in o || (o[t] = !0, document.dispatchEvent(new CustomEvent("o." + t)));
-		}var o = {};if ((window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
+		}var o = {};if (window.addEventListener("load", n.bind(null, "load")), window.addEventListener("load", n.bind(null, "DOMContentLoaded")), document.addEventListener("DOMContentLoaded", n.bind(null, "DOMContentLoaded")), document.onreadystatechange = function () {
 			"complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded");
-		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent)) {
+		}, "complete" === document.readyState ? (n("DOMContentLoaded"), n("load")) : "interactive" !== document.readyState || document.attachEvent || n("DOMContentLoaded"), document.attachEvent) {
 			var i = !1,
 			    r = 50;try {
 				i = null == window.frameElement && document.documentElement;
-			} catch (a) {}i && i.doScroll && !(function c() {
+			} catch (a) {}i && i.doScroll && !function c() {
 				if (!("DOMContentLoaded" in o)) {
 					try {
 						i.doScroll("left");
@@ -46645,343 +46443,345 @@
 						return 5e3 > r ? setTimeout(c, r *= 1.2) : void 0;
 					}n("DOMContentLoaded");
 				}
-			})();
+			}();
 		}
 	}]);
 
 /***/ },
-/* 17 */
+/* 13 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */,
 /* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(4);
 
 	var _three2 = _interopRequireDefault(_three);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	_three2.default.OBJLoader = function (manager) {
+	var tessellateModifier = function tessellateModifier(maxEdgeLength) {
 
-		this.manager = manager !== undefined ? manager : _three2.default.DefaultLoadingManager;
+						this.maxEdgeLength = maxEdgeLength;
 	}; /**
-	    * @author mrdoob / http://mrdoob.com/
+	    * Break faces with edges longer than maxEdgeLength
+	    * - not recursive
+	    *
+	    * @author alteredq / http://alteredqualia.com/
 	    */
 
-	_three2.default.OBJLoader.prototype = {
+	tessellateModifier.prototype.modify = function (geometry) {
 
-		constructor: _three2.default.OBJLoader,
+						var edge;
 
-		load: function load(url, onLoad, onProgress, onError) {
+						var faces = [];
+						var faceVertexUvs = [];
+						var maxEdgeLengthSquared = this.maxEdgeLength * this.maxEdgeLength;
 
-			var scope = this;
+						for (var i = 0, il = geometry.faceVertexUvs.length; i < il; i++) {
 
-			var loader = new _three2.default.XHRLoader(scope.manager);
-			loader.setCrossOrigin(this.crossOrigin);
-			loader.load(url, function (text) {
+											faceVertexUvs[i] = [];
+						}
 
-				onLoad(scope.parse(text));
-			}, onProgress, onError);
-		},
+						for (var i = 0, il = geometry.faces.length; i < il; i++) {
 
-		setCrossOrigin: function setCrossOrigin(value) {
+											var face = geometry.faces[i];
 
-			this.crossOrigin = value;
-		},
+											if (face instanceof _three2.default.Face3) {
 
-		parse: function parse(text) {
+																var a = face.a;
+																var b = face.b;
+																var c = face.c;
 
-			console.time('OBJLoader');
+																var va = geometry.vertices[a];
+																var vb = geometry.vertices[b];
+																var vc = geometry.vertices[c];
 
-			var object,
-			    objects = [];
-			var geometry, material;
+																var dab = va.distanceToSquared(vb);
+																var dbc = vb.distanceToSquared(vc);
+																var dac = va.distanceToSquared(vc);
 
-			function parseVertexIndex(value) {
+																if (dab > maxEdgeLengthSquared || dbc > maxEdgeLengthSquared || dac > maxEdgeLengthSquared) {
 
-				var index = parseInt(value);
+																					var m = geometry.vertices.length;
 
-				return (index >= 0 ? index - 1 : index + vertices.length / 3) * 3;
-			}
+																					var triA = face.clone();
+																					var triB = face.clone();
 
-			function parseNormalIndex(value) {
+																					if (dab >= dbc && dab >= dac) {
 
-				var index = parseInt(value);
+																										var vm = va.clone();
+																										vm.lerp(vb, 0.5);
 
-				return (index >= 0 ? index - 1 : index + normals.length / 3) * 3;
-			}
+																										triA.a = a;
+																										triA.b = m;
+																										triA.c = c;
 
-			function parseUVIndex(value) {
+																										triB.a = m;
+																										triB.b = b;
+																										triB.c = c;
 
-				var index = parseInt(value);
+																										if (face.vertexNormals.length === 3) {
 
-				return (index >= 0 ? index - 1 : index + uvs.length / 2) * 2;
-			}
+																															var vnm = face.vertexNormals[0].clone();
+																															vnm.lerp(face.vertexNormals[1], 0.5);
 
-			function addVertex(a, b, c) {
+																															triA.vertexNormals[1].copy(vnm);
+																															triB.vertexNormals[0].copy(vnm);
+																										}
 
-				geometry.vertices.push(vertices[a], vertices[a + 1], vertices[a + 2], vertices[b], vertices[b + 1], vertices[b + 2], vertices[c], vertices[c + 1], vertices[c + 2]);
-			}
+																										if (face.vertexColors.length === 3) {
 
-			function addNormal(a, b, c) {
+																															var vcm = face.vertexColors[0].clone();
+																															vcm.lerp(face.vertexColors[1], 0.5);
 
-				geometry.normals.push(normals[a], normals[a + 1], normals[a + 2], normals[b], normals[b + 1], normals[b + 2], normals[c], normals[c + 1], normals[c + 2]);
-			}
+																															triA.vertexColors[1].copy(vcm);
+																															triB.vertexColors[0].copy(vcm);
+																										}
 
-			function addUV(a, b, c) {
+																										edge = 0;
+																					} else if (dbc >= dab && dbc >= dac) {
 
-				geometry.uvs.push(uvs[a], uvs[a + 1], uvs[b], uvs[b + 1], uvs[c], uvs[c + 1]);
-			}
+																										var vm = vb.clone();
+																										vm.lerp(vc, 0.5);
 
-			function addFace(a, b, c, d, ua, ub, uc, ud, na, nb, nc, nd) {
+																										triA.a = a;
+																										triA.b = b;
+																										triA.c = m;
 
-				var ia = parseVertexIndex(a);
-				var ib = parseVertexIndex(b);
-				var ic = parseVertexIndex(c);
-				var id;
+																										triB.a = m;
+																										triB.b = c;
+																										triB.c = a;
 
-				if (d === undefined) {
+																										if (face.vertexNormals.length === 3) {
 
-					addVertex(ia, ib, ic);
-				} else {
+																															var vnm = face.vertexNormals[1].clone();
+																															vnm.lerp(face.vertexNormals[2], 0.5);
 
-					id = parseVertexIndex(d);
+																															triA.vertexNormals[2].copy(vnm);
 
-					addVertex(ia, ib, id);
-					addVertex(ib, ic, id);
-				}
+																															triB.vertexNormals[0].copy(vnm);
+																															triB.vertexNormals[1].copy(face.vertexNormals[2]);
+																															triB.vertexNormals[2].copy(face.vertexNormals[0]);
+																										}
 
-				if (ua !== undefined) {
+																										if (face.vertexColors.length === 3) {
 
-					ia = parseUVIndex(ua);
-					ib = parseUVIndex(ub);
-					ic = parseUVIndex(uc);
+																															var vcm = face.vertexColors[1].clone();
+																															vcm.lerp(face.vertexColors[2], 0.5);
 
-					if (d === undefined) {
+																															triA.vertexColors[2].copy(vcm);
 
-						addUV(ia, ib, ic);
-					} else {
+																															triB.vertexColors[0].copy(vcm);
+																															triB.vertexColors[1].copy(face.vertexColors[2]);
+																															triB.vertexColors[2].copy(face.vertexColors[0]);
+																										}
 
-						id = parseUVIndex(ud);
+																										edge = 1;
+																					} else {
 
-						addUV(ia, ib, id);
-						addUV(ib, ic, id);
-					}
-				}
+																										var vm = va.clone();
+																										vm.lerp(vc, 0.5);
 
-				if (na !== undefined) {
+																										triA.a = a;
+																										triA.b = b;
+																										triA.c = m;
 
-					ia = parseNormalIndex(na);
-					ib = parseNormalIndex(nb);
-					ic = parseNormalIndex(nc);
+																										triB.a = m;
+																										triB.b = b;
+																										triB.c = c;
 
-					if (d === undefined) {
+																										if (face.vertexNormals.length === 3) {
 
-						addNormal(ia, ib, ic);
-					} else {
+																															var vnm = face.vertexNormals[0].clone();
+																															vnm.lerp(face.vertexNormals[2], 0.5);
 
-						id = parseNormalIndex(nd);
+																															triA.vertexNormals[2].copy(vnm);
+																															triB.vertexNormals[0].copy(vnm);
+																										}
 
-						addNormal(ia, ib, id);
-						addNormal(ib, ic, id);
-					}
-				}
-			}
+																										if (face.vertexColors.length === 3) {
 
-			// create mesh if no objects in text
+																															var vcm = face.vertexColors[0].clone();
+																															vcm.lerp(face.vertexColors[2], 0.5);
 
-			if (/^o /gm.test(text) === false) {
+																															triA.vertexColors[2].copy(vcm);
+																															triB.vertexColors[0].copy(vcm);
+																										}
 
-				geometry = {
-					vertices: [],
-					normals: [],
-					uvs: []
-				};
+																										edge = 2;
+																					}
 
-				material = {
-					name: ''
-				};
+																					faces.push(triA, triB);
+																					geometry.vertices.push(vm);
 
-				object = {
-					name: '',
-					geometry: geometry,
-					material: material
-				};
+																					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
 
-				objects.push(object);
-			}
+																										if (geometry.faceVertexUvs[j].length) {
+
+																															var uvs = geometry.faceVertexUvs[j][i];
+
+																															var uvA = uvs[0];
+																															var uvB = uvs[1];
+																															var uvC = uvs[2];
+
+																															// AB
+
+																															if (edge === 0) {
+
+																																				var uvM = uvA.clone();
+																																				uvM.lerp(uvB, 0.5);
+
+																																				var uvsTriA = [uvA.clone(), uvM.clone(), uvC.clone()];
+																																				var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
+
+																																				// BC
+																															} else if (edge === 1) {
+
+																																									var uvM = uvB.clone();
+																																									uvM.lerp(uvC, 0.5);
+
+																																									var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
+																																									var uvsTriB = [uvM.clone(), uvC.clone(), uvA.clone()];
+
+																																									// AC
+																																				} else {
+
+																																														var uvM = uvA.clone();
+																																														uvM.lerp(uvC, 0.5);
+
+																																														var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
+																																														var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
+																																									}
+
+																															faceVertexUvs[j].push(uvsTriA, uvsTriB);
+																										}
+																					}
+																} else {
+
+																					faces.push(face);
+
+																					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
+
+																										faceVertexUvs[j].push(geometry.faceVertexUvs[j][i]);
+																					}
+																}
+											}
+						}
+
+						geometry.faces = faces;
+						geometry.faceVertexUvs = faceVertexUvs;
+	};
+
+	module.exports = tessellateModifier;
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(4);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var explodeModifier = function explodeModifier() {}; /**
+	                                                      * Make all faces use unique vertices
+	                                                      * so that each face can be separated from others
+	                                                      *
+	                                                      * @author alteredq / http://alteredqualia.com/
+	                                                      */
+
+	explodeModifier.prototype.modify = function (geometry) {
 
 			var vertices = [];
-			var normals = [];
-			var uvs = [];
 
-			// v float float float
+			for (var i = 0, il = geometry.faces.length; i < il; i++) {
 
-			var vertex_pattern = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+					var n = vertices.length;
 
-			// vn float float float
+					var face = geometry.faces[i];
 
-			var normal_pattern = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+					var a = face.a;
+					var b = face.b;
+					var c = face.c;
 
-			// vt float float
+					var va = geometry.vertices[a];
+					var vb = geometry.vertices[b];
+					var vc = geometry.vertices[c];
 
-			var uv_pattern = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+					vertices.push(va.clone());
+					vertices.push(vb.clone());
+					vertices.push(vc.clone());
 
-			// f vertex vertex vertex ...
-
-			var face_pattern1 = /f( +-?\d+)( +-?\d+)( +-?\d+)( +-?\d+)?/;
-
-			// f vertex/uv vertex/uv vertex/uv ...
-
-			var face_pattern2 = /f( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))?/;
-
-			// f vertex/uv/normal vertex/uv/normal vertex/uv/normal ...
-
-			var face_pattern3 = /f( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))?/;
-
-			// f vertex//normal vertex//normal vertex//normal ...
-
-			var face_pattern4 = /f( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))?/;
-
-			//
-
-			var lines = text.split('\n');
-
-			for (var i = 0; i < lines.length; i++) {
-
-				var line = lines[i];
-				line = line.trim();
-
-				var result;
-
-				if (line.length === 0 || line.charAt(0) === '#') {
-
-					continue;
-				} else if ((result = vertex_pattern.exec(line)) !== null) {
-
-					// ["v 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
-
-					vertices.push(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3]));
-				} else if ((result = normal_pattern.exec(line)) !== null) {
-
-					// ["vn 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
-
-					normals.push(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3]));
-				} else if ((result = uv_pattern.exec(line)) !== null) {
-
-					// ["vt 0.1 0.2", "0.1", "0.2"]
-
-					uvs.push(parseFloat(result[1]), parseFloat(result[2]));
-				} else if ((result = face_pattern1.exec(line)) !== null) {
-
-					// ["f 1 2 3", "1", "2", "3", undefined]
-
-					addFace(result[1], result[2], result[3], result[4]);
-				} else if ((result = face_pattern2.exec(line)) !== null) {
-
-					// ["f 1/1 2/2 3/3", " 1/1", "1", "1", " 2/2", "2", "2", " 3/3", "3", "3", undefined, undefined, undefined]
-
-					addFace(result[2], result[5], result[8], result[11], result[3], result[6], result[9], result[12]);
-				} else if ((result = face_pattern3.exec(line)) !== null) {
-
-					// ["f 1/1/1 2/2/2 3/3/3", " 1/1/1", "1", "1", "1", " 2/2/2", "2", "2", "2", " 3/3/3", "3", "3", "3", undefined, undefined, undefined, undefined]
-
-					addFace(result[2], result[6], result[10], result[14], result[3], result[7], result[11], result[15], result[4], result[8], result[12], result[16]);
-				} else if ((result = face_pattern4.exec(line)) !== null) {
-
-					// ["f 1//1 2//2 3//3", " 1//1", "1", "1", " 2//2", "2", "2", " 3//3", "3", "3", undefined, undefined, undefined]
-
-					addFace(result[2], result[5], result[8], result[11], undefined, undefined, undefined, undefined, result[3], result[6], result[9], result[12]);
-				} else if (/^o /.test(line)) {
-
-					geometry = {
-						vertices: [],
-						normals: [],
-						uvs: []
-					};
-
-					material = {
-						name: ''
-					};
-
-					object = {
-						name: line.substring(2).trim(),
-						geometry: geometry,
-						material: material
-					};
-
-					objects.push(object);
-				} else if (/^g /.test(line)) {
-
-					// group
-
-				} else if (/^usemtl /.test(line)) {
-
-						// material
-
-						material.name = line.substring(7).trim();
-					} else if (/^mtllib /.test(line)) {
-
-						// mtl file
-
-					} else if (/^s /.test(line)) {
-
-							// smooth shading
-
-						} else {
-
-								// console.log( "THREE.OBJLoader: Unhandled line " + line );
-
-							}
+					face.a = n;
+					face.b = n + 1;
+					face.c = n + 2;
 			}
 
-			var container = new _three2.default.Object3D();
-
-			for (var i = 0, l = objects.length; i < l; i++) {
-
-				object = objects[i];
-				geometry = object.geometry;
-
-				var buffergeometry = new _three2.default.BufferGeometry();
-
-				buffergeometry.addAttribute('position', new _three2.default.BufferAttribute(new Float32Array(geometry.vertices), 3));
-
-				if (geometry.normals.length > 0) {
-
-					buffergeometry.addAttribute('normal', new _three2.default.BufferAttribute(new Float32Array(geometry.normals), 3));
-				}
-
-				if (geometry.uvs.length > 0) {
-
-					buffergeometry.addAttribute('uv', new _three2.default.BufferAttribute(new Float32Array(geometry.uvs), 2));
-				}
-
-				material = new _three2.default.MeshLambertMaterial();
-				material.name = object.material.name;
-
-				var mesh = new _three2.default.Mesh(buffergeometry, material);
-				mesh.name = object.name;
-
-				container.add(mesh);
-			}
-
-			console.timeEnd('OBJLoader');
-
-			return container;
-		}
-
+			geometry.vertices = vertices;
+			delete geometry.__tmpVertices;
 	};
+
+	module.exports = explodeModifier;
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tconst float ambient = 0.4;\r\n\r\n\t\t\t\tvec3 light = vec3( 1.0 );\r\n\t\t\t\tlight = normalize( light );\r\n\r\n\t\t\t\tfloat directional = max( dot( vNormal, light ), 0.0 );\r\n\r\n\t\t\t\tgl_FragColor = vec4( ( directional + ambient ) * vColor, 1.0 );\r\n\r\n\t\t\t}\r\n"
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\n\t\t\tuniform float amplitude;\r\n\r\n\t\t\tattribute vec3 customColor;\r\n\t\t\tattribute vec3 displacement;\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tvNormal = normal;\r\n\t\t\t\tvColor = customColor;\r\n\r\n\t\t\t\tvec3 newPosition = position + normal * amplitude * displacement;\r\n\t\t\t\tgl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );\r\n\r\n\t\t\t}\r\n"
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _three = __webpack_require__(4);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_three2.default.FresnelShader = {
+
+			uniforms: {
+
+					"mRefractionRatio": { type: "f", value: 1.02 },
+					"mFresnelBias": { type: "f", value: 0.1 },
+					"mFresnelPower": { type: "f", value: 2.0 },
+					"mFresnelScale": { type: "f", value: 1.0 },
+					"tCube": { type: "t", value: null }
+
+			},
+
+			vertexShader: ["uniform float mRefractionRatio;", "uniform float mFresnelBias;", "uniform float mFresnelScale;", "uniform float mFresnelPower;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );", "vec4 worldPosition = modelMatrix * vec4( position, 1.0 );", "vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );", "vec3 I = worldPosition.xyz - cameraPosition;", "vReflect = reflect( I, worldNormal );", "vRefract[0] = refract( normalize( I ), worldNormal, mRefractionRatio );", "vRefract[1] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.99 );", "vRefract[2] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.98 );", "vReflectionFactor = mFresnelBias + mFresnelScale * pow( 1.0 + dot( normalize( I ), worldNormal ), mFresnelPower );", "gl_Position = projectionMatrix * mvPosition;", "}"].join("\n"),
+
+			fragmentShader: ["uniform samplerCube tCube;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 reflectedColor = textureCube( tCube, vec3( -vReflect.x, vReflect.yz ) );", "vec4 refractedColor = vec4( 1.0 );", "refractedColor.r = textureCube( tCube, vec3( -vRefract[0].x, vRefract[0].yz ) ).r;", "refractedColor.g = textureCube( tCube, vec3( -vRefract[1].x, vRefract[1].yz ) ).g;", "refractedColor.b = textureCube( tCube, vec3( -vRefract[2].x, vRefract[2].yz ) ).b;", "gl_FragColor = mix( refractedColor, reflectedColor, clamp( vReflectionFactor, 0.0, 1.0 ) );", "}"].join("\n")
+
+	}; /**
+	    * @author alteredq / http://alteredqualia.com/
+	    *
+	    * Based on Nvidia Cg tutorial
+	    */
 
 /***/ }
 /******/ ]);

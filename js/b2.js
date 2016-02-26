@@ -69,10 +69,10 @@ const b2 = {
     }
 
     b2Scene.onMouseClick = function() {
-      if (this.raycaster.intersection) {
+      if (this.raycaster && this.raycaster.intersection) {
         this.crystalClicked();
       }
-    },
+    }
 
     b2Scene.prepCamera = function() {
       const camera = new THREE.PerspectiveCamera(
@@ -177,7 +177,7 @@ const b2 = {
       }
 
       this.lights.lights = lights;
-    },
+    }
 
     b2Scene.pulsateLights = function () {
       for (let i = 0; i < this.lights.lights.length; i++) {
@@ -201,9 +201,10 @@ const b2 = {
       this.prepCamera()
       this.prepLights()
       this.prepCrystals()
+      this.controls = null;
 
       let self = this;
-      window.addEventListener(
+      document.querySelector('canvas').addEventListener(
         'click',
         function() {self.onMouseClick()},
         false
@@ -215,9 +216,9 @@ const b2 = {
           this.counters.cosY += 0.02;
 
           this.shakeOrSwapCrystal()
-          this.pulsateLights();
-          this.handleRaycasterIntersection();
-          this.rollIcosahedron();
+          this.pulsateLights()
+          this.handleRaycasterIntersection()
+          this.rollIcosahedron()
 
           this.counters.frame++;
         }
@@ -269,7 +270,6 @@ const b2 = {
 
     return b2Scene;
   }
-
 };
 
-module.exports = b2;
+export default b2

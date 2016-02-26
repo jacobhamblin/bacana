@@ -72,8 +72,8 @@ function hasClass(el, className) {
     let num = i;
     preview.addEventListener('click', function (e) {
       event.preventDefault();
-      // move css
       interaction.open = true;
+      // move css
       const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
       if (document.querySelector('canvas') && interaction.open) {
         divFullscreen.removeChild(document.querySelectorAll('canvas')[0]);
@@ -113,12 +113,13 @@ window.addEventListener('keydown', function (e) {
 function closeDemo(demoEl) {
   toggleClass(demoEl, "active");
   document.body.style.cursor = "initial";
+  let canvas = document.querySelector('canvas');
+  interaction.open = false;
 
-  interaction.demo = false;
-  interaction.activeDemo.endDemo();
+  interaction.activeDemo.destroy();
   setTimeout(function () {
     if (demoEl && interaction.open === false)
-    demoEl.removeChild(document.querySelectorAll('canvas')[0]);
+    demoEl.removeChild(canvas)
   }, 500);
 };
 
