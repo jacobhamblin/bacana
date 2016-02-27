@@ -54,29 +54,29 @@
 
 	var _b2 = _interopRequireDefault(_b);
 
-	var _b3 = __webpack_require__(3);
+	var _b3 = __webpack_require__(11);
 
 	var _b4 = _interopRequireDefault(_b3);
 
-	var _b5 = __webpack_require__(8);
+	var _b5 = __webpack_require__(13);
 
 	var _b6 = _interopRequireDefault(_b5);
 
-	var _b7 = __webpack_require__(9);
+	var _b7 = __webpack_require__(14);
 
 	var _b8 = _interopRequireDefault(_b7);
 
-	var _fastclickMin = __webpack_require__(12);
+	var _fastclickMin = __webpack_require__(17);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
-	var _three = __webpack_require__(4);
+	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(13);
+	__webpack_require__(18);
 
 	var demosCode = new Object();
 	demosCode.b1 = _b2.default;
@@ -253,35 +253,35 @@
 	  value: true
 	});
 
-	var _three = __webpack_require__(4);
+	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _TessellateModifier = __webpack_require__(19);
+	var _TessellateModifier = __webpack_require__(4);
 
 	var _TessellateModifier2 = _interopRequireDefault(_TessellateModifier);
 
-	var _ExplodeModifier = __webpack_require__(20);
+	var _ExplodeModifier = __webpack_require__(5);
 
 	var _ExplodeModifier2 = _interopRequireDefault(_ExplodeModifier);
 
-	var _fragment = __webpack_require__(21);
+	var _fragment = __webpack_require__(6);
 
 	var _fragment2 = _interopRequireDefault(_fragment);
 
-	var _vertex = __webpack_require__(22);
+	var _vertex = __webpack_require__(7);
 
 	var _vertex2 = _interopRequireDefault(_vertex);
 
-	var _FresnelShader = __webpack_require__(23);
+	var _FresnelShader = __webpack_require__(8);
 
 	var _FresnelShader2 = _interopRequireDefault(_FresnelShader);
 
-	var _bScene = __webpack_require__(5);
+	var _bScene = __webpack_require__(9);
 
 	var _bScene2 = _interopRequireDefault(_bScene);
 
-	var _OrbitControls = __webpack_require__(6);
+	var _OrbitControls = __webpack_require__(10);
 
 	var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
 
@@ -501,275 +501,6 @@
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; // b2.js
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _three = __webpack_require__(4);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	var _bScene = __webpack_require__(5);
-
-	var _bScene2 = _interopRequireDefault(_bScene);
-
-	var _OBJLoader = __webpack_require__(7);
-
-	var _OBJLoader2 = _interopRequireDefault(_OBJLoader);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var b2 = {
-	  init: function init(_ref) {
-	    var container = _ref.container;
-	    var renderer = _ref.renderer;
-
-	    console.log('initialized b2!');
-	    var b2Scene = _bScene2.default.create({ container: container, renderer: renderer });
-
-	    b2Scene.applyMaterial = function (object, color) {
-	      var material = new _three2.default.MeshPhongMaterial({
-	        shading: _three2.default.FlatShading,
-	        color: color
-	      });
-
-	      object.material = material;
-	      return object;
-	    };
-
-	    b2Scene.crystalClicked = function () {
-	      this.counters.clicked = this.counters.frame;
-	      // render method calls switchActiveCrystal when seven frames have passed
-	    };
-
-	    b2Scene.handleRaycasterIntersection = function () {
-	      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera);
-	      var intersects = this.raycaster.raycaster.intersectObjects(this.scene.children);
-
-	      var tempIntersection = false;
-	      if (intersects.length > 0) {
-	        for (var i = 0; i < this.objects.crystals.length; i++) {
-	          if (this.objects.crystals[i] === intersects[0].object) {
-	            tempIntersection = true;
-	          }
-	        }
-	        this.raycaster.intersection = tempIntersection;
-	        if (this.raycaster.intersection === false) {
-	          this.mouseleaveCrystal();
-	        } else {
-	          this.mouseenterCrystal();
-	        }
-	      } else {
-	        this.raycaster.intersection = tempIntersection;
-	        if (this.raycaster.intersection === false) {
-	          this.mouseleaveCrystal();
-	        }
-	      }
-
-	      if (this.raycaster.intersection) {
-	        var val = this.counters.frame % 2 === 0 ? Math.cos(this.counters.cosY) * 2 : -(Math.cos(this.counters.cosY) * 2);
-	        this.objects.crystals[this.objects.activeCrystal].position.x += val;
-	      }
-	    };
-
-	    b2Scene.mouseenterCrystal = function () {
-	      document.body.style.cursor = "pointer";
-	    };
-
-	    b2Scene.mouseleaveCrystal = function () {
-	      if (this.objects.crystals[this.objects.activeCrystal] && this.raycaster.intersection === false) {
-	        this.objects.crystals[this.objects.activeCrystal].position.x = 0;
-	        document.body.style.cursor = "initial";
-	      }
-	    };
-
-	    b2Scene.onMouseClick = function () {
-	      if (this.raycaster && this.raycaster.intersection) {
-	        this.crystalClicked();
-	      }
-	    };
-
-	    b2Scene.prepCamera = function () {
-	      var camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
-	      camera.position.set(0, 0, 800);
-	      camera.lookAt(0, 0, 0);
-
-	      this.camera = camera;
-	    };
-
-	    b2Scene.prepCrystals = function () {
-	      var self = this;
-
-	      var manager = new _three2.default.LoadingManager();
-	      manager.onProgress = function (item, loaded, total) {
-	        console.log(item, loaded, total);
-	      };
-
-	      var onProgress = function onProgress(xhr) {
-	        if (xhr.lengthComputable) {
-	          var percentComplete = xhr.loaded / xhr.total * 100;
-	          console.log(Math.round(percentComplete, 2) + '% downloaded');
-	        }
-	      };
-
-	      var onError = function onError(xhr) {};
-
-	      self.objects.crystals = [];
-
-	      var icosahedronGeom = new _three2.default.IcosahedronGeometry(250, 3);
-	      var icosahedronMat = new _three2.default.MeshDepthMaterial({
-	        wireframe: true
-	      });
-	      var icosahedron = new _three2.default.Mesh(icosahedronGeom, icosahedronMat);
-	      icosahedron.position.set(0, 0, 700);
-	      this.scene.add(icosahedron);
-	      this.objects.icosahedron = icosahedron;
-
-	      var loadedCount = 0;
-	      var crystalObjects = ['./obj/b2_1.obj', './obj/b2_2.obj', './obj/b2_3.obj'];
-	      var colors = [0xaaaaaa, 0x777777, 0xaaaaaa];
-	      var loader = new _three2.default.OBJLoader(manager);
-
-	      var _loop = function _loop(i) {
-	        loader.load(crystalObjects[i], function (object) {
-	          object.traverse(function (child) {
-	            if (child instanceof _three2.default.Mesh) {
-	              child = self.applyMaterial(child, colors[i]);
-	              child.position.set(0, 0, 700);
-	              child.scale.set(0.15, 0.15, 0.15);
-	              self.objects.crystals.push(child);
-	              loadedCount++;
-	            }
-	          });
-
-	          if (loadedCount === crystalObjects.length) {
-	            self.objects.activeCrystal = 0;
-	            self.scene.add(self.objects.crystals[self.objects.activeCrystal]);
-	          }
-	        }, onProgress, onError);
-	      };
-
-	      for (var i = 0; i < crystalObjects.length; i++) {
-	        _loop(i);
-	      }
-	    };
-
-	    b2Scene.prepLights = function () {
-	      var primLight = new _three2.default.PointLight(0xffffff, 1, 2000);
-	      primLight.position.set(0, 0, 900);
-	      this.scene.add(primLight);
-
-	      var lightParameters = [[0xff0000, 0.5, [-100, 0, 900]], [0x7700FF, 0.5, [100, 0, 900]]];
-
-	      this.lights.colors = [[0xff0000, 0x7700ff], [0xcc00ff, 0x00aaff], [0x0000ff, 0x00ff00]];
-
-	      var lights = [];
-	      for (var i = 0; i < lightParameters.length; i++) {
-	        var light = new _three2.default.PointLight(lightParameters[i][0], lightParameters[i][1], 2000);
-
-	        light.position.set(lightParameters[i][2][0], lightParameters[i][2][1], lightParameters[i][2][2]);
-
-	        lights.push(light);
-	        this.scene.add(light);
-	      }
-
-	      this.lights.lights = lights;
-	    };
-
-	    b2Scene.pulsateLights = function () {
-	      for (var i = 0; i < this.lights.lights.length; i++) {
-	        var intensities = Math.abs(Math.cos(this.counters.cosY * 10 + i));
-	        var calculation = 1 - Math.abs(this.mouse.x);
-	        var intensity = calculation > 0.3 ? (calculation - 0.3) * 2 : 0;
-	        this.lights.lights[i].intensity = intensities * intensity;
-	      }
-	    };
-
-	    b2Scene.rollIcosahedron = function () {
-	      this.objects.icosahedron.rotation.y += this.mouse.x * 0.004;
-	      this.objects.icosahedron.rotation.x += this.mouse.y * 0.004;
-	    };
-
-	    b2Scene.uniqueSetup = function () {
-	      this.counters.cosY = 0;
-	      this.counters.frame = 0;
-	      this.counters.floatingCrystalPos = 0;
-	      this.counters.clicked = -4;
-	      this.prepCamera();
-	      this.prepLights();
-	      this.prepCrystals();
-	      this.controls = null;
-
-	      var self = this;
-	      document.querySelector('canvas').addEventListener('click', function () {
-	        self.onMouseClick();
-	      }, false);
-
-	      return function () {
-	        this.counters.floatingCrystalPos += Math.cos(this.counters.cosY) * 0.2;
-	        this.counters.cosY += 0.02;
-
-	        this.shakeOrSwapCrystal();
-	        this.pulsateLights();
-	        this.handleRaycasterIntersection();
-	        this.rollIcosahedron();
-
-	        this.counters.frame++;
-	      }.bind(this);
-	    };
-
-	    b2Scene.shakeOrSwapCrystal = function () {
-	      if (_typeof(this.objects.activeCrystal) === _typeof(1)) {
-	        this.objects.crystals[this.objects.activeCrystal].rotation.y += 0.05;
-	        this.objects.crystals[this.objects.activeCrystal].position.y = this.counters.floatingCrystalPos;
-	        if (this.counters.frame <= this.counters.clicked + 7 && this.counters.frame > this.counters.clicked) {
-	          switch (Math.floor(Math.random() * 3)) {
-	            case 0:
-	              this.renderer.setClearColor(0x222222);
-	              break;
-	            case 1:
-	              this.renderer.setClearColor(this.lights.colors[this.objects.activeCrystal][0]);
-	              break;
-	            case 2:
-	              this.renderer.setClearColor(this.lights.colors[this.objects.activeCrystal][1]);
-	              break;
-	          }
-	          this.objects.crystals[this.objects.activeCrystal].position.x += Math.random() * 10 - 5;
-	          this.objects.crystals[this.objects.activeCrystal].position.y += Math.random() * 10 - 5;
-	        } else if (this.counters.frame === this.counters.clicked + 8) {
-	          this.switchActiveCrystal();
-	          renderer.setClearColor(0x222222);
-	        }
-	      }
-	    };
-
-	    b2Scene.switchActiveCrystal = function () {
-	      this.objects.crystals[this.objects.activeCrystal].position.x = 0;
-	      this.scene.remove(this.objects.crystals[this.objects.activeCrystal]);
-	      this.objects.activeCrystal = (this.objects.activeCrystal + 1) % this.objects.crystals.length;
-	      this.scene.add(this.objects.crystals[this.objects.activeCrystal]);
-
-	      for (var i = 0; i < this.lights.lights.length; i++) {
-	        this.lights.lights[i].color = new _three2.default.Color(this.lights.colors[this.objects.activeCrystal][i]);
-	      }
-	    };
-
-	    b2Scene.init();
-
-	    return b2Scene;
-	  }
-	};
-
-	exports.default = b2;
-
-/***/ },
-/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var self = self || {};// File:src/Three.js
@@ -36962,7 +36693,332 @@
 
 
 /***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(3);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var tessellateModifier = function tessellateModifier(maxEdgeLength) {
+
+						this.maxEdgeLength = maxEdgeLength;
+	}; /**
+	    * Break faces with edges longer than maxEdgeLength
+	    * - not recursive
+	    *
+	    * @author alteredq / http://alteredqualia.com/
+	    */
+
+	tessellateModifier.prototype.modify = function (geometry) {
+
+						var edge;
+
+						var faces = [];
+						var faceVertexUvs = [];
+						var maxEdgeLengthSquared = this.maxEdgeLength * this.maxEdgeLength;
+
+						for (var i = 0, il = geometry.faceVertexUvs.length; i < il; i++) {
+
+											faceVertexUvs[i] = [];
+						}
+
+						for (var i = 0, il = geometry.faces.length; i < il; i++) {
+
+											var face = geometry.faces[i];
+
+											if (face instanceof _three2.default.Face3) {
+
+																var a = face.a;
+																var b = face.b;
+																var c = face.c;
+
+																var va = geometry.vertices[a];
+																var vb = geometry.vertices[b];
+																var vc = geometry.vertices[c];
+
+																var dab = va.distanceToSquared(vb);
+																var dbc = vb.distanceToSquared(vc);
+																var dac = va.distanceToSquared(vc);
+
+																if (dab > maxEdgeLengthSquared || dbc > maxEdgeLengthSquared || dac > maxEdgeLengthSquared) {
+
+																					var m = geometry.vertices.length;
+
+																					var triA = face.clone();
+																					var triB = face.clone();
+
+																					if (dab >= dbc && dab >= dac) {
+
+																										var vm = va.clone();
+																										vm.lerp(vb, 0.5);
+
+																										triA.a = a;
+																										triA.b = m;
+																										triA.c = c;
+
+																										triB.a = m;
+																										triB.b = b;
+																										triB.c = c;
+
+																										if (face.vertexNormals.length === 3) {
+
+																															var vnm = face.vertexNormals[0].clone();
+																															vnm.lerp(face.vertexNormals[1], 0.5);
+
+																															triA.vertexNormals[1].copy(vnm);
+																															triB.vertexNormals[0].copy(vnm);
+																										}
+
+																										if (face.vertexColors.length === 3) {
+
+																															var vcm = face.vertexColors[0].clone();
+																															vcm.lerp(face.vertexColors[1], 0.5);
+
+																															triA.vertexColors[1].copy(vcm);
+																															triB.vertexColors[0].copy(vcm);
+																										}
+
+																										edge = 0;
+																					} else if (dbc >= dab && dbc >= dac) {
+
+																										var vm = vb.clone();
+																										vm.lerp(vc, 0.5);
+
+																										triA.a = a;
+																										triA.b = b;
+																										triA.c = m;
+
+																										triB.a = m;
+																										triB.b = c;
+																										triB.c = a;
+
+																										if (face.vertexNormals.length === 3) {
+
+																															var vnm = face.vertexNormals[1].clone();
+																															vnm.lerp(face.vertexNormals[2], 0.5);
+
+																															triA.vertexNormals[2].copy(vnm);
+
+																															triB.vertexNormals[0].copy(vnm);
+																															triB.vertexNormals[1].copy(face.vertexNormals[2]);
+																															triB.vertexNormals[2].copy(face.vertexNormals[0]);
+																										}
+
+																										if (face.vertexColors.length === 3) {
+
+																															var vcm = face.vertexColors[1].clone();
+																															vcm.lerp(face.vertexColors[2], 0.5);
+
+																															triA.vertexColors[2].copy(vcm);
+
+																															triB.vertexColors[0].copy(vcm);
+																															triB.vertexColors[1].copy(face.vertexColors[2]);
+																															triB.vertexColors[2].copy(face.vertexColors[0]);
+																										}
+
+																										edge = 1;
+																					} else {
+
+																										var vm = va.clone();
+																										vm.lerp(vc, 0.5);
+
+																										triA.a = a;
+																										triA.b = b;
+																										triA.c = m;
+
+																										triB.a = m;
+																										triB.b = b;
+																										triB.c = c;
+
+																										if (face.vertexNormals.length === 3) {
+
+																															var vnm = face.vertexNormals[0].clone();
+																															vnm.lerp(face.vertexNormals[2], 0.5);
+
+																															triA.vertexNormals[2].copy(vnm);
+																															triB.vertexNormals[0].copy(vnm);
+																										}
+
+																										if (face.vertexColors.length === 3) {
+
+																															var vcm = face.vertexColors[0].clone();
+																															vcm.lerp(face.vertexColors[2], 0.5);
+
+																															triA.vertexColors[2].copy(vcm);
+																															triB.vertexColors[0].copy(vcm);
+																										}
+
+																										edge = 2;
+																					}
+
+																					faces.push(triA, triB);
+																					geometry.vertices.push(vm);
+
+																					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
+
+																										if (geometry.faceVertexUvs[j].length) {
+
+																															var uvs = geometry.faceVertexUvs[j][i];
+
+																															var uvA = uvs[0];
+																															var uvB = uvs[1];
+																															var uvC = uvs[2];
+
+																															// AB
+
+																															if (edge === 0) {
+
+																																				var uvM = uvA.clone();
+																																				uvM.lerp(uvB, 0.5);
+
+																																				var uvsTriA = [uvA.clone(), uvM.clone(), uvC.clone()];
+																																				var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
+
+																																				// BC
+																															} else if (edge === 1) {
+
+																																									var uvM = uvB.clone();
+																																									uvM.lerp(uvC, 0.5);
+
+																																									var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
+																																									var uvsTriB = [uvM.clone(), uvC.clone(), uvA.clone()];
+
+																																									// AC
+																																				} else {
+
+																																														var uvM = uvA.clone();
+																																														uvM.lerp(uvC, 0.5);
+
+																																														var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
+																																														var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
+																																									}
+
+																															faceVertexUvs[j].push(uvsTriA, uvsTriB);
+																										}
+																					}
+																} else {
+
+																					faces.push(face);
+
+																					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
+
+																										faceVertexUvs[j].push(geometry.faceVertexUvs[j][i]);
+																					}
+																}
+											}
+						}
+
+						geometry.faces = faces;
+						geometry.faceVertexUvs = faceVertexUvs;
+	};
+
+	module.exports = tessellateModifier;
+
+/***/ },
 /* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(3);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var explodeModifier = function explodeModifier() {}; /**
+	                                                      * Make all faces use unique vertices
+	                                                      * so that each face can be separated from others
+	                                                      *
+	                                                      * @author alteredq / http://alteredqualia.com/
+	                                                      */
+
+	explodeModifier.prototype.modify = function (geometry) {
+
+			var vertices = [];
+
+			for (var i = 0, il = geometry.faces.length; i < il; i++) {
+
+					var n = vertices.length;
+
+					var face = geometry.faces[i];
+
+					var a = face.a;
+					var b = face.b;
+					var c = face.c;
+
+					var va = geometry.vertices[a];
+					var vb = geometry.vertices[b];
+					var vc = geometry.vertices[c];
+
+					vertices.push(va.clone());
+					vertices.push(vb.clone());
+					vertices.push(vc.clone());
+
+					face.a = n;
+					face.b = n + 1;
+					face.c = n + 2;
+			}
+
+			geometry.vertices = vertices;
+			delete geometry.__tmpVertices;
+	};
+
+	module.exports = explodeModifier;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tconst float ambient = 0.4;\r\n\r\n\t\t\t\tvec3 light = vec3( 1.0 );\r\n\t\t\t\tlight = normalize( light );\r\n\r\n\t\t\t\tfloat directional = max( dot( vNormal, light ), 0.0 );\r\n\r\n\t\t\t\tgl_FragColor = vec4( ( directional + ambient ) * vColor, 1.0 );\r\n\r\n\t\t\t}\r\n"
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\n\t\t\tuniform float amplitude;\r\n\r\n\t\t\tattribute vec3 customColor;\r\n\t\t\tattribute vec3 displacement;\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tvNormal = normal;\r\n\t\t\t\tvColor = customColor;\r\n\r\n\t\t\t\tvec3 newPosition = position + normal * amplitude * displacement;\r\n\t\t\t\tgl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );\r\n\r\n\t\t\t}\r\n"
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _three = __webpack_require__(3);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_three2.default.FresnelShader = {
+
+			uniforms: {
+
+					"mRefractionRatio": { type: "f", value: 1.02 },
+					"mFresnelBias": { type: "f", value: 0.1 },
+					"mFresnelPower": { type: "f", value: 2.0 },
+					"mFresnelScale": { type: "f", value: 1.0 },
+					"tCube": { type: "t", value: null }
+
+			},
+
+			vertexShader: ["uniform float mRefractionRatio;", "uniform float mFresnelBias;", "uniform float mFresnelScale;", "uniform float mFresnelPower;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );", "vec4 worldPosition = modelMatrix * vec4( position, 1.0 );", "vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );", "vec3 I = worldPosition.xyz - cameraPosition;", "vReflect = reflect( I, worldNormal );", "vRefract[0] = refract( normalize( I ), worldNormal, mRefractionRatio );", "vRefract[1] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.99 );", "vRefract[2] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.98 );", "vReflectionFactor = mFresnelBias + mFresnelScale * pow( 1.0 + dot( normalize( I ), worldNormal ), mFresnelPower );", "gl_Position = projectionMatrix * mvPosition;", "}"].join("\n"),
+
+			fragmentShader: ["uniform samplerCube tCube;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 reflectedColor = textureCube( tCube, vec3( -vReflect.x, vReflect.yz ) );", "vec4 refractedColor = vec4( 1.0 );", "refractedColor.r = textureCube( tCube, vec3( -vRefract[0].x, vRefract[0].yz ) ).r;", "refractedColor.g = textureCube( tCube, vec3( -vRefract[1].x, vRefract[1].yz ) ).g;", "refractedColor.b = textureCube( tCube, vec3( -vRefract[2].x, vRefract[2].yz ) ).b;", "gl_FragColor = mix( refractedColor, reflectedColor, clamp( vReflectionFactor, 0.0, 1.0 ) );", "}"].join("\n")
+
+	}; /**
+	    * @author alteredq / http://alteredqualia.com/
+	    *
+	    * Based on Nvidia Cg tutorial
+	    */
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36971,11 +37027,11 @@
 	  value: true
 	});
 
-	var _three = __webpack_require__(4);
+	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _OrbitControls = __webpack_require__(6);
+	var _OrbitControls = __webpack_require__(10);
 
 	var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
 
@@ -37094,7 +37150,7 @@
 	exports.default = bScene;
 
 /***/ },
-/* 6 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37103,7 +37159,7 @@
 			value: true
 	});
 
-	var _three = __webpack_require__(4);
+	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
 
@@ -38084,12 +38140,283 @@
 	exports.default = _three2.default.OrbitControls;
 
 /***/ },
-/* 7 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _three = __webpack_require__(4);
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; // b2.js
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _three = __webpack_require__(3);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	var _bScene = __webpack_require__(9);
+
+	var _bScene2 = _interopRequireDefault(_bScene);
+
+	var _OBJLoader = __webpack_require__(12);
+
+	var _OBJLoader2 = _interopRequireDefault(_OBJLoader);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var b2 = {
+	  init: function init(_ref) {
+	    var container = _ref.container;
+	    var renderer = _ref.renderer;
+
+	    console.log('initialized b2!');
+	    var b2Scene = _bScene2.default.create({ container: container, renderer: renderer });
+	    console.log(b2Scene);
+
+	    b2Scene.applyMaterial = function (object, color) {
+	      var material = new _three2.default.MeshPhongMaterial({
+	        shading: _three2.default.FlatShading,
+	        color: color
+	      });
+
+	      object.material = material;
+	      return object;
+	    };
+
+	    b2Scene.crystalClicked = function () {
+	      this.counters.clicked = this.counters.frame;
+	      // render method calls switchActiveCrystal when seven frames have passed
+	    };
+
+	    b2Scene.handleRaycasterIntersection = function () {
+	      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera);
+	      var intersects = this.raycaster.raycaster.intersectObjects(this.scene.children);
+
+	      var tempIntersection = false;
+	      if (intersects.length > 0) {
+	        for (var i = 0; i < this.objects.crystals.length; i++) {
+	          if (this.objects.crystals[i] === intersects[0].object) {
+	            tempIntersection = true;
+	          }
+	        }
+	        this.raycaster.intersection = tempIntersection;
+	        if (this.raycaster.intersection === false) {
+	          this.mouseleaveCrystal();
+	        } else {
+	          this.mouseenterCrystal();
+	        }
+	      } else {
+	        this.raycaster.intersection = tempIntersection;
+	        if (this.raycaster.intersection === false) {
+	          this.mouseleaveCrystal();
+	        }
+	      }
+
+	      if (this.raycaster.intersection) {
+	        var val = this.counters.frame % 2 === 0 ? Math.cos(this.counters.cosY) * 2 : -(Math.cos(this.counters.cosY) * 2);
+	        this.objects.crystals[this.objects.activeCrystal].position.x += val;
+	      }
+	    };
+
+	    b2Scene.mouseenterCrystal = function () {
+	      document.body.style.cursor = "pointer";
+	    };
+
+	    b2Scene.mouseleaveCrystal = function () {
+	      if (this.objects.crystals[this.objects.activeCrystal] && this.raycaster.intersection === false) {
+	        this.objects.crystals[this.objects.activeCrystal].position.x = 0;
+	        document.body.style.cursor = "initial";
+	      }
+	    };
+
+	    b2Scene.onMouseClick = function () {
+	      if (this.raycaster && this.raycaster.intersection) {
+	        this.crystalClicked();
+	      }
+	    };
+
+	    b2Scene.prepCamera = function () {
+	      var camera = new _three2.default.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 400);
+	      camera.position.set(0, 0, 800);
+	      camera.lookAt(0, 0, 0);
+
+	      this.camera = camera;
+	    };
+
+	    b2Scene.prepCrystals = function () {
+	      var self = this;
+
+	      var manager = new _three2.default.LoadingManager();
+	      manager.onProgress = function (item, loaded, total) {
+	        console.log(item, loaded, total);
+	      };
+
+	      var onProgress = function onProgress(xhr) {
+	        if (xhr.lengthComputable) {
+	          var percentComplete = xhr.loaded / xhr.total * 100;
+	          console.log(Math.round(percentComplete, 2) + '% downloaded');
+	        }
+	      };
+
+	      var onError = function onError(xhr) {};
+
+	      self.objects.crystals = [];
+
+	      var icosahedronGeom = new _three2.default.IcosahedronGeometry(250, 3);
+	      var icosahedronMat = new _three2.default.MeshDepthMaterial({
+	        wireframe: true
+	      });
+	      var icosahedron = new _three2.default.Mesh(icosahedronGeom, icosahedronMat);
+	      icosahedron.position.set(0, 0, 700);
+	      this.scene.add(icosahedron);
+	      this.objects.icosahedron = icosahedron;
+
+	      var loadedCount = 0;
+	      var crystalObjects = ['./obj/b2_1.obj', './obj/b2_2.obj', './obj/b2_3.obj'];
+	      var colors = [0xaaaaaa, 0x777777, 0xaaaaaa];
+	      var loader = new _three2.default.OBJLoader(manager);
+
+	      var _loop = function _loop(i) {
+	        loader.load(crystalObjects[i], function (object) {
+	          object.traverse(function (child) {
+	            if (child instanceof _three2.default.Mesh) {
+	              child = self.applyMaterial(child, colors[i]);
+	              child.position.set(0, 0, 700);
+	              child.scale.set(0.15, 0.15, 0.15);
+	              self.objects.crystals.push(child);
+	              loadedCount++;
+	            }
+	          });
+
+	          if (loadedCount === crystalObjects.length) {
+	            self.objects.activeCrystal = 0;
+	            self.scene.add(self.objects.crystals[self.objects.activeCrystal]);
+	          }
+	        }, onProgress, onError);
+	      };
+
+	      for (var i = 0; i < crystalObjects.length; i++) {
+	        _loop(i);
+	      }
+	    };
+
+	    b2Scene.prepLights = function () {
+	      var primLight = new _three2.default.PointLight(0xffffff, 1, 2000);
+	      primLight.position.set(0, 0, 900);
+	      this.scene.add(primLight);
+
+	      var lightParameters = [[0xff0000, 0.5, [-100, 0, 900]], [0x7700FF, 0.5, [100, 0, 900]]];
+
+	      this.lights.colors = [[0xff0000, 0x7700ff], [0xcc00ff, 0x00aaff], [0x0000ff, 0x00ff00]];
+
+	      var lights = [];
+	      for (var i = 0; i < lightParameters.length; i++) {
+	        var light = new _three2.default.PointLight(lightParameters[i][0], lightParameters[i][1], 2000);
+
+	        light.position.set(lightParameters[i][2][0], lightParameters[i][2][1], lightParameters[i][2][2]);
+
+	        lights.push(light);
+	        this.scene.add(light);
+	      }
+
+	      this.lights.lights = lights;
+	    };
+
+	    b2Scene.pulsateLights = function () {
+	      for (var i = 0; i < this.lights.lights.length; i++) {
+	        var intensities = Math.abs(Math.cos(this.counters.cosY * 10 + i));
+	        var calculation = 1 - Math.abs(this.mouse.x);
+	        var intensity = calculation > 0.3 ? (calculation - 0.3) * 2 : 0;
+	        this.lights.lights[i].intensity = intensities * intensity;
+	      }
+	    };
+
+	    b2Scene.rollIcosahedron = function () {
+	      this.objects.icosahedron.rotation.y += this.mouse.x * 0.004;
+	      this.objects.icosahedron.rotation.x += this.mouse.y * 0.004;
+	    };
+
+	    b2Scene.uniqueSetup = function () {
+	      this.counters.cosY = 0;
+	      this.counters.frame = 0;
+	      this.counters.floatingCrystalPos = 0;
+	      this.counters.clicked = -4;
+	      this.prepCamera();
+	      this.prepLights();
+	      this.prepCrystals();
+	      this.controls = null;
+
+	      var self = this;
+	      document.querySelector('canvas').addEventListener('click', function () {
+	        self.onMouseClick();
+	      }, false);
+
+	      return function () {
+	        this.counters.floatingCrystalPos += Math.cos(this.counters.cosY) * 0.2;
+	        this.counters.cosY += 0.02;
+
+	        this.shakeOrSwapCrystal();
+	        this.pulsateLights();
+	        this.handleRaycasterIntersection();
+	        this.rollIcosahedron();
+
+	        this.counters.frame++;
+	      }.bind(this);
+	    };
+
+	    b2Scene.shakeOrSwapCrystal = function () {
+	      if (_typeof(this.objects.activeCrystal) === _typeof(1) && this.objects.crystals.length > 0) {
+	        if (this.objects.crystals[this.objects.activeCrystal] === undefined) debugger;
+	        this.objects.crystals[this.objects.activeCrystal].rotation.y += 0.05;
+	        this.objects.crystals[this.objects.activeCrystal].position.y = this.counters.floatingCrystalPos;
+	        if (this.counters.frame <= this.counters.clicked + 7 && this.counters.frame > this.counters.clicked) {
+	          switch (Math.floor(Math.random() * 3)) {
+	            case 0:
+	              this.renderer.setClearColor(0x222222);
+	              break;
+	            case 1:
+	              this.renderer.setClearColor(this.lights.colors[this.objects.activeCrystal][0]);
+	              break;
+	            case 2:
+	              this.renderer.setClearColor(this.lights.colors[this.objects.activeCrystal][1]);
+	              break;
+	          }
+	          this.objects.crystals[this.objects.activeCrystal].position.x += Math.random() * 10 - 5;
+	          this.objects.crystals[this.objects.activeCrystal].position.y += Math.random() * 10 - 5;
+	        } else if (this.counters.frame === this.counters.clicked + 8) {
+	          this.switchActiveCrystal();
+	          renderer.setClearColor(0x222222);
+	        }
+	      }
+	    };
+
+	    b2Scene.switchActiveCrystal = function () {
+	      this.objects.crystals[this.objects.activeCrystal].position.x = 0;
+	      this.scene.remove(this.objects.crystals[this.objects.activeCrystal]);
+	      this.objects.activeCrystal = (this.objects.activeCrystal + 1) % this.objects.crystals.length;
+	      this.scene.add(this.objects.crystals[this.objects.activeCrystal]);
+
+	      for (var i = 0; i < this.lights.lights.length; i++) {
+	        this.lights.lights[i].color = new _three2.default.Color(this.lights.colors[this.objects.activeCrystal][i]);
+	      }
+	    };
+
+	    b2Scene.init();
+
+	    return b2Scene;
+	  }
+	};
+
+	exports.default = b2;
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
 
@@ -38407,20 +38734,20 @@
 	};
 
 /***/ },
-/* 8 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _three = __webpack_require__(4);
+	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _bScene = __webpack_require__(5);
+	var _bScene = __webpack_require__(9);
 
 	var _bScene2 = _interopRequireDefault(_bScene);
 
-	var _OrbitControls = __webpack_require__(6);
+	var _OrbitControls = __webpack_require__(10);
 
 	var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
 
@@ -38602,7 +38929,7 @@
 	module.exports = b3;
 
 /***/ },
-/* 9 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38611,15 +38938,15 @@
 	  value: true
 	});
 
-	var _three = __webpack_require__(4);
+	var _three = __webpack_require__(3);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _bScene = __webpack_require__(5);
+	var _bScene = __webpack_require__(9);
 
 	var _bScene2 = _interopRequireDefault(_bScene);
 
-	var _gsap = __webpack_require__(10);
+	var _gsap = __webpack_require__(15);
 
 	var _gsap2 = _interopRequireDefault(_gsap);
 
@@ -38698,7 +39025,7 @@
 	exports.default = b4;
 
 /***/ },
-/* 10 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -44500,7 +44827,7 @@
 							if (global) {
 								_globals[n] = cl; //provides a way to avoid global namespace pollution. By default, the main classes like TweenLite, Power1, Strong, etc. are added to window unless a GreenSockGlobals is defined. So if you want to have things added to a custom object instead, just do something like window.GreenSockGlobals = {} before loading any GreenSock files. You can even set up an alias like window.GreenSockGlobals = windows.gs = {} so that you can access everything like gs.TweenLite. Also remember that ALL classes are added to the window.com.greensock object (in their respective packages, like com.greensock.easing.Power1, com.greensock.TweenLite, etc.)
 								hasModule = (typeof(module) !== "undefined" && module.exports);
-								if (!hasModule && "function" === "function" && __webpack_require__(11)){ //AMD
+								if (!hasModule && "function" === "function" && __webpack_require__(16)){ //AMD
 									!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() { return cl; }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 								} else if (ns === moduleName && hasModule){ //node
 									module.exports = cl;
@@ -46285,7 +46612,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 11 */
+/* 16 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -46293,7 +46620,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 12 */
+/* 17 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -46448,340 +46775,10 @@
 	}]);
 
 /***/ },
-/* 13 */
+/* 18 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _three = __webpack_require__(4);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var tessellateModifier = function tessellateModifier(maxEdgeLength) {
-
-						this.maxEdgeLength = maxEdgeLength;
-	}; /**
-	    * Break faces with edges longer than maxEdgeLength
-	    * - not recursive
-	    *
-	    * @author alteredq / http://alteredqualia.com/
-	    */
-
-	tessellateModifier.prototype.modify = function (geometry) {
-
-						var edge;
-
-						var faces = [];
-						var faceVertexUvs = [];
-						var maxEdgeLengthSquared = this.maxEdgeLength * this.maxEdgeLength;
-
-						for (var i = 0, il = geometry.faceVertexUvs.length; i < il; i++) {
-
-											faceVertexUvs[i] = [];
-						}
-
-						for (var i = 0, il = geometry.faces.length; i < il; i++) {
-
-											var face = geometry.faces[i];
-
-											if (face instanceof _three2.default.Face3) {
-
-																var a = face.a;
-																var b = face.b;
-																var c = face.c;
-
-																var va = geometry.vertices[a];
-																var vb = geometry.vertices[b];
-																var vc = geometry.vertices[c];
-
-																var dab = va.distanceToSquared(vb);
-																var dbc = vb.distanceToSquared(vc);
-																var dac = va.distanceToSquared(vc);
-
-																if (dab > maxEdgeLengthSquared || dbc > maxEdgeLengthSquared || dac > maxEdgeLengthSquared) {
-
-																					var m = geometry.vertices.length;
-
-																					var triA = face.clone();
-																					var triB = face.clone();
-
-																					if (dab >= dbc && dab >= dac) {
-
-																										var vm = va.clone();
-																										vm.lerp(vb, 0.5);
-
-																										triA.a = a;
-																										triA.b = m;
-																										triA.c = c;
-
-																										triB.a = m;
-																										triB.b = b;
-																										triB.c = c;
-
-																										if (face.vertexNormals.length === 3) {
-
-																															var vnm = face.vertexNormals[0].clone();
-																															vnm.lerp(face.vertexNormals[1], 0.5);
-
-																															triA.vertexNormals[1].copy(vnm);
-																															triB.vertexNormals[0].copy(vnm);
-																										}
-
-																										if (face.vertexColors.length === 3) {
-
-																															var vcm = face.vertexColors[0].clone();
-																															vcm.lerp(face.vertexColors[1], 0.5);
-
-																															triA.vertexColors[1].copy(vcm);
-																															triB.vertexColors[0].copy(vcm);
-																										}
-
-																										edge = 0;
-																					} else if (dbc >= dab && dbc >= dac) {
-
-																										var vm = vb.clone();
-																										vm.lerp(vc, 0.5);
-
-																										triA.a = a;
-																										triA.b = b;
-																										triA.c = m;
-
-																										triB.a = m;
-																										triB.b = c;
-																										triB.c = a;
-
-																										if (face.vertexNormals.length === 3) {
-
-																															var vnm = face.vertexNormals[1].clone();
-																															vnm.lerp(face.vertexNormals[2], 0.5);
-
-																															triA.vertexNormals[2].copy(vnm);
-
-																															triB.vertexNormals[0].copy(vnm);
-																															triB.vertexNormals[1].copy(face.vertexNormals[2]);
-																															triB.vertexNormals[2].copy(face.vertexNormals[0]);
-																										}
-
-																										if (face.vertexColors.length === 3) {
-
-																															var vcm = face.vertexColors[1].clone();
-																															vcm.lerp(face.vertexColors[2], 0.5);
-
-																															triA.vertexColors[2].copy(vcm);
-
-																															triB.vertexColors[0].copy(vcm);
-																															triB.vertexColors[1].copy(face.vertexColors[2]);
-																															triB.vertexColors[2].copy(face.vertexColors[0]);
-																										}
-
-																										edge = 1;
-																					} else {
-
-																										var vm = va.clone();
-																										vm.lerp(vc, 0.5);
-
-																										triA.a = a;
-																										triA.b = b;
-																										triA.c = m;
-
-																										triB.a = m;
-																										triB.b = b;
-																										triB.c = c;
-
-																										if (face.vertexNormals.length === 3) {
-
-																															var vnm = face.vertexNormals[0].clone();
-																															vnm.lerp(face.vertexNormals[2], 0.5);
-
-																															triA.vertexNormals[2].copy(vnm);
-																															triB.vertexNormals[0].copy(vnm);
-																										}
-
-																										if (face.vertexColors.length === 3) {
-
-																															var vcm = face.vertexColors[0].clone();
-																															vcm.lerp(face.vertexColors[2], 0.5);
-
-																															triA.vertexColors[2].copy(vcm);
-																															triB.vertexColors[0].copy(vcm);
-																										}
-
-																										edge = 2;
-																					}
-
-																					faces.push(triA, triB);
-																					geometry.vertices.push(vm);
-
-																					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
-
-																										if (geometry.faceVertexUvs[j].length) {
-
-																															var uvs = geometry.faceVertexUvs[j][i];
-
-																															var uvA = uvs[0];
-																															var uvB = uvs[1];
-																															var uvC = uvs[2];
-
-																															// AB
-
-																															if (edge === 0) {
-
-																																				var uvM = uvA.clone();
-																																				uvM.lerp(uvB, 0.5);
-
-																																				var uvsTriA = [uvA.clone(), uvM.clone(), uvC.clone()];
-																																				var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
-
-																																				// BC
-																															} else if (edge === 1) {
-
-																																									var uvM = uvB.clone();
-																																									uvM.lerp(uvC, 0.5);
-
-																																									var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
-																																									var uvsTriB = [uvM.clone(), uvC.clone(), uvA.clone()];
-
-																																									// AC
-																																				} else {
-
-																																														var uvM = uvA.clone();
-																																														uvM.lerp(uvC, 0.5);
-
-																																														var uvsTriA = [uvA.clone(), uvB.clone(), uvM.clone()];
-																																														var uvsTriB = [uvM.clone(), uvB.clone(), uvC.clone()];
-																																									}
-
-																															faceVertexUvs[j].push(uvsTriA, uvsTriB);
-																										}
-																					}
-																} else {
-
-																					faces.push(face);
-
-																					for (var j = 0, jl = geometry.faceVertexUvs.length; j < jl; j++) {
-
-																										faceVertexUvs[j].push(geometry.faceVertexUvs[j][i]);
-																					}
-																}
-											}
-						}
-
-						geometry.faces = faces;
-						geometry.faceVertexUvs = faceVertexUvs;
-	};
-
-	module.exports = tessellateModifier;
-
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _three = __webpack_require__(4);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var explodeModifier = function explodeModifier() {}; /**
-	                                                      * Make all faces use unique vertices
-	                                                      * so that each face can be separated from others
-	                                                      *
-	                                                      * @author alteredq / http://alteredqualia.com/
-	                                                      */
-
-	explodeModifier.prototype.modify = function (geometry) {
-
-			var vertices = [];
-
-			for (var i = 0, il = geometry.faces.length; i < il; i++) {
-
-					var n = vertices.length;
-
-					var face = geometry.faces[i];
-
-					var a = face.a;
-					var b = face.b;
-					var c = face.c;
-
-					var va = geometry.vertices[a];
-					var vb = geometry.vertices[b];
-					var vc = geometry.vertices[c];
-
-					vertices.push(va.clone());
-					vertices.push(vb.clone());
-					vertices.push(vc.clone());
-
-					face.a = n;
-					face.b = n + 1;
-					face.c = n + 2;
-			}
-
-			geometry.vertices = vertices;
-			delete geometry.__tmpVertices;
-	};
-
-	module.exports = explodeModifier;
-
-/***/ },
-/* 21 */
-/***/ function(module, exports) {
-
-	module.exports = "\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tconst float ambient = 0.4;\r\n\r\n\t\t\t\tvec3 light = vec3( 1.0 );\r\n\t\t\t\tlight = normalize( light );\r\n\r\n\t\t\t\tfloat directional = max( dot( vNormal, light ), 0.0 );\r\n\r\n\t\t\t\tgl_FragColor = vec4( ( directional + ambient ) * vColor, 1.0 );\r\n\r\n\t\t\t}\r\n"
-
-/***/ },
-/* 22 */
-/***/ function(module, exports) {
-
-	module.exports = "\r\n\t\t\tuniform float amplitude;\r\n\r\n\t\t\tattribute vec3 customColor;\r\n\t\t\tattribute vec3 displacement;\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tvNormal = normal;\r\n\t\t\t\tvColor = customColor;\r\n\r\n\t\t\t\tvec3 newPosition = position + normal * amplitude * displacement;\r\n\t\t\t\tgl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );\r\n\r\n\t\t\t}\r\n"
-
-/***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var _three = __webpack_require__(4);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	_three2.default.FresnelShader = {
-
-			uniforms: {
-
-					"mRefractionRatio": { type: "f", value: 1.02 },
-					"mFresnelBias": { type: "f", value: 0.1 },
-					"mFresnelPower": { type: "f", value: 2.0 },
-					"mFresnelScale": { type: "f", value: 1.0 },
-					"tCube": { type: "t", value: null }
-
-			},
-
-			vertexShader: ["uniform float mRefractionRatio;", "uniform float mFresnelBias;", "uniform float mFresnelScale;", "uniform float mFresnelPower;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );", "vec4 worldPosition = modelMatrix * vec4( position, 1.0 );", "vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );", "vec3 I = worldPosition.xyz - cameraPosition;", "vReflect = reflect( I, worldNormal );", "vRefract[0] = refract( normalize( I ), worldNormal, mRefractionRatio );", "vRefract[1] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.99 );", "vRefract[2] = refract( normalize( I ), worldNormal, mRefractionRatio * 0.98 );", "vReflectionFactor = mFresnelBias + mFresnelScale * pow( 1.0 + dot( normalize( I ), worldNormal ), mFresnelPower );", "gl_Position = projectionMatrix * mvPosition;", "}"].join("\n"),
-
-			fragmentShader: ["uniform samplerCube tCube;", "varying vec3 vReflect;", "varying vec3 vRefract[3];", "varying float vReflectionFactor;", "void main() {", "vec4 reflectedColor = textureCube( tCube, vec3( -vReflect.x, vReflect.yz ) );", "vec4 refractedColor = vec4( 1.0 );", "refractedColor.r = textureCube( tCube, vec3( -vRefract[0].x, vRefract[0].yz ) ).r;", "refractedColor.g = textureCube( tCube, vec3( -vRefract[1].x, vRefract[1].yz ) ).g;", "refractedColor.b = textureCube( tCube, vec3( -vRefract[2].x, vRefract[2].yz ) ).b;", "gl_FragColor = mix( refractedColor, reflectedColor, clamp( vReflectionFactor, 0.0, 1.0 ) );", "}"].join("\n")
-
-	}; /**
-	    * @author alteredq / http://alteredqualia.com/
-	    *
-	    * Based on Nvidia Cg tutorial
-	    */
 
 /***/ }
 /******/ ]);

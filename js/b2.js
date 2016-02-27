@@ -8,6 +8,7 @@ const b2 = {
   init: function ({container, renderer}) {
     console.log('initialized b2!')
     const b2Scene = bScene.create({container, renderer});
+    console.log(b2Scene);
 
     b2Scene.applyMaterial = function(object, color) {
       let material = new THREE.MeshPhongMaterial({
@@ -226,7 +227,8 @@ const b2 = {
     }
 
     b2Scene.shakeOrSwapCrystal = function () {
-      if (typeof this.objects.activeCrystal === typeof 1) {
+      if (typeof this.objects.activeCrystal === typeof 1 && this.objects.crystals.length > 0) {
+        if (this.objects.crystals[this.objects.activeCrystal] === undefined) debugger
         this.objects.crystals[this.objects.activeCrystal].rotation.y += 0.05;
         this.objects.crystals[this.objects.activeCrystal].position.y = this.counters.floatingCrystalPos;
         if (
