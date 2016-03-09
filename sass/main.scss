@@ -6,9 +6,8 @@ $accent: #777;
 $animDur: 2s;
 
 @import './fonts.scss';
-@import './headerBoxOne.scss';
-@import './headerBoxTwo.scss';
 @import './previewContainer.scss';
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
 
 html {
   body.one {
@@ -22,6 +21,7 @@ html {
     padding: 0;
     color: #DDE2E2;
     overflow-x: hidden;
+    font-family: "Open Sans", sans-serif;
     a {
       text-decoration: none;
     }
@@ -82,8 +82,17 @@ html {
     header {
       width: 90%;
       max-width: $maxWidth;
-      height: 17rem;
+      padding: 3em 0;
       margin: 2rem auto 1rem auto;
+      text-align: center;
+      h1 {
+        color: #555;
+        margin-bottom: 0.7em;
+      }
+      h4 {
+        color: #888;
+        margin-top: 0;
+      }
       div.box {
         width: 100%;
         height: 100%;
@@ -105,17 +114,7 @@ html {
       max-width: $maxWidth;
       text-align: center;
       margin: 0 auto;
-      padding: 1rem 0;
-      font-family: 'Helvetica Neue', Arial;
-      font-size: 1rem;
-      font-weight: 200;
-      font-style: italic;
-      background-color: #333;
-      opacity: 0.7;
-      animation-iteration-count: infinite;
-      animation-duration: $animDur;
-      animation-direction: alternate;
-      animation-name: changeOpacity;
+      padding: 4rem 0;
       svg {
         &:hover {
           fill: #fff;

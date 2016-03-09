@@ -17,10 +17,8 @@ div.previews-container.one {
   }
 }
 div.previews-container.two {
-  background-color: #fff;
   div.preview-container {
     div.preview-overlay {
-      background-color: #fff;
     }
   }
 }
@@ -65,7 +63,7 @@ div.previews-container {
         left: 50%;
         bottom: 0;
         height: 3px;
-        background: #fff;
+        background: #eee;
         height: 120%;
         left: -10%;
         -webkit-transform: skewX(15deg);
