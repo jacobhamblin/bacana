@@ -261,6 +261,7 @@ html body {
       margin-bottom: 0.7em; }
     html body header h4 {
       color: #888;
+      font-weight: normal;
       margin-top: 0; }
     html body header div.box {
       width: 100%;

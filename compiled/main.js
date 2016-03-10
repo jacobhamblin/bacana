@@ -62,7 +62,7 @@
 
 	var _b6 = _interopRequireDefault(_b5);
 
-	var _fastclickMin = __webpack_require__(17);
+	var _fastclickMin = __webpack_require__(14);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
@@ -72,7 +72,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(18);
+	__webpack_require__(15);
 	// import b4 from './b4.js';
 
 	var demosCode = new Object();
@@ -38912,10 +38912,7 @@
 	module.exports = b3;
 
 /***/ },
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */
+/* 14 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -39070,7 +39067,7 @@
 	}]);
 
 /***/ },
-/* 18 */
+/* 15 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
