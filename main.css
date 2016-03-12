@@ -281,8 +281,10 @@ html body {
     text-align: center;
     margin: 0 auto;
     padding: 4rem 0; }
-    html body footer svg:hover {
-      fill: #fff; }
+    html body footer svg {
+      fill: #333; }
+      html body footer svg:hover {
+        fill: #777; }
 
 @-webkit-keyframes changeOpacity {
   from {
