@@ -38365,8 +38365,8 @@
 	              this.renderer.setClearColor(this.lights.colors[this.objects.activeCrystal][1]);
 	              break;
 	          }
-	          this.objects.crystals[this.objects.activeCrystal].position.x += Math.random() * 10 - 5;
-	          this.objects.crystals[this.objects.activeCrystal].position.y += Math.random() * 10 - 5;
+	          this.objects.crystals[this.objects.activeCrystal].position.x += Math.random() * 20 - 10;
+	          this.objects.crystals[this.objects.activeCrystal].position.y += Math.random() * 20 - 10;
 	        } else if (this.counters.frame === this.counters.clicked + 8) {
 	          this.switchActiveCrystal();
 	          renderer.setClearColor(0x222222);
