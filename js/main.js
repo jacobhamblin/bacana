@@ -3,7 +3,7 @@ import demosJson from './demos.json';
 import b1 from './b1.js';
 import b2 from './b2.js';
 import b3 from './b3.js';
-// import b4 from './b4.js';
+import b4 from './b4.js';
 import FastClick from './vendor/fastclick.min.js';
 import THREE from 'three';
 
@@ -11,7 +11,7 @@ const demosCode = new Object;
 demosCode.b1 = b1;
 demosCode.b2 = b2;
 demosCode.b3 = b3;
-// demosCode.b4 = b4;
+demosCode.b4 = b4;
 
 const interaction = new Object;
 interaction.open = false;

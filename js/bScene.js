@@ -53,7 +53,7 @@ const bScene = {
       70,
       window.innerWidth / window.innerHeight,
       1,
-      400
+      500
     );
     camera.position.set(0, 0, 50);
     camera.lookAt(0,0,0);
