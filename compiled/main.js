@@ -38940,13 +38940,17 @@
 
 	var _gsap2 = _interopRequireDefault(_gsap);
 
-	var _LinkedList = __webpack_require__(26);
+	var _LinkedList = __webpack_require__(17);
 
 	var _LinkedList2 = _interopRequireDefault(_LinkedList);
 
+	var _OrbitControls = __webpack_require__(10);
+
+	var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// b4.js
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } // b4.js
 
 	var b4 = {
 	  init: function init(_ref) {
@@ -38961,7 +38965,7 @@
 	    };
 
 	    b4Scene.moveLights = function () {
-	      var _this = this;
+	      var a = this.counters.a;
 
 	      this.lights.lights.map(function (light) {
 	        var c = light.color;
@@ -38974,10 +38978,11 @@
 
 	        var p = light.position;
 	        var m = light.motion;
-	        p.x += Math.cos(_this.counters.a) * m[0] * 1;
-	        p.y += Math.cos(_this.counters.a) * m[1] * 1;
-	        p.z += Math.cos(_this.counters.a) * m[2] * 1;
-	        c.setHSL((h + 0.001) % 0.4 + 0.4, s, l);
+	        p.x += Math.cos(a) * m[0] * 1;
+	        p.y += Math.cos(a) * m[1] * 1;
+	        p.z += Math.cos(a) * m[2] * 1;
+	        var op = h + 0.001;
+	        c.setHSL((Math.sin(a * 0.1 + light.hue) * 0.2 + 0.8) % 1, s, l);
 	      });
 	    };
 
@@ -38990,40 +38995,56 @@
 	    };
 
 	    b4Scene.prepLights = function () {
-	      var _this2 = this;
+	      var _this = this;
 
 	      var i = 0;
-	      this.lights.lights = [[-100, 0, 0], [-500, 0, 200], [500, 0, -200], [0, 0, 0]].map(function (coords) {
+	      this.lights.lights = [[-100, 0, 0], [-200, 0, 200], [200, 0, -200], [0, 0, 0]].map(function (coords) {
+	        var _light$position;
+
 	        var light = new _three2.default.PointLight(0x00ffff, 0.75, 500);
-	        light.position.set(coords[0], coords[1], coords[2]);
+	        (_light$position = light.position).set.apply(_light$position, _toConsumableArray(coords));
+	        light.hue = 0.3 * i++ + 1;
 	        light.motion = [Math.random(), Math.random(), Math.random()];
-	        light.color.setHSL(0.1 * i, 1, 0.5);
-	        i++;
-	        _this2.scene.add(light);
+	        light.color.setHSL(light.hue, 1, 0.5);
+	        _this.scene.add(light);
 	        return light;
 	      });
 	      window.lights = this.lights.lights;
 	    };
 
+	    b4Scene.prepObjects = function () {
+	      var sphereGeom = new _three2.default.SphereGeometry(200, 32, 32);
+	      var material = new _three2.default.MeshBasicMaterial({
+	        color: 0x333333,
+	        emissive: 0x333333,
+	        side: _three2.default.BackSide
+	      });
+	      var sphere = new _three2.default.Mesh(sphereGeom, material);
+	      this.scene.add(sphere);
+
+	      this.prepTetras();
+	      this.prepPlanes();
+	    };
+
 	    b4Scene.prepPlanes = function () {
-	      var _this3 = this;
+	      var _this2 = this;
 
 	      var info = this.objects.objInfo.planes;
 	      this.objects.planes = [];
 
 	      var _loop = function _loop(i) {
 	        var rndPortion = 0.5;
-	        var plane = new _three2.default.Mesh(new _three2.default.PlaneGeometry(info.size, info.size, 32), new _three2.default.MeshPhongMaterial({ wireframe: true }));
+	        var plane = new _three2.default.Mesh(new _three2.default.PlaneGeometry(info.size, info.size, 32), new _three2.default.MeshPhongMaterial({ wireframe: true, emissive: 0x333333 }));
 	        plane.position.set(0, (i - 5) * 100, 0);
 	        // plane.rotation.y -= 1.4;
 	        plane.wiggle = (function (i) {
 	          return Math.cos(this.counters.a * rndPortion + i * 4) * 0.01;
-	        }).bind(_this3);
+	        }).bind(_this2);
 	        plane.motion = (function (i) {
 	          return Math.cos(this.counters.a * rndPortion + i * 1) * 0.1;
-	        }).bind(_this3);
-	        _this3.objects.planes.push(plane);
-	        _this3.scene.add(plane);
+	        }).bind(_this2);
+	        _this2.objects.planes.push(plane);
+	        _this2.scene.add(plane);
 	      };
 
 	      for (var i = 0; i < info.count; i++) {
@@ -39032,8 +39053,8 @@
 	      window.planes = this.objects.planes;
 	    };
 
-	    b4Scene.prepObjects = function () {
-	      var _this4 = this;
+	    b4Scene.prepTetras = function () {
+	      var _this3 = this;
 
 	      var objs = new _LinkedList2.default();
 	      var _objects$objInfo$tetr = this.objects.objInfo.tetras;
@@ -39044,7 +39065,9 @@
 	        var objSize = Math.random() * size;
 	        var mesh = new _three2.default.Mesh(new _three2.default.TetrahedronGeometry(objSize, 0), new _three2.default.MeshPhongMaterial({
 	          color: 0xffffff,
-	          shading: _three2.default.FlatShading
+	          shading: _three2.default.FlatShading,
+	          emissive: 0x333333,
+	          side: _three2.default.DoubleSide
 	        }));
 	        mesh.position.set(Math.random() * 500 - 250, Math.random() * 100 - 50, Math.random() * 300 - 150);
 	        mesh.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
@@ -39058,12 +39081,12 @@
 	        var val = Math.random();
 	        mesh.wiggle = (function (i) {
 	          return Math.cos(this.counters.a * Math.random() * window.meshW1 - i) * window.meshW2;
-	        }).bind(_this4);
+	        }).bind(_this3);
 	        mesh.motion = (function (i) {
 	          return Math.cos(this.counters.a * window.meshM1 - i) % window.meshM2 * val * window.meshM3;
-	        }).bind(_this4);
+	        }).bind(_this3);
 
-	        _this4.scene.add(mesh);
+	        _this3.scene.add(mesh);
 	        objs.add(mesh);
 	      };
 
@@ -39102,14 +39125,21 @@
 	    };
 
 	    b4Scene.moveTetras = function () {
-	      var _this5 = this;
+	      var _this4 = this;
 
 	      var i = 0;
 	      this.objects.objs.map(function (node) {
-	        _this5.pulsateObjA(node.value);
-	        _this5.pulsateObjC(node.value, 'z', 'motion', i);
+	        // this.pulsateObjA(node.value)
+	        _this4.pulsateObjC(node.value, 'z', 'motion', i);
 	        i++;
 	      });
+	    };
+
+	    b4Scene.prepControls = function () {
+	      this.controls = new _OrbitControls2.default(this.camera, this.renderer.domElement);
+	      this.controls.rotateSpeed = 1;
+	      this.controls.enablePan = false;
+	      this.controls.maxDistance = 199;
 	    };
 
 	    b4Scene.uniqueSetup = function () {
@@ -39117,12 +39147,13 @@
 	        planes: { count: 15, size: 1000 },
 	        tetras: { count: 75, size: 22 }
 	      };
+	      window.controls = this.controls;
+	      this.controls.enableZoom = false;
 
 	      this.prepCamera();
 	      this.prepControls();
 	      this.prepLights();
 	      this.prepObjects();
-	      this.prepPlanes();
 	      window.objects = this.objects;
 
 	      this.renderer.setClearColor(0xf7f7f7);
@@ -46743,7 +46774,78 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 17 */,
+/* 17 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var LinkedList = (function () {
+	  function LinkedList(props) {
+	    _classCallCheck(this, LinkedList);
+
+	    this.head = null;
+	  }
+
+	  _createClass(LinkedList, [{
+	    key: "add",
+	    value: function add(value) {
+	      var node = {
+	        value: value,
+	        next: null
+	      };
+	      var current = undefined;
+
+	      if (this.head === null) {
+	        this.head = node;
+	      } else {
+	        current = this.head;
+	        while (current.next) {
+	          current = current.next;
+	        }
+	        current.next = node;
+	      }
+	      return node;
+	    }
+	  }, {
+	    key: "remove",
+	    value: function remove(node) {
+	      var current = undefined,
+	          value = node.value;
+
+	      if (this.head !== null) {
+	        if (this.head === node) {
+	          this.head = this.head.next;
+	          node.next = null;
+	          return value;
+	        }
+	        current = this.head;
+	      }
+	    }
+	  }, {
+	    key: "map",
+	    value: function map(cb) {
+	      var current = this.head;
+	      while (current.next) {
+	        cb(current);
+	        current = current.next;
+	      }
+	    }
+	  }]);
+
+	  return LinkedList;
+	})();
+
+	exports.default = LinkedList;
+
+/***/ },
 /* 18 */
 /***/ function(module, exports) {
 
@@ -46903,84 +47005,6 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var LinkedList = (function () {
-	  function LinkedList(props) {
-	    _classCallCheck(this, LinkedList);
-
-	    this.head = null;
-	  }
-
-	  _createClass(LinkedList, [{
-	    key: "add",
-	    value: function add(value) {
-	      var node = {
-	        value: value,
-	        next: null
-	      };
-	      var current = undefined;
-
-	      if (this.head === null) {
-	        this.head = node;
-	      } else {
-	        current = this.head;
-	        while (current.next) {
-	          current = current.next;
-	        }
-	        current.next = node;
-	      }
-	      return node;
-	    }
-	  }, {
-	    key: "remove",
-	    value: function remove(node) {
-	      var current = undefined,
-	          value = node.value;
-
-	      if (this.head !== null) {
-	        if (this.head === node) {
-	          this.head = this.head.next;
-	          node.next = null;
-	          return value;
-	        }
-	        current = this.head;
-	      }
-	    }
-	  }, {
-	    key: "map",
-	    value: function map(cb) {
-	      var current = this.head;
-	      while (current.next) {
-	        cb(current);
-	        current = current.next;
-	      }
-	    }
-	  }]);
-
-	  return LinkedList;
-	})();
-
-	exports.default = LinkedList;
 
 /***/ }
 /******/ ]);

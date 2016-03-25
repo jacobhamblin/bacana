@@ -4,6 +4,7 @@ import THREE from 'three';
 import bScene from './bScene.js';
 import TweenLite from 'gsap';
 import LinkedList from './utils/LinkedList'
+import OrbitControls from './vendor/OrbitControls.js';
 
 const b4 = {
   init({container, renderer}) {
@@ -15,15 +16,17 @@ const b4 = {
     }
 
     b4Scene.moveLights = function () {
+      let { a } = this.counters;
       this.lights.lights.map(light => {
         let c = light.color
         let {h, s, l} = c.getHSL()
         let p = light.position
         let m = light.motion
-        p.x += (Math.cos(this.counters.a) * m[0] * 1 )
-        p.y += (Math.cos(this.counters.a) * m[1] * 1 )
-        p.z += (Math.cos(this.counters.a) * m[2] * 1 )
-        c.setHSL(((h + 0.001) % 0.4) + 0.4, s, l)
+        p.x += (Math.cos(a) * m[0] * 1 )
+        p.y += (Math.cos(a) * m[1] * 1 )
+        p.z += (Math.cos(a) * m[2] * 1 )
+        let op = h + 0.001;
+        c.setHSL((((Math.sin((a * 0.1) + light.hue) * 0.2) + 0.8) % 1), s, l)
       })
     }
 
@@ -44,19 +47,34 @@ const b4 = {
       let i = 0;
       this.lights.lights = [
         [-100, 0, 0],
-        [-500, 0, 200],
-        [500, 0, -200],
+        [-200, 0, 200],
+        [200, 0, -200],
         [0, 0, 0]
       ].map(coords => {
         const light = new THREE.PointLight(0x00ffff, 0.75, 500);
-        light.position.set(coords[0], coords[1], coords[2]);
+        light.position.set(...coords);
+        light.hue = (0.3 * i++) + 1
         light.motion = [Math.random(), Math.random(), Math.random()]
-        light.color.setHSL((0.1 * i), 1, 0.5);
-        i++
+        light.color.setHSL(light.hue, 1, 0.5);
         this.scene.add(light);
         return light;
       })
       window.lights = this.lights.lights;
+    }
+
+    b4Scene.prepObjects = function() {
+      let sphereGeom = new THREE.SphereGeometry(200,32,32)
+			let material = new THREE.MeshBasicMaterial({
+        color: 0x333333,
+        emissive: 0x333333,
+        side: THREE.BackSide
+      });
+      let sphere = new THREE.Mesh(sphereGeom, material)
+      this.scene.add(sphere);
+
+      this.prepTetras()
+      this.prepPlanes()
+
     }
 
     b4Scene.prepPlanes = function() {
@@ -67,7 +85,7 @@ const b4 = {
         const rndPortion = 0.5
         let plane = new THREE.Mesh(
           new THREE.PlaneGeometry(info.size, info.size, 32),
-          new THREE.MeshPhongMaterial({wireframe: true})
+          new THREE.MeshPhongMaterial({wireframe: true, emissive: 0x333333})
         )
         plane.position.set(0, (i - 5) * 100, 0);
         // plane.rotation.y -= 1.4;
@@ -79,7 +97,7 @@ const b4 = {
       window.planes = this.objects.planes;
     }
 
-    b4Scene.prepObjects = function () {
+    b4Scene.prepTetras = function () {
       let objs = new LinkedList();
       let {count, size} = this.objects.objInfo.tetras;
 
@@ -89,7 +107,9 @@ const b4 = {
           new THREE.TetrahedronGeometry(objSize, 0),
           new THREE.MeshPhongMaterial({
             color: 0xffffff,
-            shading: THREE.FlatShading
+            shading: THREE.FlatShading,
+            emissive: 0x333333,
+            side: THREE.DoubleSide
           })
         );
         mesh.position.set(
@@ -154,10 +174,19 @@ const b4 = {
     b4Scene.moveTetras = function () {
       let i = 0;
       this.objects.objs.map(node => {
-        this.pulsateObjA(node.value)
+        // this.pulsateObjA(node.value)
         this.pulsateObjC(node.value, 'z', 'motion', i)
         i++
       })
+    }
+
+    b4Scene.prepControls = function() {
+      this.controls = new OrbitControls(
+        this.camera, this.renderer.domElement
+      );
+      this.controls.rotateSpeed = 1;
+      this.controls.enablePan = false;
+      this.controls.maxDistance = 199;
     }
 
     b4Scene.uniqueSetup = function () {
@@ -165,12 +194,13 @@ const b4 = {
         planes: {count: 15, size: 1000},
         tetras: {count: 75, size: 22}
       }
+      window.controls = this.controls;
+      this.controls.enableZoom = false;
 
       this.prepCamera()
       this.prepControls()
       this.prepLights()
       this.prepObjects()
-      this.prepPlanes()
       window.objects = this.objects
 
       this.renderer.setClearColor(0xf7f7f7)
