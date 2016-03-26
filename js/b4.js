@@ -3,8 +3,8 @@
 import THREE from 'three';
 import bScene from './bScene.js';
 import TweenLite from 'gsap';
-import LinkedList from './utils/LinkedList'
-import OrbitControls from './vendor/OrbitControls.js';
+import { LinkedList } from './utils'
+import { OrbitControls } from './vendor';
 
 const b4 = {
   init({container, renderer}) {

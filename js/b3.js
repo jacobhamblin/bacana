@@ -2,7 +2,7 @@
 
 import THREE from 'three';
 import bScene from './bScene.js';
-import OrbitControls from './vendor/OrbitControls.js';
+import { OrbitControls } from './vendor';
 
 const b3 = {
   init: function ({container, renderer}) {

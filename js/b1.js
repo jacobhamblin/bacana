@@ -1,13 +1,9 @@
 // b1.js
 
 import THREE from 'three';
-import TessellateModifier from './vendor/TessellateModifier.js';
-import ExplodeModifier from './vendor/ExplodeModifier.js';
-import FragmentShader from './vendor/shaders/fragment.txt';
-import VertexShader from './vendor/shaders/vertex.txt';
-import FresnelShader from './vendor/shaders/FresnelShader.js';
+import { ExplodeModifier, TessellateModifier, OrbitControls } from './vendor';
+import { FragmentShader, VertexShader } from './vendor/shaders';
 import bScene from './bScene.js';
-import OrbitControls from './vendor/OrbitControls.js';
 
 const b1 = {
   init: function ({container, renderer}) {

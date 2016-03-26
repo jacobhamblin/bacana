@@ -4,6 +4,7 @@ import b1 from './b1.js';
 import b2 from './b2.js';
 import b3 from './b3.js';
 import b4 from './b4.js';
+// import b5 from './b5.js';
 import FastClick from './vendor/fastclick.min.js';
 import THREE from 'three';
 
@@ -12,6 +13,7 @@ demosCode.b1 = b1;
 demosCode.b2 = b2;
 demosCode.b3 = b3;
 demosCode.b4 = b4;
+// demosCode.b5 = b5;
 
 const interaction = new Object;
 interaction.open = false;

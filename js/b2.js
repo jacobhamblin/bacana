@@ -2,7 +2,7 @@
 
 import THREE from 'three';
 import bScene from './bScene.js';
-import OBJLoader from './vendor/OBJLoader.js';
+import { OBJLoader } from './vendor';
 
 const b2 = {
   init: function ({container, renderer}) {

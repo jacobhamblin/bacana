@@ -74,3 +74,5 @@ THREE.FresnelShader = {
 	].join( "\n" )
 
 };
+
+export default THREE.FresnelShader;
