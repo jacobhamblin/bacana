@@ -171,10 +171,28 @@ const b4 = {
       p[dim] += obj[fn](i)
     }
 
+    b4Scene.maybeShake = function() {
+
+    }
+
+    b4Scene.checkVertices = function(obj) {
+      obj.updateMatrixWorld();
+
+      let objP = [];
+      obj.geometry.vertices.forEach(vector => {
+        let v = vector.clone();
+        v.applyMatrix4(obj.matrixWorld);
+        objP.push(v)
+      })
+      window.oPositions.push(objP)
+    }
+
     b4Scene.moveTetras = function () {
       let i = 0;
-      this.objects.objs.map(node => {
+      window.oPositions = [];
+      this.objects.objs.each(node => {
         // this.pulsateObjA(node.value)
+        this.checkVertices(node.value)
         this.pulsateObjC(node.value, 'z', 'motion', i)
         i++
       })
@@ -192,7 +210,7 @@ const b4 = {
     b4Scene.uniqueSetup = function () {
       this.objects.objInfo = {
         planes: {count: 15, size: 1000},
-        tetras: {count: 75, size: 22}
+        tetras: {count: 125, size: 22}
       }
       window.controls = this.controls;
       this.controls.enableZoom = false;
@@ -210,6 +228,7 @@ const b4 = {
           this.incrementCounters()
           this.moveTetras()
           this.moveLights()
+          // this.maybeShake()
 
           for (let i = 0; i < this.objects.planes.length; i++) {
             const plane = this.objects.planes[i]

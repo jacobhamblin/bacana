@@ -35,7 +35,7 @@ class LinkedList {
     }
   }
 
-  map(cb) {
+  each(cb) {
     let current = this.head;
     while (current.next) {
       cb(current);

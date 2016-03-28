@@ -4,7 +4,7 @@ import THREE from 'three';
 import bScene from './bScene.js';
 import TweenLite from 'gsap';
 import { LinkedList } from './utils'
-import { MeshLine, MeshLineMaterial, OrbitControls } from './vendor';
+import { MeshLine, MeshLineMaterial } from './vendor';
 
 const b5 = {
   init({container, renderer}) {
@@ -16,8 +16,39 @@ const b5 = {
     }
 
     b5Scene.prepObjects = function () {
+      let colors = [
+      	0xed6a5a, 0xf4f1bb, 0x9bc1bc,	0x5ca4a9,
+      	0xe6ebe0,	0xf0b67f,	0xfe5f55, 0xd6d1b1,
+        0xc7efcf, 0xeef5db,	0x50514f,	0xf25f5c,
+      	0xffe066,	0x247ba0,	0x70c1b3
+      ];
+      window.THREE = THREE;
+      let resolution = new THREE.Vector2( window.innerWidth, window.innerHeight );
+      let geom = new THREE.Geometry();
+      for (let i = 0; i < Math.PI; i+= 2 * Math.PI / 100) {
+        let v = new THREE.Vector3(Math.cos(i), Math.sin(i), 0);
+        geom.vertices.push(v);
+      }
+      let line = new THREE.MeshLine();
+      line.setGeometry(geom);
+      let material = new THREE.MeshLineMaterial( {
+      	map: THREE.ImageUtils.loadTexture( '../img/stroke.png' ),
+      	useMap: false,
+      	color: new THREE.Color( colors[ 3 ] ),
+      	opacity: 0.5,
+      	resolution: resolution,
+      	sizeAttenuation: false,
+      	lineWidth: 10,
+      	near: this.camera.near,
+      	far: this.camera.far,
+      	depthWrite: false,
+      	depthTest: false,
+      	transparent: true
+      });
 
-
+      let mesh = new THREE.MeshLine(line.geometry, material);
+      this.scene.add(mesh);
+      window.mesh = mesh;
 
     }
 
@@ -89,7 +120,7 @@ const b5 = {
     b5Scene.readModel = function () {
       return new Promise( function( resolve, reject ) {
         let loader = new THREE.OBJLoader();
-        loader.load( './obj/LeePerrySmith.obj', function( res ) {
+        loader.load( './obj/b2_2.obj', function( res ) {
           resolve( res );
         })
       });
@@ -110,7 +141,6 @@ const b5 = {
     }
 
     b5Scene.prepCamera = function () {
-      debugger
       const camera = new THREE.PerspectiveCamera(
         70,
         window.innerWidth / window.innerHeight,
@@ -124,6 +154,7 @@ const b5 = {
     },
 
     b5Scene.uniqueSetup = function () {
+      this.prepObjects()
       this.incrementCounters()
       this.readModel().then(collectPoints.bind(this));
 
