@@ -54,19 +54,19 @@
 
 	var _b2 = _interopRequireDefault(_b);
 
-	var _b3 = __webpack_require__(16);
+	var _b3 = __webpack_require__(15);
 
 	var _b4 = _interopRequireDefault(_b3);
 
-	var _b5 = __webpack_require__(17);
+	var _b5 = __webpack_require__(16);
 
 	var _b6 = _interopRequireDefault(_b5);
 
-	var _b7 = __webpack_require__(18);
+	var _b7 = __webpack_require__(17);
 
 	var _b8 = _interopRequireDefault(_b7);
 
-	var _fastclickMin = __webpack_require__(24);
+	var _fastclickMin = __webpack_require__(22);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
@@ -76,7 +76,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(25);
+	__webpack_require__(23);
 	// import b5 from './b5.js';
 
 	var demosCode = new Object();
@@ -251,9 +251,9 @@
 
 	var _vendor = __webpack_require__(4);
 
-	var _shaders = __webpack_require__(11);
+	var _shaders = __webpack_require__(10);
 
-	var _bScene = __webpack_require__(15);
+	var _bScene = __webpack_require__(14);
 
 	var _bScene2 = _interopRequireDefault(_bScene);
 
@@ -36675,7 +36675,7 @@
 	});
 	exports.TessellateModifier = exports.OBJLoader = exports.MeshLineMaterial = exports.MeshLine = exports.ExplodeModifier = exports.OrbitControls = undefined;
 
-	var _MeshLine = __webpack_require__(7);
+	var _MeshLine = __webpack_require__(5);
 
 	Object.defineProperty(exports, 'MeshLine', {
 	  enumerable: true,
@@ -36690,19 +36690,19 @@
 	  }
 	});
 
-	var _OrbitControls2 = __webpack_require__(5);
+	var _OrbitControls2 = __webpack_require__(6);
 
 	var _OrbitControls3 = _interopRequireDefault(_OrbitControls2);
 
-	var _ExplodeModifier2 = __webpack_require__(6);
+	var _ExplodeModifier2 = __webpack_require__(7);
 
 	var _ExplodeModifier3 = _interopRequireDefault(_ExplodeModifier2);
 
-	var _OBJLoader2 = __webpack_require__(9);
+	var _OBJLoader2 = __webpack_require__(8);
 
 	var _OBJLoader3 = _interopRequireDefault(_OBJLoader2);
 
-	var _TessellateModifier2 = __webpack_require__(10);
+	var _TessellateModifier2 = __webpack_require__(9);
 
 	var _TessellateModifier3 = _interopRequireDefault(_TessellateModifier2);
 
@@ -36715,6 +36715,264 @@
 
 /***/ },
 /* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _three = __webpack_require__(3);
+
+	var _three2 = _interopRequireDefault(_three);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_three2.default.MeshLine = function () {
+
+		this.positions = [];
+
+		this.previous = [];
+		this.next = [];
+		this.side = [];
+		this.width = [];
+		this.indices_array = [];
+		this.uvs = [];
+
+		this.geometry = new _three2.default.BufferGeometry();
+
+		this.widthCallback = null;
+	};
+
+	_three2.default.MeshLine.prototype.setGeometry = function (g, c) {
+
+		this.widthCallback = c;
+
+		this.positions = [];
+
+		if (g instanceof _three2.default.Geometry) {
+			for (var j = 0; j < g.vertices.length; j++) {
+				var v = g.vertices[j];
+				this.positions.push(v.x, v.y, v.z);
+				this.positions.push(v.x, v.y, v.z);
+			}
+		}
+
+		if (g instanceof _three2.default.BufferGeometry) {
+			// read attribute positions ?
+		}
+
+		if (g instanceof Float32Array || g instanceof Array) {
+			for (var j = 0; j < g.length; j += 3) {
+				this.positions.push(g[j], g[j + 1], g[j + 2]);
+				this.positions.push(g[j], g[j + 1], g[j + 2]);
+			}
+		}
+
+		this.process();
+	};
+
+	_three2.default.MeshLine.prototype.compareV3 = function (a, b) {
+
+		var aa = a * 6;
+		var ab = b * 6;
+		return this.positions[aa] === this.positions[ab] && this.positions[aa + 1] === this.positions[ab + 1] && this.positions[aa + 2] === this.positions[ab + 2];
+	};
+
+	_three2.default.MeshLine.prototype.copyV3 = function (a) {
+
+		var aa = a * 6;
+		return [this.positions[aa], this.positions[aa + 1], this.positions[aa + 2]];
+	};
+
+	_three2.default.MeshLine.prototype.process = function () {
+
+		var l = this.positions.length / 6;
+
+		this.previous = [];
+		this.next = [];
+		this.side = [];
+		this.width = [];
+		this.indices_array = [];
+		this.uvs = [];
+
+		for (var j = 0; j < l; j++) {
+			this.side.push(1);
+			this.side.push(-1);
+		}
+
+		var w;
+		for (var j = 0; j < l; j++) {
+			if (this.widthCallback) w = this.widthCallback(j / (l - 1));else w = 1;
+			this.width.push(w);
+			this.width.push(w);
+		}
+
+		for (var j = 0; j < l; j++) {
+			this.uvs.push(j / (l - 1), 0);
+			this.uvs.push(j / (l - 1), 1);
+		}
+
+		var v;
+
+		if (this.compareV3(0, l - 1)) {
+			v = this.copyV3(l - 2);
+		} else {
+			v = this.copyV3(0);
+		}
+		this.previous.push(v[0], v[1], v[2]);
+		this.previous.push(v[0], v[1], v[2]);
+		for (var j = 0; j < l - 1; j++) {
+			v = this.copyV3(j);
+			this.previous.push(v[0], v[1], v[2]);
+			this.previous.push(v[0], v[1], v[2]);
+		}
+
+		for (var j = 1; j < l; j++) {
+			v = this.copyV3(j);
+			this.next.push(v[0], v[1], v[2]);
+			this.next.push(v[0], v[1], v[2]);
+		}
+
+		if (this.compareV3(l - 1, 0)) {
+			v = this.copyV3(1);
+		} else {
+			v = this.copyV3(l - 1);
+		}
+		this.next.push(v[0], v[1], v[2]);
+		this.next.push(v[0], v[1], v[2]);
+
+		for (var j = 0; j < l - 1; j++) {
+			var n = j * 2;
+			this.indices_array.push(n, n + 1, n + 2);
+			this.indices_array.push(n + 2, n + 1, n + 3);
+		}
+
+		if (!this.attributes) {
+			this.attributes = {
+				position: new _three2.default.BufferAttribute(new Float32Array(this.positions), 3),
+				previous: new _three2.default.BufferAttribute(new Float32Array(this.previous), 3),
+				next: new _three2.default.BufferAttribute(new Float32Array(this.next), 3),
+				side: new _three2.default.BufferAttribute(new Float32Array(this.side), 1),
+				width: new _three2.default.BufferAttribute(new Float32Array(this.width), 1),
+				uv: new _three2.default.BufferAttribute(new Float32Array(this.uvs), 2),
+				index: new _three2.default.BufferAttribute(new Uint16Array(this.indices_array), 1)
+			};
+		} else {
+			this.attributes.position.copyArray(new Float32Array(this.positions));
+			this.attributes.position.needsUpdate = true;
+			this.attributes.previous.copyArray(new Float32Array(this.previous));
+			this.attributes.previous.needsUpdate = true;
+			this.attributes.next.copyArray(new Float32Array(this.next));
+			this.attributes.next.needsUpdate = true;
+			this.attributes.side.copyArray(new Float32Array(this.side));
+			this.attributes.side.needsUpdate = true;
+			this.attributes.width.copyArray(new Float32Array(this.width));
+			this.attributes.width.needsUpdate = true;
+			this.attributes.uv.copyArray(new Float32Array(this.uvs));
+			this.attributes.uv.needsUpdate = true;
+			this.attributes.index.copyArray(new Uint16Array(this.index));
+			this.attributes.index.needsUpdate = true;
+		}
+
+		this.geometry.addAttribute('position', this.attributes.position);
+		this.geometry.addAttribute('previous', this.attributes.previous);
+		this.geometry.addAttribute('next', this.attributes.next);
+		this.geometry.addAttribute('side', this.attributes.side);
+		this.geometry.addAttribute('width', this.attributes.width);
+		this.geometry.addAttribute('uv', this.attributes.uv);
+
+		this.geometry.setIndex(this.attributes.index);
+	};
+
+	_three2.default.MeshLineMaterial = function (parameters) {
+
+		var vertexShaderSource = ['precision highp float;', '', 'attribute vec3 position;', 'attribute vec3 previous;', 'attribute vec3 next;', 'attribute float side;', 'attribute float width;', 'attribute vec2 uv;', '', 'uniform mat4 projectionMatrix;', 'uniform mat4 modelViewMatrix;', 'uniform vec2 resolution;', 'uniform float lineWidth;', 'uniform vec3 color;', 'uniform float opacity;', 'uniform float near;', 'uniform float far;', 'uniform float sizeAttenuation;', '', 'varying vec2 vUV;', 'varying vec4 vColor;', 'varying vec3 vPosition;', '', 'vec2 fix( vec4 i, float aspect ) {', '', '    vec2 res = i.xy / i.w;', '    res.x *= aspect;', '    return res;', '', '}', '', 'void main() {', '', '    float aspect = resolution.x / resolution.y;', '	 float pixelWidthRatio = 1. / (resolution.x * projectionMatrix[0][0]);', '', '    vColor = vec4( color, opacity );', '    vUV = uv;', '', '    mat4 m = projectionMatrix * modelViewMatrix;', '    vec4 finalPosition = m * vec4( position, 1.0 );', '    vec4 prevPos = m * vec4( previous, 1.0 );', '    vec4 nextPos = m * vec4( next, 1.0 );', '', '    vec2 currentP = fix( finalPosition, aspect );', '    vec2 prevP = fix( prevPos, aspect );', '    vec2 nextP = fix( nextPos, aspect );', '', '	 float pixelWidth = finalPosition.w * pixelWidthRatio;', '    float w = 1.8 * pixelWidth * lineWidth * width;', '', '    if( sizeAttenuation == 1. ) {', '        w = 1.8 * lineWidth * width;', '    }', '', '    vec2 dir;', '    if( nextP == currentP ) dir = normalize( currentP - prevP );', '    else if( prevP == currentP ) dir = normalize( nextP - currentP );', '    else {', '        vec2 dir1 = normalize( currentP - prevP );', '        vec2 dir2 = normalize( nextP - currentP );', '        dir = normalize( dir1 + dir2 );', '', '        vec2 perp = vec2( -dir1.y, dir1.x );', '        vec2 miter = vec2( -dir.y, dir.x );', '        //w = clamp( w / dot( miter, perp ), 0., 4. * lineWidth * width );', '', '    }', '', '    //vec2 normal = ( cross( vec3( dir, 0. ), vec3( 0., 0., 1. ) ) ).xy;', '    vec2 normal = vec2( -dir.y, dir.x );', '    normal.x /= aspect;', '    normal *= .5 * w;', '', '    vec4 offset = vec4( normal * side, 0.0, 1.0 );', '    finalPosition.xy += offset.xy;', '', '	 vPosition = ( modelViewMatrix * vec4( position, 1. ) ).xyz;', '    gl_Position = finalPosition;', '', '}'];
+
+		var fragmentShaderSource = ['#extension GL_OES_standard_derivatives : enable', 'precision mediump float;', '', 'uniform sampler2D map;', 'uniform float useMap;', 'uniform float useDash;', 'uniform vec2 dashArray;', '', 'varying vec2 vUV;', 'varying vec4 vColor;', 'varying vec3 vPosition;', '', 'void main() {', '', '    vec4 c = vColor;', '    if( useMap == 1. ) c *= texture2D( map, vUV );', '	 if( useDash == 1. ){', '	 	 ', '	 }', '    gl_FragColor = c;', '', '}'];
+
+		function check(v, d) {
+			if (v === undefined) return d;
+			return v;
+		}
+
+		_three2.default.Material.call(this);
+
+		parameters = parameters || {};
+
+		this.lineWidth = check(parameters.lineWidth, 1);
+		this.map = check(parameters.map, null);
+		this.useMap = check(parameters.useMap, 0);
+		this.color = check(parameters.color, new _three2.default.Color(0xffffff));
+		this.opacity = check(parameters.opacity, 1);
+		this.resolution = check(parameters.resolution, new _three2.default.Vector2(1, 1));
+		this.sizeAttenuation = check(parameters.sizeAttenuation, 1);
+		this.near = check(parameters.near, 1);
+		this.far = check(parameters.far, 1);
+		this.dashArray = check(parameters.dashArray, []);
+		this.useDash = this.dashArray !== [] ? 1 : 0;
+
+		var material = new _three2.default.RawShaderMaterial({
+			uniforms: {
+				lineWidth: { type: 'f', value: this.lineWidth },
+				map: { type: 't', value: this.map },
+				useMap: { type: 'f', value: this.useMap },
+				color: { type: 'c', value: this.color },
+				opacity: { type: 'f', value: this.opacity },
+				resolution: { type: 'v2', value: this.resolution },
+				sizeAttenuation: { type: 'f', value: this.sizeAttenuation },
+				near: { type: 'f', value: this.near },
+				far: { type: 'f', value: this.far },
+				dashArray: { type: 'v2', value: new _three2.default.Vector2(this.dashArray[0], this.dashArray[1]) },
+				useDash: { type: 'f', value: this.useDash }
+			},
+			vertexShader: vertexShaderSource.join('\r\n'),
+			fragmentShader: fragmentShaderSource.join('\r\n')
+		});
+
+		delete parameters.lineWidth;
+		delete parameters.map;
+		delete parameters.useMap;
+		delete parameters.color;
+		delete parameters.opacity;
+		delete parameters.resolution;
+		delete parameters.sizeAttenuation;
+		delete parameters.near;
+		delete parameters.far;
+		delete parameters.dashArray;
+
+		material.type = 'MeshLineMaterial';
+
+		material.setValues(parameters);
+
+		return material;
+	};
+
+	_three2.default.MeshLineMaterial.prototype = Object.create(_three2.default.Material.prototype);
+	_three2.default.MeshLineMaterial.prototype.constructor = _three2.default.MeshLineMaterial;
+
+	_three2.default.MeshLineMaterial.prototype.copy = function (source) {
+
+		_three2.default.Material.prototype.copy.call(this, source);
+
+		this.lineWidth = source.lineWidth;
+		this.map = source.map;
+		this.useMap = source.useMap;
+		this.color.copy(source.color);
+		this.opacity = source.opacity;
+		this.resolution.copy(source.resolution);
+		this.sizeAttenuation = source.sizeAttenuation;
+		this.near = source.near;
+		this.far = source.far;
+
+		return this;
+	};
+
+	exports.default = { MeshLine: _three2.default.MeshLine, MeshLineMaterial: _three2.default.MeshLineMaterial };
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37704,7 +37962,7 @@
 	exports.default = _three2.default.OrbitControls;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37756,266 +38014,7 @@
 	module.exports = explodeModifier;
 
 /***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _three = __webpack_require__(3);
-
-	var _three2 = _interopRequireDefault(_three);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	_three2.default.MeshLine = function () {
-
-		this.positions = [];
-
-		this.previous = [];
-		this.next = [];
-		this.side = [];
-		this.width = [];
-		this.indices_array = [];
-		this.uvs = [];
-
-		this.geometry = new _three2.default.BufferGeometry();
-
-		this.widthCallback = null;
-	};
-
-	_three2.default.MeshLine.prototype.setGeometry = function (g, c) {
-
-		this.widthCallback = c;
-
-		this.positions = [];
-
-		if (g instanceof _three2.default.Geometry) {
-			for (var j = 0; j < g.vertices.length; j++) {
-				var v = g.vertices[j];
-				this.positions.push(v.x, v.y, v.z);
-				this.positions.push(v.x, v.y, v.z);
-			}
-		}
-
-		if (g instanceof _three2.default.BufferGeometry) {
-			// read attribute positions ?
-		}
-
-		if (g instanceof Float32Array || g instanceof Array) {
-			for (var j = 0; j < g.length; j += 3) {
-				this.positions.push(g[j], g[j + 1], g[j + 2]);
-				this.positions.push(g[j], g[j + 1], g[j + 2]);
-			}
-		}
-
-		this.process();
-	};
-
-	_three2.default.MeshLine.prototype.compareV3 = function (a, b) {
-
-		var aa = a * 6;
-		var ab = b * 6;
-		return this.positions[aa] === this.positions[ab] && this.positions[aa + 1] === this.positions[ab + 1] && this.positions[aa + 2] === this.positions[ab + 2];
-	};
-
-	_three2.default.MeshLine.prototype.copyV3 = function (a) {
-
-		var aa = a * 6;
-		return [this.positions[aa], this.positions[aa + 1], this.positions[aa + 2]];
-	};
-
-	_three2.default.MeshLine.prototype.process = function () {
-
-		var l = this.positions.length / 6;
-
-		this.previous = [];
-		this.next = [];
-		this.side = [];
-		this.width = [];
-		this.indices_array = [];
-		this.uvs = [];
-
-		for (var j = 0; j < l; j++) {
-			this.side.push(1);
-			this.side.push(-1);
-		}
-
-		var w;
-		for (var j = 0; j < l; j++) {
-			if (this.widthCallback) w = this.widthCallback(j / (l - 1));else w = 1;
-			this.width.push(w);
-			this.width.push(w);
-		}
-
-		for (var j = 0; j < l; j++) {
-			this.uvs.push(j / (l - 1), 0);
-			this.uvs.push(j / (l - 1), 1);
-		}
-
-		var v;
-
-		if (this.compareV3(0, l - 1)) {
-			v = this.copyV3(l - 2);
-		} else {
-			v = this.copyV3(0);
-		}
-		this.previous.push(v[0], v[1], v[2]);
-		this.previous.push(v[0], v[1], v[2]);
-		for (var j = 0; j < l - 1; j++) {
-			v = this.copyV3(j);
-			this.previous.push(v[0], v[1], v[2]);
-			this.previous.push(v[0], v[1], v[2]);
-		}
-
-		for (var j = 1; j < l; j++) {
-			v = this.copyV3(j);
-			this.next.push(v[0], v[1], v[2]);
-			this.next.push(v[0], v[1], v[2]);
-		}
-
-		if (this.compareV3(l - 1, 0)) {
-			v = this.copyV3(1);
-		} else {
-			v = this.copyV3(l - 1);
-		}
-		this.next.push(v[0], v[1], v[2]);
-		this.next.push(v[0], v[1], v[2]);
-
-		for (var j = 0; j < l - 1; j++) {
-			var n = j * 2;
-			this.indices_array.push(n, n + 1, n + 2);
-			this.indices_array.push(n + 2, n + 1, n + 3);
-		}
-
-		if (!this.attributes) {
-			this.attributes = {
-				position: new _three2.default.BufferAttribute(new Float32Array(this.positions), 3),
-				previous: new _three2.default.BufferAttribute(new Float32Array(this.previous), 3),
-				next: new _three2.default.BufferAttribute(new Float32Array(this.next), 3),
-				side: new _three2.default.BufferAttribute(new Float32Array(this.side), 1),
-				width: new _three2.default.BufferAttribute(new Float32Array(this.width), 1),
-				uv: new _three2.default.BufferAttribute(new Float32Array(this.uvs), 2),
-				index: new _three2.default.BufferAttribute(new Uint16Array(this.indices_array), 1)
-			};
-		} else {
-			this.attributes.position.copyArray(new Float32Array(this.positions));
-			this.attributes.position.needsUpdate = true;
-			this.attributes.previous.copyArray(new Float32Array(this.previous));
-			this.attributes.previous.needsUpdate = true;
-			this.attributes.next.copyArray(new Float32Array(this.next));
-			this.attributes.next.needsUpdate = true;
-			this.attributes.side.copyArray(new Float32Array(this.side));
-			this.attributes.side.needsUpdate = true;
-			this.attributes.width.copyArray(new Float32Array(this.width));
-			this.attributes.width.needsUpdate = true;
-			this.attributes.uv.copyArray(new Float32Array(this.uvs));
-			this.attributes.uv.needsUpdate = true;
-			this.attributes.index.copyArray(new Uint16Array(this.index));
-			this.attributes.index.needsUpdate = true;
-		}
-
-		this.geometry.addAttribute('position', this.attributes.position);
-		this.geometry.addAttribute('previous', this.attributes.previous);
-		this.geometry.addAttribute('next', this.attributes.next);
-		this.geometry.addAttribute('side', this.attributes.side);
-		this.geometry.addAttribute('width', this.attributes.width);
-		this.geometry.addAttribute('uv', this.attributes.uv);
-
-		this.geometry.setIndex(this.attributes.index);
-	};
-
-	_three2.default.MeshLineMaterial = function (parameters) {
-
-		var vertexShaderSource = ['precision highp float;', '', 'attribute vec3 position;', 'attribute vec3 previous;', 'attribute vec3 next;', 'attribute float side;', 'attribute float width;', 'attribute vec2 uv;', '', 'uniform mat4 projectionMatrix;', 'uniform mat4 modelViewMatrix;', 'uniform vec2 resolution;', 'uniform float lineWidth;', 'uniform vec3 color;', 'uniform float opacity;', 'uniform float near;', 'uniform float far;', 'uniform float sizeAttenuation;', '', 'varying vec2 vUV;', 'varying vec4 vColor;', 'varying vec3 vPosition;', '', 'vec2 fix( vec4 i, float aspect ) {', '', '    vec2 res = i.xy / i.w;', '    res.x *= aspect;', '    return res;', '', '}', '', 'void main() {', '', '    float aspect = resolution.x / resolution.y;', '	 float pixelWidthRatio = 1. / (resolution.x * projectionMatrix[0][0]);', '', '    vColor = vec4( color, opacity );', '    vUV = uv;', '', '    mat4 m = projectionMatrix * modelViewMatrix;', '    vec4 finalPosition = m * vec4( position, 1.0 );', '    vec4 prevPos = m * vec4( previous, 1.0 );', '    vec4 nextPos = m * vec4( next, 1.0 );', '', '    vec2 currentP = fix( finalPosition, aspect );', '    vec2 prevP = fix( prevPos, aspect );', '    vec2 nextP = fix( nextPos, aspect );', '', '	 float pixelWidth = finalPosition.w * pixelWidthRatio;', '    float w = 1.8 * pixelWidth * lineWidth * width;', '', '    if( sizeAttenuation == 1. ) {', '        w = 1.8 * lineWidth * width;', '    }', '', '    vec2 dir;', '    if( nextP == currentP ) dir = normalize( currentP - prevP );', '    else if( prevP == currentP ) dir = normalize( nextP - currentP );', '    else {', '        vec2 dir1 = normalize( currentP - prevP );', '        vec2 dir2 = normalize( nextP - currentP );', '        dir = normalize( dir1 + dir2 );', '', '        vec2 perp = vec2( -dir1.y, dir1.x );', '        vec2 miter = vec2( -dir.y, dir.x );', '        //w = clamp( w / dot( miter, perp ), 0., 4. * lineWidth * width );', '', '    }', '', '    //vec2 normal = ( cross( vec3( dir, 0. ), vec3( 0., 0., 1. ) ) ).xy;', '    vec2 normal = vec2( -dir.y, dir.x );', '    normal.x /= aspect;', '    normal *= .5 * w;', '', '    vec4 offset = vec4( normal * side, 0.0, 1.0 );', '    finalPosition.xy += offset.xy;', '', '	 vPosition = ( modelViewMatrix * vec4( position, 1. ) ).xyz;', '    gl_Position = finalPosition;', '', '}'];
-
-		var fragmentShaderSource = ['#extension GL_OES_standard_derivatives : enable', 'precision mediump float;', '', 'uniform sampler2D map;', 'uniform float useMap;', 'uniform float useDash;', 'uniform vec2 dashArray;', '', 'varying vec2 vUV;', 'varying vec4 vColor;', 'varying vec3 vPosition;', '', 'void main() {', '', '    vec4 c = vColor;', '    if( useMap == 1. ) c *= texture2D( map, vUV );', '	 if( useDash == 1. ){', '	 	 ', '	 }', '    gl_FragColor = c;', '', '}'];
-
-		function check(v, d) {
-			if (v === undefined) return d;
-			return v;
-		}
-
-		_three2.default.Material.call(this);
-
-		parameters = parameters || {};
-
-		this.lineWidth = check(parameters.lineWidth, 1);
-		this.map = check(parameters.map, null);
-		this.useMap = check(parameters.useMap, 0);
-		this.color = check(parameters.color, new _three2.default.Color(0xffffff));
-		this.opacity = check(parameters.opacity, 1);
-		this.resolution = check(parameters.resolution, new _three2.default.Vector2(1, 1));
-		this.sizeAttenuation = check(parameters.sizeAttenuation, 1);
-		this.near = check(parameters.near, 1);
-		this.far = check(parameters.far, 1);
-		this.dashArray = check(parameters.dashArray, []);
-		this.useDash = this.dashArray !== [] ? 1 : 0;
-
-		var material = new _three2.default.RawShaderMaterial({
-			uniforms: {
-				lineWidth: { type: 'f', value: this.lineWidth },
-				map: { type: 't', value: this.map },
-				useMap: { type: 'f', value: this.useMap },
-				color: { type: 'c', value: this.color },
-				opacity: { type: 'f', value: this.opacity },
-				resolution: { type: 'v2', value: this.resolution },
-				sizeAttenuation: { type: 'f', value: this.sizeAttenuation },
-				near: { type: 'f', value: this.near },
-				far: { type: 'f', value: this.far },
-				dashArray: { type: 'v2', value: new _three2.default.Vector2(this.dashArray[0], this.dashArray[1]) },
-				useDash: { type: 'f', value: this.useDash }
-			},
-			vertexShader: vertexShaderSource.join('\r\n'),
-			fragmentShader: fragmentShaderSource.join('\r\n')
-		});
-
-		delete parameters.lineWidth;
-		delete parameters.map;
-		delete parameters.useMap;
-		delete parameters.color;
-		delete parameters.opacity;
-		delete parameters.resolution;
-		delete parameters.sizeAttenuation;
-		delete parameters.near;
-		delete parameters.far;
-		delete parameters.dashArray;
-
-		material.type = 'MeshLineMaterial';
-
-		material.setValues(parameters);
-
-		return material;
-	};
-
-	_three2.default.MeshLineMaterial.prototype = Object.create(_three2.default.Material.prototype);
-	_three2.default.MeshLineMaterial.prototype.constructor = _three2.default.MeshLineMaterial;
-
-	_three2.default.MeshLineMaterial.prototype.copy = function (source) {
-
-		_three2.default.Material.prototype.copy.call(this, source);
-
-		this.lineWidth = source.lineWidth;
-		this.map = source.map;
-		this.useMap = source.useMap;
-		this.color.copy(source.color);
-		this.opacity = source.opacity;
-		this.resolution.copy(source.resolution);
-		this.sizeAttenuation = source.sizeAttenuation;
-		this.near = source.near;
-		this.far = source.far;
-
-		return this;
-	};
-
-	exports.default = { MeshLine: _three2.default.MeshLine, MeshLineMaterial: _three2.default.MeshLineMaterial };
-
-/***/ },
-/* 8 */,
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38338,7 +38337,7 @@
 	};
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38565,7 +38564,7 @@
 	module.exports = tessellateModifier;
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38575,15 +38574,15 @@
 	});
 	exports.VertexShader = exports.FragmentShader = exports.FresnelShader = undefined;
 
-	var _FresnelShader2 = __webpack_require__(12);
+	var _FresnelShader2 = __webpack_require__(11);
 
 	var _FresnelShader3 = _interopRequireDefault(_FresnelShader2);
 
-	var _fragment = __webpack_require__(13);
+	var _fragment = __webpack_require__(12);
 
 	var _fragment2 = _interopRequireDefault(_fragment);
 
-	var _vertex = __webpack_require__(14);
+	var _vertex = __webpack_require__(13);
 
 	var _vertex2 = _interopRequireDefault(_vertex);
 
@@ -38594,7 +38593,7 @@
 	exports.VertexShader = _vertex2.default;
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -38634,19 +38633,19 @@
 	exports.default = _three2.default.FresnelShader;
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = "\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tconst float ambient = 0.4;\r\n\r\n\t\t\t\tvec3 light = vec3( 1.0 );\r\n\t\t\t\tlight = normalize( light );\r\n\r\n\t\t\t\tfloat directional = max( dot( vNormal, light ), 0.0 );\r\n\r\n\t\t\t\tgl_FragColor = vec4( ( directional + ambient ) * vColor, 1.0 );\r\n\r\n\t\t\t}\r\n"
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports) {
 
 	module.exports = "\r\n\t\t\tuniform float amplitude;\r\n\r\n\t\t\tattribute vec3 customColor;\r\n\t\t\tattribute vec3 displacement;\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tvNormal = normal;\r\n\t\t\t\tvColor = customColor;\r\n\r\n\t\t\t\tvec3 newPosition = position + normal * amplitude * displacement;\r\n\t\t\t\tgl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );\r\n\r\n\t\t\t}\r\n"
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38659,7 +38658,7 @@
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _OrbitControls = __webpack_require__(5);
+	var _OrbitControls = __webpack_require__(6);
 
 	var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
 
@@ -38778,7 +38777,7 @@
 	exports.default = bScene;
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38793,7 +38792,7 @@
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _bScene = __webpack_require__(15);
+	var _bScene = __webpack_require__(14);
 
 	var _bScene2 = _interopRequireDefault(_bScene);
 
@@ -39047,7 +39046,7 @@
 	exports.default = b2;
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39056,7 +39055,7 @@
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _bScene = __webpack_require__(15);
+	var _bScene = __webpack_require__(14);
 
 	var _bScene2 = _interopRequireDefault(_bScene);
 
@@ -39240,7 +39239,7 @@
 	module.exports = b3;
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39253,15 +39252,15 @@
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _bScene = __webpack_require__(15);
+	var _bScene = __webpack_require__(14);
 
 	var _bScene2 = _interopRequireDefault(_bScene);
 
-	var _gsap = __webpack_require__(19);
+	var _gsap = __webpack_require__(18);
 
 	var _gsap2 = _interopRequireDefault(_gsap);
 
-	var _utils = __webpack_require__(21);
+	var _utils = __webpack_require__(20);
 
 	var _vendor = __webpack_require__(4);
 
@@ -39276,6 +39275,30 @@
 
 	    console.log('initialized b4!');
 	    var b4Scene = _bScene2.default.create({ container: container, renderer: renderer });
+
+	    b4Scene.changeMats = function (objs, planes, perception) {
+	      var wireframe = perception ? true : false;
+	      var mat = perception ? new _three2.default.MeshBasicMaterial({ wireframe: true, emissive: 0x333333, color: 0xAAAAAA }) : new _three2.default.MeshPhongMaterial({ wireframe: true, emissive: 0x333333 });
+
+	      objs.each(function (node) {
+	        node.value.material = new _three2.default.MeshPhongMaterial({
+	          color: 0xffffff,
+	          shading: _three2.default.FlatShading,
+	          emissive: 0x333333,
+	          side: _three2.default.DoubleSide,
+	          wireframe: wireframe
+	        });
+	      });
+	      planes.forEach(function (plane) {
+	        plane.material = mat;
+	      });
+	      // objs['' + (perception + 1) % 2].each(node => {
+	      //   this.scene.remove(node.value)
+	      // })
+	      // objs['' + perception].each(node => {
+	      //   this.scene.add(node.value);
+	      // });
+	    };
 
 	    b4Scene.incrementCounters = function () {
 	      this.counters.a += 0.02;
@@ -39299,7 +39322,10 @@
 	        p.y += Math.cos(a) * m[1] * 1;
 	        p.z += Math.cos(a) * m[2] * 1;
 	        var op = h + 0.001;
-	        c.setHSL((Math.sin(a * 0.1 + light.hue) * 0.2 + 0.8) % 1, s, l);
+	        // s = (this.altPerception ? 0 : 0.8);
+	        var vals = [(Math.sin(a * 0.1 + light.hue) * 0.2 + 0.8) % 1, s, l];
+
+	        c.setHSL.apply(c, vals);
 	      });
 	    };
 
@@ -39373,21 +39399,54 @@
 	    b4Scene.prepTetras = function () {
 	      var _this3 = this;
 
-	      var objs = new _utils.LinkedList();
+	      var objs0 = new _utils.LinkedList();
+	      // let objs1 = new LinkedList();
 	      var _objects$objInfo$tetr = this.objects.objInfo.tetras;
 	      var count = _objects$objInfo$tetr.count;
 	      var size = _objects$objInfo$tetr.size;
 
+	      var resolution = new _three2.default.Vector2(window.innerWidth, window.innerHeight);
+	      var lineMaterial = new _three2.default.MeshLineMaterial({
+	        map: _three2.default.TextureLoader('../img/stroke.png'),
+	        useMap: false,
+	        color: new _three2.default.Color(this.colors[3]),
+	        opacity: 0.5,
+	        resolution: resolution,
+	        sizeAttenuation: false,
+	        lineWidth: 10,
+	        near: this.camera.near,
+	        far: this.camera.far,
+	        depthWrite: false,
+	        depthTest: false,
+	        transparent: true
+	      });
+
 	      var _loop2 = function _loop2() {
+	        var _mesh$position, _mesh$rotation;
+
+	        var val = Math.random();
 	        var objSize = Math.random() * size;
-	        var mesh = new _three2.default.Mesh(new _three2.default.TetrahedronGeometry(objSize, 0), new _three2.default.MeshPhongMaterial({
+	        var position = [Math.random() * 500 - 250, Math.random() * 100 - 50, Math.random() * 300 - 150];
+	        var rotation = [Math.random() * 3, Math.random() * 3, Math.random() * 3];
+	        var geom = new _three2.default.TetrahedronGeometry(objSize, 0);
+	        var mesh = void 0;
+
+	        // for (let j = 0; j < 2; j++) {
+	        //   if (j === 0) {
+	        mesh = new _three2.default.Mesh(geom, new _three2.default.MeshPhongMaterial({
 	          color: 0xffffff,
 	          shading: _three2.default.FlatShading,
 	          emissive: 0x333333,
 	          side: _three2.default.DoubleSide
 	        }));
-	        mesh.position.set(Math.random() * 500 - 250, Math.random() * 100 - 50, Math.random() * 300 - 150);
-	        mesh.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+	        // } else {
+	        //   let line = new THREE.MeshLine();
+	        //   line.setGeometry(geom);
+	        //   mesh = new THREE.Mesh(line.geometry, lineMaterial);
+	        // }
+
+	        (_mesh$position = mesh.position).set.apply(_mesh$position, position);
+	        (_mesh$rotation = mesh.rotation).set.apply(_mesh$rotation, rotation);
 	        mesh.geometry.verticesNeedUpdate = true;
 	        mesh.geometry.dynamic = true;
 	        window.meshW1 = 6;
@@ -39395,7 +39454,6 @@
 	        window.meshM1 = 0.02;
 	        window.meshM2 = 1;
 	        window.meshM3 = 0.06;
-	        var val = Math.random();
 	        mesh.wiggle = function (i) {
 	          return Math.cos(this.counters.a * Math.random() * window.meshW1 - i) * window.meshW2;
 	        }.bind(_this3);
@@ -39403,15 +39461,21 @@
 	          return Math.cos(this.counters.a * window.meshM1 - i) % window.meshM2 * val * window.meshM3;
 	        }.bind(_this3);
 
+	        // if (j === 0) {
+	        objs0.add(mesh);
 	        _this3.scene.add(mesh);
-	        objs.add(mesh);
+	        // } else {
+	        //   objs1.add(mesh);
+	        // }
+	        // }
 	      };
 
 	      for (var i = 0; i < count; i++) {
 	        _loop2();
 	      }
 
-	      this.objects.objs = objs;
+	      // this.objects.objs = {0: objs0, 1: objs1};
+	      this.objects.objs = objs0;
 	    };
 
 	    b4Scene.pulsateObjA = function (obj) {
@@ -39441,24 +39505,49 @@
 	      p[dim] += obj[fn](i);
 	    };
 
-	    b4Scene.maybeShake = function () {};
+	    b4Scene.maybeShake = function () {
+	      var _counters = this.counters;
+	      var shake = _counters.shake;
+	      var timestamp = _counters.timestamp;
+	      var interval = shake.interval;
+	      var index = shake.index;
+
+	      var now = new Date().getTime() / 1000;
+	      var timePassed = now - timestamp;
+	      if (timePassed >= interval && this.altPerception === 0) {
+	        this.altPerception = 1;
+	        this.changeMats(this.objects.objs, this.objects.planes, this.altPerception);
+	        this.counters.timestamp += interval + Math.random() * 0.6;
+	        // (this.counters.index += 1) % 3;
+	        this.counters.interval = Math.random() * 7.5;
+	      } else if (now > timestamp && this.altPerception === 1) {
+	        this.altPerception = 0;
+	        this.changeMats(this.objects.objs, this.objects.planes, this.altPerception);
+	      }
+
+	      if (this.altPerception) {
+	        var pos = this.camera.position;
+	        pos.x += Math.random() - 0.5, pos.y += Math.random() - 0.5, pos.z += Math.random() - 0.5;
+	      }
+	    };
 
 	    b4Scene.checkVertices = function (obj) {
-	      obj.updateMatrixWorld();
-
-	      var objP = [];
-	      obj.geometry.vertices.forEach(function (vector) {
-	        var v = vector.clone();
-	        v.applyMatrix4(obj.matrixWorld);
-	        objP.push(v);
-	      });
-	      window.oPositions.push(objP);
+	      // obj.updateMatrixWorld();
+	      //
+	      // let objP = [];
+	      // obj.geometry.vertices.forEach(vector => {
+	      //   let v = vector.clone();
+	      //   v.applyMatrix4(obj.matrixWorld);
+	      //   objP.push(v)
+	      // })
+	      // window.oPositions.push(objP)
 	    };
 
 	    b4Scene.moveTetras = function () {
 	      var _this4 = this;
 
-	      var i = 0;
+	      var i = 0,
+	          j = 0;
 	      window.oPositions = [];
 	      this.objects.objs.each(function (node) {
 	        // this.pulsateObjA(node.value)
@@ -39466,6 +39555,11 @@
 	        _this4.pulsateObjC(node.value, 'z', 'motion', i);
 	        i++;
 	      });
+	      // this.objects.objs['1'].each(node => {
+	      //   this.checkVertices(node.value);
+	      //   this.pulsateObjC(node.value, 'z', 'motion', i);
+	      //   j++
+	      // })
 	    };
 
 	    b4Scene.prepControls = function () {
@@ -39480,14 +39574,19 @@
 	        planes: { count: 15, size: 1000 },
 	        tetras: { count: 125, size: 22 }
 	      };
-	      window.controls = this.controls;
+	      this.colors = [0xed6a5a, 0xf4f1bb, 0x9bc1bc, 0x5ca4a9, 0xe6ebe0, 0xf0b67f, 0xfe5f55, 0xd6d1b1, 0xc7efcf, 0xeef5db, 0x50514f, 0xf25f5c, 0xffe066, 0x247ba0, 0x70c1b3];
+	      this.counters.timestamp = new Date().getTime() / 1000;
+	      this.counters.shake = {
+	        interval: Math.random() * 7.5,
+	        index: 0
+	      };
+	      this.altPerception = 0;
 	      this.controls.enableZoom = false;
 
 	      this.prepCamera();
 	      this.prepControls();
 	      this.prepLights();
 	      this.prepObjects();
-	      window.objects = this.objects;
 
 	      this.renderer.setClearColor(0xf7f7f7);
 
@@ -39495,7 +39594,7 @@
 	        this.incrementCounters();
 	        this.moveTetras();
 	        this.moveLights();
-	        // this.maybeShake()
+	        this.maybeShake();
 
 	        for (var i = 0; i < this.objects.planes.length; i++) {
 	          var plane = this.objects.planes[i];
@@ -39513,7 +39612,7 @@
 	exports.default = b4;
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -45315,7 +45414,7 @@
 							if (global) {
 								_globals[n] = cl; //provides a way to avoid global namespace pollution. By default, the main classes like TweenLite, Power1, Strong, etc. are added to window unless a GreenSockGlobals is defined. So if you want to have things added to a custom object instead, just do something like window.GreenSockGlobals = {} before loading any GreenSock files. You can even set up an alias like window.GreenSockGlobals = windows.gs = {} so that you can access everything like gs.TweenLite. Also remember that ALL classes are added to the window.com.greensock object (in their respective packages, like com.greensock.easing.Power1, com.greensock.TweenLite, etc.)
 								hasModule = (typeof(module) !== "undefined" && module.exports);
-								if (!hasModule && "function" === "function" && __webpack_require__(20)){ //AMD
+								if (!hasModule && "function" === "function" && __webpack_require__(19)){ //AMD
 									!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() { return cl; }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 								} else if (ns === moduleName && hasModule){ //node
 									module.exports = cl;
@@ -47100,7 +47199,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -47108,7 +47207,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47118,7 +47217,7 @@
 	});
 	exports.LinkedList = undefined;
 
-	var _LinkedList2 = __webpack_require__(22);
+	var _LinkedList2 = __webpack_require__(21);
 
 	var _LinkedList3 = _interopRequireDefault(_LinkedList2);
 
@@ -47127,7 +47226,7 @@
 	exports.LinkedList = _LinkedList3.default;
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -47186,6 +47285,7 @@
 	    key: "each",
 	    value: function each(cb) {
 	      var current = this.head;
+	      cb(current);
 	      while (current.next) {
 	        cb(current);
 	        current = current.next;
@@ -47199,8 +47299,7 @@
 	exports.default = LinkedList;
 
 /***/ },
-/* 23 */,
-/* 24 */
+/* 22 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -47355,7 +47454,7 @@
 	}]);
 
 /***/ },
-/* 25 */
+/* 23 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

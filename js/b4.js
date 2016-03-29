@@ -4,12 +4,40 @@ import THREE from 'three';
 import bScene from './bScene.js';
 import TweenLite from 'gsap';
 import { LinkedList } from './utils'
-import { OrbitControls } from './vendor';
+import { OrbitControls, MeshLine } from './vendor';
 
 const b4 = {
   init({container, renderer}) {
     console.log('initialized b4!')
     const b4Scene = bScene.create({container, renderer});
+
+    b4Scene.changeMats = function(objs, planes, perception) {
+      let wireframe = (perception ? true : false);
+      let mat = (perception ? new THREE.MeshBasicMaterial(
+        {wireframe: true, emissive: 0x333333, color: 0xAAAAAA}
+      ) : new THREE.MeshPhongMaterial(
+        {wireframe: true, emissive: 0x333333}
+      ));
+
+      objs.each(node => {
+        node.value.material = new THREE.MeshPhongMaterial({
+          color: 0xffffff,
+          shading: THREE.FlatShading,
+          emissive: 0x333333,
+          side: THREE.DoubleSide,
+          wireframe: wireframe
+        })
+      })
+      planes.forEach(plane => {
+        plane.material = mat;
+      })
+      // objs['' + (perception + 1) % 2].each(node => {
+      //   this.scene.remove(node.value)
+      // })
+      // objs['' + perception].each(node => {
+      //   this.scene.add(node.value);
+      // });
+    }
 
     b4Scene.incrementCounters = function () {
       this.counters.a += 0.02;
@@ -22,11 +50,14 @@ const b4 = {
         let {h, s, l} = c.getHSL()
         let p = light.position
         let m = light.motion
-        p.x += (Math.cos(a) * m[0] * 1 )
-        p.y += (Math.cos(a) * m[1] * 1 )
-        p.z += (Math.cos(a) * m[2] * 1 )
+        p.x += (Math.cos(a) * m[0] * 1)
+        p.y += (Math.cos(a) * m[1] * 1)
+        p.z += (Math.cos(a) * m[2] * 1)
         let op = h + 0.001;
-        c.setHSL((((Math.sin((a * 0.1) + light.hue) * 0.2) + 0.8) % 1), s, l)
+        // s = (this.altPerception ? 0 : 0.8);
+        let vals =[(((Math.sin((a * 0.1) + light.hue) * 0.2) + 0.8) % 1), s, l];
+
+        c.setHSL(...vals);
       })
     }
 
@@ -98,46 +129,82 @@ const b4 = {
     }
 
     b4Scene.prepTetras = function () {
-      let objs = new LinkedList();
+      let objs0 = new LinkedList();
+      // let objs1 = new LinkedList();
       let {count, size} = this.objects.objInfo.tetras;
+      let resolution = new THREE.Vector2( window.innerWidth, window.innerHeight );
+      let lineMaterial = new THREE.MeshLineMaterial( {
+        map: THREE.TextureLoader( '../img/stroke.png' ),
+        useMap: false,
+        color: new THREE.Color( this.colors[ 3 ] ),
+        opacity: 0.5,
+        resolution: resolution,
+        sizeAttenuation: false,
+        lineWidth: 10,
+        near: this.camera.near,
+        far: this.camera.far,
+        depthWrite: false,
+        depthTest: false,
+        transparent: true
+      });
 
       for (var i = 0; i < count; i++) {
+        let val = Math.random()
         let objSize = Math.random() * size;
-        let mesh = new THREE.Mesh(
-          new THREE.TetrahedronGeometry(objSize, 0),
-          new THREE.MeshPhongMaterial({
-            color: 0xffffff,
-            shading: THREE.FlatShading,
-            emissive: 0x333333,
-            side: THREE.DoubleSide
-          })
-        );
-        mesh.position.set(
+        let position = [
           (Math.random() * 500) - 250,
           (Math.random() * 100) - 50,
           (Math.random() * 300) - 150
-        );
-        mesh.rotation.set(
+        ];
+        let rotation = [
           Math.random() * 3,
           Math.random() * 3,
           Math.random() * 3
-        )
-        mesh.geometry.verticesNeedUpdate = true;
-        mesh.geometry.dynamic = true;
-        window.meshW1 = 6;
-        window.meshW2 = 0.02;
-        window.meshM1 = 0.02;
-        window.meshM2 = 1;
-        window.meshM3 = 0.06;
-        let val = Math.random()
-        mesh.wiggle = function(i) { return (Math.cos((this.counters.a * Math.random() * window.meshW1) - i) * window.meshW2)}.bind(this);
-        mesh.motion = function(i) { return ((Math.cos((this.counters.a * window.meshM1) - i) % window.meshM2) * val * window.meshM3)}.bind(this);
+        ];
+        let geom = new THREE.TetrahedronGeometry(objSize, 0);
+        let mesh;
 
-        this.scene.add(mesh);
-        objs.add(mesh);
+        // for (let j = 0; j < 2; j++) {
+        //   if (j === 0) {
+            mesh = new THREE.Mesh(
+              geom,
+              new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                shading: THREE.FlatShading,
+                emissive: 0x333333,
+                side: THREE.DoubleSide
+              })
+            );
+          // } else {
+          //   let line = new THREE.MeshLine();
+          //   line.setGeometry(geom);
+          //   mesh = new THREE.Mesh(line.geometry, lineMaterial);
+          // }
+
+
+          mesh.position.set(...position);
+          mesh.rotation.set(...rotation);
+          mesh.geometry.verticesNeedUpdate = true;
+          mesh.geometry.dynamic = true;
+          window.meshW1 = 6;
+          window.meshW2 = 0.02;
+          window.meshM1 = 0.02;
+          window.meshM2 = 1;
+          window.meshM3 = 0.06;
+          mesh.wiggle = function(i) { return (Math.cos((this.counters.a * Math.random() * window.meshW1) - i) * window.meshW2)}.bind(this);
+          mesh.motion = function(i) { return ((Math.cos((this.counters.a * window.meshM1) - i) % window.meshM2) * val * window.meshM3)}.bind(this);
+
+          // if (j === 0) {
+            objs0.add(mesh);
+            this.scene.add(mesh);
+          // } else {
+          //   objs1.add(mesh);
+          // }
+        // }
       }
 
-      this.objects.objs = objs;
+      // this.objects.objs = {0: objs0, 1: objs1};
+      this.objects.objs = objs0;
     }
 
     b4Scene.pulsateObjA = function(obj) {
@@ -172,30 +239,55 @@ const b4 = {
     }
 
     b4Scene.maybeShake = function() {
+      let { shake, timestamp } = this.counters;
+      let { interval, index } = shake;
+      let now = new Date().getTime() / 1000;
+      let timePassed = (now - timestamp);
+      if (timePassed >= interval && this.altPerception === 0) {
+        this.altPerception = 1;
+        this.changeMats(this.objects.objs, this.objects.planes, this.altPerception);
+        this.counters.timestamp += interval + Math.random() * 0.6;
+        // (this.counters.index += 1) % 3;
+        this.counters.interval = Math.random() * 7.5
+      } else if ((now > timestamp) && this.altPerception === 1) {
+        this.altPerception = 0;
+        this.changeMats(this.objects.objs, this.objects.planes, this.altPerception);
+      }
 
+      if (this.altPerception) {
+        let pos = this.camera.position;
+        pos.x += Math.random() - 0.5,
+        pos.y += Math.random() - 0.5,
+        pos.z += Math.random() - 0.5
+      }
     }
 
     b4Scene.checkVertices = function(obj) {
-      obj.updateMatrixWorld();
-
-      let objP = [];
-      obj.geometry.vertices.forEach(vector => {
-        let v = vector.clone();
-        v.applyMatrix4(obj.matrixWorld);
-        objP.push(v)
-      })
-      window.oPositions.push(objP)
+      // obj.updateMatrixWorld();
+      //
+      // let objP = [];
+      // obj.geometry.vertices.forEach(vector => {
+      //   let v = vector.clone();
+      //   v.applyMatrix4(obj.matrixWorld);
+      //   objP.push(v)
+      // })
+      // window.oPositions.push(objP)
     }
 
     b4Scene.moveTetras = function () {
-      let i = 0;
+      let i = 0, j = 0;
       window.oPositions = [];
       this.objects.objs.each(node => {
         // this.pulsateObjA(node.value)
         this.checkVertices(node.value)
         this.pulsateObjC(node.value, 'z', 'motion', i)
         i++
-      })
+      });
+      // this.objects.objs['1'].each(node => {
+      //   this.checkVertices(node.value);
+      //   this.pulsateObjC(node.value, 'z', 'motion', i);
+      //   j++
+      // })
     }
 
     b4Scene.prepControls = function() {
@@ -212,14 +304,24 @@ const b4 = {
         planes: {count: 15, size: 1000},
         tetras: {count: 125, size: 22}
       }
-      window.controls = this.controls;
+      this.colors = [
+      	0xed6a5a, 0xf4f1bb, 0x9bc1bc,	0x5ca4a9,
+      	0xe6ebe0,	0xf0b67f,	0xfe5f55, 0xd6d1b1,
+        0xc7efcf, 0xeef5db,	0x50514f,	0xf25f5c,
+      	0xffe066,	0x247ba0,	0x70c1b3
+      ];
+      this.counters.timestamp = new Date().getTime() / 1000;
+      this.counters.shake = {
+        interval: Math.random() * 7.5,
+        index: 0
+      };
+      this.altPerception = 0;
       this.controls.enableZoom = false;
 
       this.prepCamera()
       this.prepControls()
       this.prepLights()
       this.prepObjects()
-      window.objects = this.objects
 
       this.renderer.setClearColor(0xf7f7f7)
 
@@ -228,7 +330,7 @@ const b4 = {
           this.incrementCounters()
           this.moveTetras()
           this.moveLights()
-          // this.maybeShake()
+          this.maybeShake()
 
           for (let i = 0; i < this.objects.planes.length; i++) {
             const plane = this.objects.planes[i]
