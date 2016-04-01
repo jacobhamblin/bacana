@@ -50,9 +50,9 @@ const b4 = {
         let {h, s, l} = c.getHSL()
         let p = light.position
         let m = light.motion
-        p.x += (Math.cos(a) * m[0] * 1)
-        p.y += (Math.cos(a) * m[1] * 1)
-        p.z += (Math.cos(a) * m[2] * 1)
+        p.x += (Math.cos(a) * m[0] * 1 )
+        p.y += (Math.cos(a) * m[1] * 1 )
+        p.z += (Math.cos(a) * m[2] * 1 )
         let op = h + 0.001;
         // s = (this.altPerception ? 0 : 0.8);
         let vals =[(((Math.sin((a * 0.1) + light.hue) * 0.2) + 0.8) % 1), s, l];
@@ -161,6 +161,7 @@ const b4 = {
           Math.random() * 3
         ];
         let geom = new THREE.TetrahedronGeometry(objSize, 0);
+
         let mesh;
 
         // for (let j = 0; j < 2; j++) {
@@ -239,15 +240,15 @@ const b4 = {
 
     b4Scene.maybeShake = function() {
       let { shake, timestamp } = this.counters;
-      let { interval, index } = shake;
+      let { interval } = shake;
       let now = new Date().getTime() / 1000;
       let timePassed = (now - timestamp);
       if (timePassed >= interval && this.altPerception === 0) {
+        let durationAltPerception = Math.random() * 0.6;
         this.altPerception = 1;
         this.changeMats(this.objects.objs, this.objects.planes, this.altPerception);
-        this.counters.timestamp += interval + Math.random() * 0.6;
-        // (this.counters.index += 1) % 3;
-        this.counters.interval = Math.random() * 7.5
+        this.counters.timestamp += interval + durationAltPerception;
+        this.counters.shake.interval = Math.random() * 5
       } else if ((now > timestamp) && this.altPerception === 1) {
         this.altPerception = 0;
         this.changeMats(this.objects.objs, this.objects.planes, this.altPerception);
@@ -311,8 +312,7 @@ const b4 = {
       ];
       this.counters.timestamp = new Date().getTime() / 1000;
       this.counters.shake = {
-        interval: Math.random() * 7.5,
-        index: 0
+        interval: Math.random() * 5
       };
       this.altPerception = 0;
       this.controls.enableZoom = false;
@@ -321,6 +321,7 @@ const b4 = {
       this.prepControls()
       this.prepLights()
       this.prepObjects()
+      this.watchWindowFocus()
 
       this.renderer.setClearColor(0xf7f7f7)
 
@@ -337,6 +338,12 @@ const b4 = {
           }
         }.bind(this)
       )
+    }
+
+    b4Scene.watchWindowFocus = function() {
+      document.addEventListener('visibilitychange', (e) => {
+        if (!document.hidden) this.counters.timestamp = new Date().getTime() / 1000;
+      })
     }
 
     b4Scene.init();
