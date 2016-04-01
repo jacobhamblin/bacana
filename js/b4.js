@@ -14,7 +14,7 @@ const b4 = {
     b4Scene.changeMats = function(objs, planes, perception) {
       let wireframe = (perception ? true : false);
       let mat = (perception ? new THREE.MeshBasicMaterial(
-        {wireframe: true, emissive: 0x333333, color: 0xAAAAAA}
+        {wireframe: true, color: 0xAAAAAA}
       ) : new THREE.MeshPhongMaterial(
         {wireframe: true, emissive: 0x333333}
       ));
@@ -97,7 +97,6 @@ const b4 = {
       let sphereGeom = new THREE.SphereGeometry(200,32,32)
 			let material = new THREE.MeshBasicMaterial({
         color: 0x333333,
-        emissive: 0x333333,
         side: THREE.BackSide
       });
       let sphere = new THREE.Mesh(sphereGeom, material)

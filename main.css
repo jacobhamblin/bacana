@@ -65,7 +65,7 @@ div.previews-container {
     background-color: #777;
     z-index: 0;
     position: relative;
-    margin-bottom: 1rem; }
+    margin-bottom: 1.5rem; }
     div.previews-container div.preview-container div.title {
       position: absolute;
       bottom: 0;

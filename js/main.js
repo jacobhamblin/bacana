@@ -1,4 +1,4 @@
-require('../sass/main.scss');
+import '../sass/main.scss';
 import demosJson from './demos.json';
 import b1 from './b1.js';
 import b2 from './b2.js';
@@ -23,9 +23,41 @@ let bannerCounter = 0;
 (function attachFastClick() {
   if ('addEventListener' in document) {
     document.addEventListener('DOMContentLoaded', function() {
-        FastClick.attach(document.body);
+      FastClick.attach(document.body);
     }, false);
   }
+})
+
+function checkURL() {
+  var url = window.location.hash.match(/#\/b\d+/);
+  if (url) {
+    beginDemo(url[0].slice(2));
+  } else {
+    closeDemo(document.querySelector('div.fullscreen'));
+  }
+}
+
+(function initialLoad() {
+  window.renderer = initThreeRenderer();
+  prepareDemos()
+  checkURL();
+}());
+
+function beginDemo(demo) {
+  let renderer = window.renderer;
+  interaction.open = true;
+  // move css
+  const divFullscreen = document.querySelector('div.fullscreen');
+  if (document.querySelector('canvas') && interaction.open) {
+    divFullscreen.removeChild(document.querySelector('canvas'));
+  }
+  toggleClass(divFullscreen, "active");
+  interaction.activeDemo = demosCode[demo]
+    .init({container: divFullscreen, renderer});
+}
+
+window.addEventListener('popstate', e => {
+  checkURL();
 })
 
 function toggleClass(el, className) {
@@ -47,14 +79,13 @@ function toggleClass(el, className) {
 
 function hasClass(el, className) {
   var present = false;
-  el.className.split(' ').indexOf(className) > 0 ? present = true : present = false
+  el.className.split(' ').indexOf(className) > 0 ? present = true : present = false;
   return present;
 }
 
-(function prepareDemos() {
+function prepareDemos() {
   const demos = demosJson.demos;
 
-  let renderer = initThreeRenderer();
   for (var i = 0; i < demos.length; i++) {
     let demo = demos[i];
     let previewContainer = document.createElement('div');
@@ -74,15 +105,11 @@ function hasClass(el, className) {
     let num = i;
     preview.addEventListener('click', function (e) {
       event.preventDefault();
-      interaction.open = true;
-      // move css
-      const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
-      if (document.querySelector('canvas') && interaction.open) {
-        divFullscreen.removeChild(document.querySelectorAll('canvas')[0]);
+      if (interaction.open) {
+        window.location = "#/";
+      } else {
+        window.location = "#/" + "b" + (num + 1).toString();
       }
-      toggleClass(divFullscreen, "active");
-      interaction.activeDemo = demosCode['b' + (num + 1).toString()]
-        .init({container: divFullscreen, renderer});
     })
     previewContainer.appendChild(preview);
     previewContainer.appendChild(preview);
@@ -90,9 +117,9 @@ function hasClass(el, className) {
     previewContainer.appendChild(prevOverlay1);
     title.appendChild(text);
     previewContainer.appendChild(title);
-    document.querySelectorAll('.previews-container')[0].appendChild(previewContainer);
+    document.querySelector('.previews-container').appendChild(previewContainer);
   }
-})();
+};
 
 function initThreeRenderer() {
   let renderer = new THREE.WebGLRenderer();
@@ -100,29 +127,32 @@ function initThreeRenderer() {
   return renderer;
 };
 
-document.querySelectorAll('div.fullscreen div.close-container')[0]
+document.querySelector('div.fullscreen div.close-container')
   .addEventListener('click', function () {
-    closeDemo(document.querySelectorAll('div.fullscreen')[0]);
+    closeDemo(document.querySelector('div.fullscreen'));
   });
 
 window.addEventListener('keydown', function (e) {
-  const divFullscreen = document.querySelectorAll('div.fullscreen')[0];
+  const divFullscreen = document.querySelector('div.fullscreen');
   if (hasClass(divFullscreen, "active") && e.keyCode === 27) {
     closeDemo(divFullscreen);
   }
 });
 
 function closeDemo(demoEl) {
-  toggleClass(demoEl, "active");
-  document.body.style.cursor = "initial";
-  let canvas = document.querySelector('canvas');
-  interaction.open = false;
+  if (document.querySelector('canvas') && interaction.open) {
+    toggleClass(demoEl, "active");
+    document.body.style.cursor = "initial";
+    let canvas = document.querySelector('canvas');
+    interaction.open = false;
 
-  interaction.activeDemo.destroy();
-  setTimeout(function () {
-    if (demoEl && interaction.open === false)
-    demoEl.removeChild(canvas)
-  }, 500);
+    interaction.activeDemo.destroy();
+    setTimeout(function () {
+      if (demoEl && interaction.open === false)
+      demoEl.removeChild(canvas)
+    }, 500);
+    window.location = "#/";
+  }
 };
 
 const prevsNodeList = document.querySelectorAll('div.preview-container');
