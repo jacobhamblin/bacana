@@ -15,7 +15,13 @@ const b5 = {
       this.counters.a += 0.02;
     }
 
+    b5Scene.prepPlane = function () {
+
+    }
+
     b5Scene.prepObjects = function () {
+      this.prepPlane();
+
       let colors = [
       	0xed6a5a, 0xf4f1bb, 0x9bc1bc,	0x5ca4a9,
       	0xe6ebe0,	0xf0b67f,	0xfe5f55, 0xd6d1b1,
@@ -95,7 +101,7 @@ const b5 = {
       var origin = new THREE.Vector3();
       var direction = new THREE.Vector3();
       for( var j = 0; j < 6000; j++ ) {
-        a += 0.1;
+        a += .05;
         y += 0.075;
         origin.set( r * Math.cos( a ), y, r * Math.sin( a ) );
         direction.set( -origin.x, 0, -origin.z );
@@ -145,9 +151,9 @@ const b5 = {
         70,
         window.innerWidth / window.innerHeight,
         1,
-        500
+        1500
       );
-      camera.position.set(0, 0, 50);
+      camera.position.set(0, 800, 800);
       camera.lookAt(0,0,0);
 
       this.camera = camera;

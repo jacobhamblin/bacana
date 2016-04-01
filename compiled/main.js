@@ -46,33 +46,33 @@
 
 	'use strict';
 
-	__webpack_require__(23);
+	__webpack_require__(1);
 
-	var _demos = __webpack_require__(1);
+	var _demos = __webpack_require__(7);
 
 	var _demos2 = _interopRequireDefault(_demos);
 
-	var _b = __webpack_require__(2);
+	var _b = __webpack_require__(8);
 
 	var _b2 = _interopRequireDefault(_b);
 
-	var _b3 = __webpack_require__(15);
+	var _b3 = __webpack_require__(21);
 
 	var _b4 = _interopRequireDefault(_b3);
 
-	var _b5 = __webpack_require__(16);
+	var _b5 = __webpack_require__(22);
 
 	var _b6 = _interopRequireDefault(_b5);
 
-	var _b7 = __webpack_require__(17);
+	var _b7 = __webpack_require__(23);
 
 	var _b8 = _interopRequireDefault(_b7);
 
-	var _fastclickMin = __webpack_require__(22);
+	var _fastclickMin = __webpack_require__(30);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
@@ -247,6 +247,17 @@
 /* 1 */
 /***/ function(module, exports) {
 
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */
+/***/ function(module, exports) {
+
 	module.exports = {
 		"demos": [
 			{
@@ -269,7 +280,7 @@
 	};
 
 /***/ },
-/* 2 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -278,15 +289,15 @@
 	  value: true
 	});
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _vendor = __webpack_require__(4);
+	var _vendor = __webpack_require__(10);
 
-	var _shaders = __webpack_require__(10);
+	var _shaders = __webpack_require__(16);
 
-	var _bScene = __webpack_require__(14);
+	var _bScene = __webpack_require__(20);
 
 	var _bScene2 = _interopRequireDefault(_bScene);
 
@@ -505,7 +516,7 @@
 	exports.default = b1;
 
 /***/ },
-/* 3 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var self = self || {};// File:src/Three.js
@@ -36698,7 +36709,7 @@
 
 
 /***/ },
-/* 4 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36708,7 +36719,7 @@
 	});
 	exports.TessellateModifier = exports.OBJLoader = exports.MeshLineMaterial = exports.MeshLine = exports.ExplodeModifier = exports.OrbitControls = undefined;
 
-	var _MeshLine = __webpack_require__(5);
+	var _MeshLine = __webpack_require__(11);
 
 	Object.defineProperty(exports, 'MeshLine', {
 	  enumerable: true,
@@ -36723,19 +36734,19 @@
 	  }
 	});
 
-	var _OrbitControls2 = __webpack_require__(6);
+	var _OrbitControls2 = __webpack_require__(12);
 
 	var _OrbitControls3 = _interopRequireDefault(_OrbitControls2);
 
-	var _ExplodeModifier2 = __webpack_require__(7);
+	var _ExplodeModifier2 = __webpack_require__(13);
 
 	var _ExplodeModifier3 = _interopRequireDefault(_ExplodeModifier2);
 
-	var _OBJLoader2 = __webpack_require__(8);
+	var _OBJLoader2 = __webpack_require__(14);
 
 	var _OBJLoader3 = _interopRequireDefault(_OBJLoader2);
 
-	var _TessellateModifier2 = __webpack_require__(9);
+	var _TessellateModifier2 = __webpack_require__(15);
 
 	var _TessellateModifier3 = _interopRequireDefault(_TessellateModifier2);
 
@@ -36747,7 +36758,7 @@
 	exports.TessellateModifier = _TessellateModifier3.default;
 
 /***/ },
-/* 5 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36756,7 +36767,7 @@
 		value: true
 	});
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
@@ -37005,7 +37016,7 @@
 	exports.default = { MeshLine: _three2.default.MeshLine, MeshLineMaterial: _three2.default.MeshLineMaterial };
 
 /***/ },
-/* 6 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37014,7 +37025,7 @@
 		value: true
 	});
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
@@ -37995,12 +38006,12 @@
 	exports.default = _three2.default.OrbitControls;
 
 /***/ },
-/* 7 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
@@ -38047,12 +38058,12 @@
 	module.exports = explodeModifier;
 
 /***/ },
-/* 8 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
@@ -38370,12 +38381,12 @@
 	};
 
 /***/ },
-/* 9 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
@@ -38597,7 +38608,7 @@
 	module.exports = tessellateModifier;
 
 /***/ },
-/* 10 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38607,15 +38618,15 @@
 	});
 	exports.VertexShader = exports.FragmentShader = exports.FresnelShader = undefined;
 
-	var _FresnelShader2 = __webpack_require__(11);
+	var _FresnelShader2 = __webpack_require__(17);
 
 	var _FresnelShader3 = _interopRequireDefault(_FresnelShader2);
 
-	var _fragment = __webpack_require__(12);
+	var _fragment = __webpack_require__(18);
 
 	var _fragment2 = _interopRequireDefault(_fragment);
 
-	var _vertex = __webpack_require__(13);
+	var _vertex = __webpack_require__(19);
 
 	var _vertex2 = _interopRequireDefault(_vertex);
 
@@ -38626,7 +38637,7 @@
 	exports.VertexShader = _vertex2.default;
 
 /***/ },
-/* 11 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -38635,7 +38646,7 @@
 			value: true
 	});
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
@@ -38666,19 +38677,19 @@
 	exports.default = _three2.default.FresnelShader;
 
 /***/ },
-/* 12 */
+/* 18 */
 /***/ function(module, exports) {
 
 	module.exports = "\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tconst float ambient = 0.4;\r\n\r\n\t\t\t\tvec3 light = vec3( 1.0 );\r\n\t\t\t\tlight = normalize( light );\r\n\r\n\t\t\t\tfloat directional = max( dot( vNormal, light ), 0.0 );\r\n\r\n\t\t\t\tgl_FragColor = vec4( ( directional + ambient ) * vColor, 1.0 );\r\n\r\n\t\t\t}\r\n"
 
 /***/ },
-/* 13 */
+/* 19 */
 /***/ function(module, exports) {
 
 	module.exports = "\r\n\t\t\tuniform float amplitude;\r\n\r\n\t\t\tattribute vec3 customColor;\r\n\t\t\tattribute vec3 displacement;\r\n\r\n\t\t\tvarying vec3 vNormal;\r\n\t\t\tvarying vec3 vColor;\r\n\r\n\t\t\tvoid main() {\r\n\r\n\t\t\t\tvNormal = normal;\r\n\t\t\t\tvColor = customColor;\r\n\r\n\t\t\t\tvec3 newPosition = position + normal * amplitude * displacement;\r\n\t\t\t\tgl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );\r\n\r\n\t\t\t}\r\n"
 
 /***/ },
-/* 14 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38687,11 +38698,11 @@
 	  value: true
 	});
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _OrbitControls = __webpack_require__(6);
+	var _OrbitControls = __webpack_require__(12);
 
 	var _OrbitControls2 = _interopRequireDefault(_OrbitControls);
 
@@ -38810,7 +38821,7 @@
 	exports.default = bScene;
 
 /***/ },
-/* 15 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38821,15 +38832,15 @@
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; // b2.js
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _bScene = __webpack_require__(14);
+	var _bScene = __webpack_require__(20);
 
 	var _bScene2 = _interopRequireDefault(_bScene);
 
-	var _vendor = __webpack_require__(4);
+	var _vendor = __webpack_require__(10);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39079,20 +39090,20 @@
 	exports.default = b2;
 
 /***/ },
-/* 16 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _bScene = __webpack_require__(14);
+	var _bScene = __webpack_require__(20);
 
 	var _bScene2 = _interopRequireDefault(_bScene);
 
-	var _vendor = __webpack_require__(4);
+	var _vendor = __webpack_require__(10);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39272,7 +39283,7 @@
 	module.exports = b3;
 
 /***/ },
-/* 17 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39281,21 +39292,21 @@
 	  value: true
 	});
 
-	var _three = __webpack_require__(3);
+	var _three = __webpack_require__(9);
 
 	var _three2 = _interopRequireDefault(_three);
 
-	var _bScene = __webpack_require__(14);
+	var _bScene = __webpack_require__(20);
 
 	var _bScene2 = _interopRequireDefault(_bScene);
 
-	var _gsap = __webpack_require__(18);
+	var _gsap = __webpack_require__(24);
 
 	var _gsap2 = _interopRequireDefault(_gsap);
 
-	var _utils = __webpack_require__(20);
+	var _utils = __webpack_require__(26);
 
-	var _vendor = __webpack_require__(4);
+	var _vendor = __webpack_require__(10);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39644,7 +39655,7 @@
 	exports.default = b4;
 
 /***/ },
-/* 18 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -45446,7 +45457,7 @@
 							if (global) {
 								_globals[n] = cl; //provides a way to avoid global namespace pollution. By default, the main classes like TweenLite, Power1, Strong, etc. are added to window unless a GreenSockGlobals is defined. So if you want to have things added to a custom object instead, just do something like window.GreenSockGlobals = {} before loading any GreenSock files. You can even set up an alias like window.GreenSockGlobals = windows.gs = {} so that you can access everything like gs.TweenLite. Also remember that ALL classes are added to the window.com.greensock object (in their respective packages, like com.greensock.easing.Power1, com.greensock.TweenLite, etc.)
 								hasModule = (typeof(module) !== "undefined" && module.exports);
-								if (!hasModule && "function" === "function" && __webpack_require__(19)){ //AMD
+								if (!hasModule && "function" === "function" && __webpack_require__(25)){ //AMD
 									!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() { return cl; }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 								} else if (ns === moduleName && hasModule){ //node
 									module.exports = cl;
@@ -47231,7 +47242,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 19 */
+/* 25 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -47239,7 +47250,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 20 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47247,18 +47258,23 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.LinkedList = undefined;
+	exports.GraphNode = exports.LinkedList = undefined;
 
-	var _LinkedList2 = __webpack_require__(21);
+	var _LinkedList2 = __webpack_require__(27);
 
 	var _LinkedList3 = _interopRequireDefault(_LinkedList2);
+
+	var _GraphNode2 = __webpack_require__(28);
+
+	var _GraphNode3 = _interopRequireDefault(_GraphNode2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.LinkedList = _LinkedList3.default;
+	exports.GraphNode = _GraphNode3.default;
 
 /***/ },
-/* 21 */
+/* 27 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -47331,7 +47347,44 @@
 	exports.default = LinkedList;
 
 /***/ },
-/* 22 */
+/* 28 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var GraphNode = function () {
+	  function GraphNode(props) {
+	    _classCallCheck(this, GraphNode);
+
+	    this.adjacent = props.adjacent || [];
+	  }
+
+	  _createClass(GraphNode, [{
+	    key: "add",
+	    value: function add(node) {
+	      this.adjacent.push(node);
+	      node.adjacent.push(this);
+
+	      return node;
+	    }
+	  }]);
+
+	  return GraphNode;
+	}();
+
+	exports.default = GraphNode;
+
+/***/ },
+/* 29 */,
+/* 30 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -47484,12 +47537,6 @@
 			}();
 		}
 	}]);
-
-/***/ },
-/* 23 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);
