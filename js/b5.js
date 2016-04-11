@@ -11,12 +11,35 @@ const b5 = {
     console.log('initialized b5!')
     const b5Scene = bScene.create({container, renderer});
 
-    b5Scene.incrementCounters = function () {
+    b5Scene.createCrystal = function() {
+      let { x, y, z } = this.raycaster.pos
+      console.log(x + ' ' + y + ' ' + z)
+      let crystal = this.objects.crystal.clone()
+      crystal.position.set(x, y, z)
+      this.scene.add(crystal)
+      this.objects.crystals.push(crystal)
+    }
+
+    b5Scene.incrementCounters = function() {
       this.counters.a += 0.02;
     }
 
-    b5Scene.prepPlane = function () {
+    b5Scene.handleRaycasterIntersection = function() {
+      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera)
+      let intersects = this.raycaster.raycaster.intersectObjects(this.scene.children)
 
+      if (intersects.length > 0 && intersects[0].object === this.objects.plane) {
+        this.raycaster.intersected = this.objects.plane
+        this.raycaster.pos = intersects[0].point
+      } else {
+        this.raycaster.intersected = null
+      }
+    }
+
+    b5Scene.maybeCreateCrystal = function() {
+      if (this.raycaster.intersected === this.objects.plane) {
+        this.createCrystal()
+      }
     }
 
     b5Scene.prepObjects = function () {
@@ -81,7 +104,6 @@ const b5 = {
       	transparent: true
       });
 
-      console.log( source );
       var g = source.children[ 0 ].geometry;
       g.center()
       var scaleMatrix = new THREE.Matrix4();
@@ -117,8 +139,7 @@ const b5 = {
       var l = new THREE.MeshLine();
       l.setGeometry( points, function( p ) { return p } );
       var line = new THREE.Mesh( l.geometry, material );
-      this.scene.add( line );
-      window.line = line;
+      this.objects.crystal = line;
 
       // document.querySelector( '#title p' ).style.display = 'none';
   }
@@ -151,21 +172,47 @@ const b5 = {
         70,
         window.innerWidth / window.innerHeight,
         1,
-        1500
+        15000
       );
-      camera.position.set(0, 800, 800);
+      camera.position.set(0, 1250, 1250);
       camera.lookAt(0,0,0);
 
       this.camera = camera;
-    },
+    }
+
+    b5Scene.prepPlane = function () {
+      let geom = new THREE.PlaneGeometry(400, 400, 32)
+      let mat = new THREE.MeshBasicMaterial({
+        color: 0x555555,
+        side: THREE.DoubleSide,
+        wireframe: true,
+      })
+      let plane = new THREE.Mesh(geom, mat)
+      plane.scale.set(10,10,1)
+      plane.rotation.set(1.57,0,0)
+      this.scene.add(plane)
+      this.objects.plane = plane
+    }
 
     b5Scene.uniqueSetup = function () {
+      window.crystals = this.objects.crystals = []
+      window.raycaster = this.raycaster
       this.prepObjects()
       this.incrementCounters()
       this.readModel().then(collectPoints.bind(this));
+      document.querySelector('canvas').addEventListener('click', function(e) {
+        debugger
+        if (e.ctrlKey) {
+          this.maybeCreateCrystal()
+        }
+        if (e.shiftKey) {
+
+        }
+      }.bind(this))
 
       return (
         function() {
+          this.handleRaycasterIntersection()
 
         }.bind(this)
       )
