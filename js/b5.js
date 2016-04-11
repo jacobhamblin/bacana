@@ -24,20 +24,54 @@ const b5 = {
       console.log(this.counters.currentCrystal)
     }
 
+    b5Scene.createEdge = function() {
+
+    }
+
+    b5Scene.finishEdge = function() {
+      let { raycaster } = this
+      // raycaster.creatingEdge.end = raycaster.pos
+      raycaster.creatingEdge = false
+    }
+
+    b5Scene.handleRaycasterIntersection = function() {
+      let { crystalObjs } = this.objects
+      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera)
+      let intersects = this.raycaster.raycaster.intersectObjects(this.scene.children)
+
+      if (intersects.length > 0) {
+        if (intersects[0].object === this.objects.plane) {
+          this.raycaster.intersected = this.objects.plane
+          this.raycaster.pos = intersects[0].point
+        } else if (
+          intersects[0].object.geometry === crystalObjs[0] ||
+          intersects[0].object.geometry === crystalObjs[1] ||
+          intersects[0].object.geometry === crystalObjs[2]
+        ) {
+          this.raycaster.intersected = intersects[0].object.geometry
+          this.raycaster.pos = intersects[0].object.position
+        }
+      } else {
+        this.raycaster.intersected = null
+      }
+    }
+
     b5Scene.incrementCounters = function() {
       this.counters.a += 0.02;
     }
 
-    b5Scene.handleRaycasterIntersection = function() {
-      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera)
-      let intersects = this.raycaster.raycaster.intersectObjects(this.scene.children)
+    b5Scene.makeLine = function (geo) {
+    	var g = new THREE.MeshLine();
+    	g.setGeometry(geo);
 
-      if (intersects.length > 0 && intersects[0].object === this.objects.plane) {
-        this.raycaster.intersected = this.objects.plane
-        this.raycaster.pos = intersects[0].point
-      } else {
-        this.raycaster.intersected = null
-      }
+    	var mesh = new THREE.Mesh( g.geometry, material );
+    	mesh.position.z += 500;
+    	mesh.position.y += 300;
+    	mesh.rotation.y = -Math.PI / 2;
+    	mesh.rotation.z = Math.PI;
+    	this.scene.add( mesh );
+
+    	return mesh;
     }
 
     b5Scene.maybeCreateCrystal = function() {
@@ -46,37 +80,56 @@ const b5 = {
       }
     }
 
+    b5Scene.maybeCreateEdge = function() {
+      let { crystalObjs } = this.objects
+      let { raycaster, mouseDown } = this
+      if (
+        (
+          raycaster.intersected === crystalObjs[0] ||
+          raycaster.intersected === crystalObjs[1] ||
+          raycaster.intersected === crystalObjs[2]
+        )
+        && raycaster.creatingEdge === false
+      ) {
+        this.createEdge()
+      } else if (raycaster.creatingEdge) {
+        this.updateEdge()
+      }
+    }
+
     b5Scene.prepObjects = function () {
       this.prepPlane();
       this.objects.crystalObjs = []
-
-      let colors = [
-      	0xed6a5a, 0xf4f1bb, 0x9bc1bc,	0x5ca4a9,
-      	0xe6ebe0,	0xf0b67f,	0xfe5f55, 0xd6d1b1,
-        0xc7efcf, 0xeef5db,	0x50514f,	0xf25f5c,
-      	0xffe066,	0x247ba0,	0x70c1b3
-      ];
-      window.THREE = THREE;
-      let resolution = new THREE.Vector2( window.innerWidth, window.innerHeight );
-      let material = new THREE.MeshLineMaterial( {
-      	map: THREE.ImageUtils.loadTexture( '../img/stroke.png' ),
-      	useMap: false,
-      	color: new THREE.Color( colors[ 3 ] ),
-      	opacity: 0.5,
-      	resolution: resolution,
-      	sizeAttenuation: false,
-      	lineWidth: 10,
-      	near: this.camera.near,
-      	far: this.camera.far,
-      	depthWrite: false,
-      	depthTest: false,
-      	transparent: true
-      });
-      this.materials.meshLine = material
     }
 
     function collectPoints( sources ) {
+      let colors = [
+        0xB4F0A8, 0xA8F0B4, 0xA8F0CC, 0xA8F0E4, 0xA8E4F0,
+      0xA8CCF0, 0xA8C0F0, 0xA8A8F0, 0xC0A8F0, 0xD8A8F0,
+      0xF0A8F0, 0xF0A8D8, 0xF0A8C0, 0xF0A8A8, 0xF0C0A8,
+      0xF0D8A8, 0xF0F0A8
+      ];
+      window.THREE = THREE;
+      let resolution = new THREE.Vector2( window.innerWidth, window.innerHeight );
+
       for (var h = 0; h < sources.length; h++) {
+        let color = h + 1
+
+        let material = new THREE.MeshLineMaterial( {
+        	map: THREE.ImageUtils.loadTexture( '../img/stroke.png' ),
+        	useMap: false,
+        	color: new THREE.Color( colors[ color ] ),
+        	opacity: 0.5,
+        	resolution: resolution,
+        	sizeAttenuation: false,
+        	lineWidth: 10,
+        	near: this.camera.near,
+        	far: this.camera.far,
+        	depthWrite: false,
+        	depthTest: false,
+        	transparent: true
+        });
+
         let source = sources[h]
         var g = source.children[ 0 ].geometry;
         g.center()
@@ -112,7 +165,7 @@ const b5 = {
 
         var l = new THREE.MeshLine();
         l.setGeometry( points, function( p ) { return p } );
-        var line = new THREE.Mesh( l.geometry, this.materials.meshLine );
+        var line = new THREE.Mesh( l.geometry, material );
         this.objects.crystalObjs.push(line)
       }
   }
@@ -139,20 +192,6 @@ const b5 = {
           if (this.counters.crystalsLoaded === 3) {resolve(this.counters.crystalsRes)}
         }.bind(b5scene))
       });
-    }
-
-    b5Scene.makeLine = function (geo) {
-    	var g = new THREE.MeshLine();
-    	g.setGeometry(geo);
-
-    	var mesh = new THREE.Mesh( g.geometry, material );
-    	mesh.position.z += 500;
-    	mesh.position.y += 300;
-    	mesh.rotation.y = -Math.PI / 2;
-    	mesh.rotation.z = Math.PI;
-    	this.scene.add( mesh );
-
-    	return mesh;
     }
 
     b5Scene.prepCamera = function () {
@@ -186,17 +225,30 @@ const b5 = {
       window.crystals = this.objects.crystals = []
       window.raycaster = this.raycaster
       this.counters.currentCrystal = 0
-      this.materials = {}
+      this.mouseState = {}
+      this.mouseState.mouseDown = false
+      this.raycaster.creatingEdge = false
       this.prepObjects()
       this.readModel().then(collectPoints.bind(this));
-      document.querySelector('canvas').addEventListener('click', function(e) {
+      document.querySelector('canvas').addEventListener('click', (e) => {
         if (e.ctrlKey) {
           this.maybeCreateCrystal()
         }
-        if (e.shiftKey) {
-
+      })
+      document.querySelector('canvas').addEventListener('mousedown', (e) => {
+        this.mouseState.mouseDown = true
+      })
+      document.querySelector('canvas').addEventListener('mouseup', (e) => {
+        this.mouseState.mouseDown = false
+        if (this.raycaster.creatingEdge) {
+          this.finishEdge()
         }
-      }.bind(this))
+      })
+      document.querySelector('canvas').addEventListener('mousemove', (e) => {
+        if (this.mouseState.mouseDown && e.shiftKey) {
+          this.maybeCreateEdge()
+        }
+      })
 
       return (
         function() {
@@ -205,6 +257,10 @@ const b5 = {
 
         }.bind(this)
       )
+    }
+
+    b5Scene.updateEdge = function() {
+
     }
 
     b5Scene.init();
