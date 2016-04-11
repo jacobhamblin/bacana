@@ -39449,22 +39449,6 @@
 	      var count = _objects$objInfo$tetr.count;
 	      var size = _objects$objInfo$tetr.size;
 
-	      var resolution = new _three2.default.Vector2(window.innerWidth, window.innerHeight);
-	      var lineMaterial = new _three2.default.MeshLineMaterial({
-	        map: _three2.default.TextureLoader('../img/stroke.png'),
-	        useMap: false,
-	        color: new _three2.default.Color(this.colors[3]),
-	        opacity: 0.5,
-	        resolution: resolution,
-	        sizeAttenuation: false,
-	        lineWidth: 10,
-	        near: this.camera.near,
-	        far: this.camera.far,
-	        depthWrite: false,
-	        depthTest: false,
-	        transparent: true
-	      });
-
 	      var _loop2 = function _loop2() {
 	        var _mesh$position, _mesh$rotation;
 
@@ -39476,20 +39460,12 @@
 
 	        var mesh = void 0;
 
-	        // for (let j = 0; j < 2; j++) {
-	        //   if (j === 0) {
 	        mesh = new _three2.default.Mesh(geom, new _three2.default.MeshPhongMaterial({
 	          color: 0xffffff,
 	          shading: _three2.default.FlatShading,
 	          emissive: 0x333333,
 	          side: _three2.default.DoubleSide
 	        }));
-	        // } else {
-	        //   let line = new THREE.MeshLine();
-	        //   line.setGeometry(geom);
-	        //   mesh = new THREE.Mesh(line.geometry, lineMaterial);
-	        // }
-
 	        (_mesh$position = mesh.position).set.apply(_mesh$position, position);
 	        (_mesh$rotation = mesh.rotation).set.apply(_mesh$rotation, rotation);
 	        mesh.geometry.verticesNeedUpdate = true;
@@ -39505,14 +39481,8 @@
 	        mesh.motion = function (i) {
 	          return Math.cos(this.counters.a * window.meshM1 - i) % window.meshM2 * val * window.meshM3;
 	        }.bind(_this3);
-
-	        // if (j === 0) {
 	        objs0.add(mesh);
 	        _this3.scene.add(mesh);
-	        // } else {
-	        //   objs1.add(mesh);
-	        // }
-	        // }
 	      };
 
 	      for (var i = 0; i < count; i++) {
@@ -47342,11 +47312,11 @@
 	    key: "each",
 	    value: function each(cb) {
 	      var current = this.head;
-	      cb(current);
 	      while (current.next) {
 	        cb(current);
 	        current = current.next;
 	      }
+	      cb(current);
 	    }
 	  }]);
 

@@ -131,22 +131,6 @@ const b4 = {
       let objs0 = new LinkedList();
       // let objs1 = new LinkedList();
       let {count, size} = this.objects.objInfo.tetras;
-      let resolution = new THREE.Vector2( window.innerWidth, window.innerHeight );
-      let lineMaterial = new THREE.MeshLineMaterial( {
-        map: THREE.TextureLoader( '../img/stroke.png' ),
-        useMap: false,
-        color: new THREE.Color( this.colors[ 3 ] ),
-        opacity: 0.5,
-        resolution: resolution,
-        sizeAttenuation: false,
-        lineWidth: 10,
-        near: this.camera.near,
-        far: this.camera.far,
-        depthWrite: false,
-        depthTest: false,
-        transparent: true
-      });
-
       for (var i = 0; i < count; i++) {
         let val = Math.random()
         let objSize = Math.random() * size;
@@ -164,43 +148,28 @@ const b4 = {
 
         let mesh;
 
-        // for (let j = 0; j < 2; j++) {
-        //   if (j === 0) {
-            mesh = new THREE.Mesh(
-              geom,
-              new THREE.MeshPhongMaterial({
-                color: 0xffffff,
-                shading: THREE.FlatShading,
-                emissive: 0x333333,
-                side: THREE.DoubleSide
-              })
-            );
-          // } else {
-          //   let line = new THREE.MeshLine();
-          //   line.setGeometry(geom);
-          //   mesh = new THREE.Mesh(line.geometry, lineMaterial);
-          // }
-
-
-          mesh.position.set(...position);
-          mesh.rotation.set(...rotation);
-          mesh.geometry.verticesNeedUpdate = true;
-          mesh.geometry.dynamic = true;
-          window.meshW1 = 6;
-          window.meshW2 = 0.02;
-          window.meshM1 = 0.02;
-          window.meshM2 = 1;
-          window.meshM3 = 0.06;
-          mesh.wiggle = function(i) { return (Math.cos((this.counters.a * Math.random() * window.meshW1) - i) * window.meshW2)}.bind(this);
-          mesh.motion = function(i) { return ((Math.cos((this.counters.a * window.meshM1) - i) % window.meshM2) * val * window.meshM3)}.bind(this);
-
-          // if (j === 0) {
-            objs0.add(mesh);
-            this.scene.add(mesh);
-          // } else {
-          //   objs1.add(mesh);
-          // }
-        // }
+        mesh = new THREE.Mesh(
+          geom,
+          new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+            shading: THREE.FlatShading,
+            emissive: 0x333333,
+            side: THREE.DoubleSide
+          })
+        );
+        mesh.position.set(...position);
+        mesh.rotation.set(...rotation);
+        mesh.geometry.verticesNeedUpdate = true;
+        mesh.geometry.dynamic = true;
+        window.meshW1 = 6;
+        window.meshW2 = 0.02;
+        window.meshM1 = 0.02;
+        window.meshM2 = 1;
+        window.meshM3 = 0.06;
+        mesh.wiggle = function(i) { return (Math.cos((this.counters.a * Math.random() * window.meshW1) - i) * window.meshW2)}.bind(this);
+        mesh.motion = function(i) { return ((Math.cos((this.counters.a * window.meshM1) - i) % window.meshM2) * val * window.meshM3)}.bind(this);
+        objs0.add(mesh);
+        this.scene.add(mesh);
       }
 
       // this.objects.objs = {0: objs0, 1: objs1};

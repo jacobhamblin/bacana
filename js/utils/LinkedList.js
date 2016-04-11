@@ -37,11 +37,11 @@ class LinkedList {
 
   each(cb) {
     let current = this.head;
-    cb(current);
     while (current.next) {
       cb(current);
       current = current.next;
     }
+    cb(current);
   }
 }
 
