@@ -12,12 +12,16 @@ const b5 = {
     const b5Scene = bScene.create({container, renderer});
 
     b5Scene.createCrystal = function() {
+      let { currentCrystal } = this.counters
       let { x, y, z } = this.raycaster.pos
-      console.log(x + ' ' + y + ' ' + z)
-      let crystal = this.objects.crystal.clone()
+
+      let crystal = this.objects.crystalObjs[currentCrystal].clone()
       crystal.position.set(x, y, z)
       this.scene.add(crystal)
       this.objects.crystals.push(crystal)
+
+      this.counters.currentCrystal = (currentCrystal + 1) % 3
+      console.log(this.counters.currentCrystal)
     }
 
     b5Scene.incrementCounters = function() {
@@ -44,6 +48,7 @@ const b5 = {
 
     b5Scene.prepObjects = function () {
       this.prepPlane();
+      this.objects.crystalObjs = []
 
       let colors = [
       	0xed6a5a, 0xf4f1bb, 0x9bc1bc,	0x5ca4a9,
@@ -53,13 +58,6 @@ const b5 = {
       ];
       window.THREE = THREE;
       let resolution = new THREE.Vector2( window.innerWidth, window.innerHeight );
-      let geom = new THREE.Geometry();
-      for (let i = 0; i < Math.PI; i+= 2 * Math.PI / 100) {
-        let v = new THREE.Vector3(Math.cos(i), Math.sin(i), 0);
-        geom.vertices.push(v);
-      }
-      let line = new THREE.MeshLine();
-      line.setGeometry(geom);
       let material = new THREE.MeshLineMaterial( {
       	map: THREE.ImageUtils.loadTexture( '../img/stroke.png' ),
       	useMap: false,
@@ -74,82 +72,72 @@ const b5 = {
       	depthTest: false,
       	transparent: true
       });
-
-      let mesh = new THREE.MeshLine(line.geometry, material);
-      this.scene.add(mesh);
-      window.mesh = mesh;
-
+      this.materials.meshLine = material
     }
 
-    function collectPoints( source ) {
-      let resolution = new THREE.Vector2( window.innerWidth, window.innerHeight );
-      let colors = [
-      	0xed6a5a, 0xf4f1bb, 0x9bc1bc,	0x5ca4a9,
-      	0xe6ebe0,	0xf0b67f,	0xfe5f55, 0xd6d1b1,
-        0xc7efcf, 0xeef5db,	0x50514f,	0xf25f5c,
-      	0xffe066,	0x247ba0,	0x70c1b3
-      ];
-      let material = new THREE.MeshLineMaterial( {
-      	map: THREE.ImageUtils.loadTexture( '../img/stroke.png' ),
-      	useMap: false,
-      	color: new THREE.Color( colors[ 3 ] ),
-      	opacity: 0.5,
-      	resolution: resolution,
-      	sizeAttenuation: false,
-      	lineWidth: 10,
-      	near: this.camera.near,
-      	far: this.camera.far,
-      	depthWrite: false,
-      	depthTest: false,
-      	transparent: true
-      });
+    function collectPoints( sources ) {
+      for (var h = 0; h < sources.length; h++) {
+        let source = sources[h]
+        var g = source.children[ 0 ].geometry;
+        g.center()
+        var scaleMatrix = new THREE.Matrix4();
+        scaleMatrix.makeScale( 1, 1, 1 );
+        g.applyMatrix( scaleMatrix );
 
-      var g = source.children[ 0 ].geometry;
-      g.center()
-      var scaleMatrix = new THREE.Matrix4();
-      scaleMatrix.makeScale( 1, 1, 1 );
-      g.applyMatrix( scaleMatrix );
+        var o = new THREE.Mesh( g, new THREE.MeshNormalMaterial() );
+        //this.scene.add( o );
 
-      var o = new THREE.Mesh( g, new THREE.MeshNormalMaterial() );
-      //this.scene.add( o );
+        var raycaster = new THREE.Raycaster();
 
-      var raycaster = new THREE.Raycaster();
+        var points = [];
 
-      var points = [];
+        var y = -200;
+        var a = 0;
+        var r = 1000;
+        var origin = new THREE.Vector3();
+        var direction = new THREE.Vector3();
+        for( var j = 0; j < 6000; j++ ) {
+          a += .05;
+          y += 0.075;
+          origin.set( r * Math.cos( a ), y, r * Math.sin( a ) );
+          direction.set( -origin.x, 0, -origin.z );
+          direction = direction.normalize();
+          raycaster.set( origin, direction );
 
-      var y = -200;
-      var a = 0;
-      var r = 1000;
-      var origin = new THREE.Vector3();
-      var direction = new THREE.Vector3();
-      for( var j = 0; j < 6000; j++ ) {
-        a += .05;
-        y += 0.075;
-        origin.set( r * Math.cos( a ), y, r * Math.sin( a ) );
-        direction.set( -origin.x, 0, -origin.z );
-        direction = direction.normalize();
-        raycaster.set( origin, direction );
-
-        var i = raycaster.intersectObject( o, true );
-        if( i.length ) {
-          points.push( i[ 0 ].point.x, i[ 0 ].point.y, i[ 0 ].point.z );
+          var i = raycaster.intersectObject( o, true );
+          if( i.length ) {
+            points.push( i[ 0 ].point.x, i[ 0 ].point.y, i[ 0 ].point.z );
+          }
         }
+
+        var l = new THREE.MeshLine();
+        l.setGeometry( points, function( p ) { return p } );
+        var line = new THREE.Mesh( l.geometry, this.materials.meshLine );
+        this.objects.crystalObjs.push(line)
       }
-
-      var l = new THREE.MeshLine();
-      l.setGeometry( points, function( p ) { return p } );
-      var line = new THREE.Mesh( l.geometry, material );
-      this.objects.crystal = line;
-
-      // document.querySelector( '#title p' ).style.display = 'none';
   }
 
     b5Scene.readModel = function () {
+      this.counters.crystalsLoaded = 0
+      this.counters.crystalsRes = []
+      const b5scene = this
       return new Promise( function( resolve, reject ) {
         let loader = new THREE.OBJLoader();
+        loader.load( './obj/b2_1.obj', function( res ) {
+          this.counters.crystalsLoaded += 1
+          this.counters.crystalsRes.push(res)
+          if (this.counters.crystalsLoaded === 3) {resolve(this.counters.crystalsRes)}
+        }.bind(b5scene))
         loader.load( './obj/b2_2.obj', function( res ) {
-          resolve( res );
-        })
+          this.counters.crystalsLoaded += 1
+          this.counters.crystalsRes.push(res)
+          if (this.counters.crystalsLoaded === 3) {resolve(this.counters.crystalsRes)}
+        }.bind(b5scene))
+        loader.load( './obj/b2_3.obj', function( res ) {
+          this.counters.crystalsLoaded += 1
+          this.counters.crystalsRes.push(res)
+          if (this.counters.crystalsLoaded === 3) {resolve(this.counters.crystalsRes)}
+        }.bind(b5scene))
       });
     }
 
@@ -197,11 +185,11 @@ const b5 = {
     b5Scene.uniqueSetup = function () {
       window.crystals = this.objects.crystals = []
       window.raycaster = this.raycaster
+      this.counters.currentCrystal = 0
+      this.materials = {}
       this.prepObjects()
-      this.incrementCounters()
       this.readModel().then(collectPoints.bind(this));
       document.querySelector('canvas').addEventListener('click', function(e) {
-        debugger
         if (e.ctrlKey) {
           this.maybeCreateCrystal()
         }
@@ -212,6 +200,7 @@ const b5 = {
 
       return (
         function() {
+          this.incrementCounters()
           this.handleRaycasterIntersection()
 
         }.bind(this)

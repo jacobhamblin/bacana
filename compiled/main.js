@@ -68,7 +68,7 @@
 
 	var _b8 = _interopRequireDefault(_b7);
 
-	var _fastclickMin = __webpack_require__(29);
+	var _fastclickMin = __webpack_require__(30);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
@@ -37652,7 +37652,8 @@
 					event.preventDefault();
 
 					if (event.button === scope.mouseButtons.ORBIT) {
-
+							if (event.ctrlKey) return;
+							if (event.shiftKey) return;
 							if (scope.enableRotate === false) return;
 
 							handleMouseDownRotate(event);
@@ -47391,7 +47392,8 @@
 	exports.default = GraphNode;
 
 /***/ },
-/* 29 */
+/* 29 */,
+/* 30 */
 /***/ function(module, exports) {
 
 	"use strict";
