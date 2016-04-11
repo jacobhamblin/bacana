@@ -21,16 +21,36 @@ const b5 = {
       this.objects.crystals.push(crystal)
 
       this.counters.currentCrystal = (currentCrystal + 1) % 3
-      console.log(this.counters.currentCrystal)
     }
 
     b5Scene.createEdge = function() {
+      let { raycaster } = this.state
+      let { x, y, z } = raycaster.pos
 
+      let material = new THREE.MeshBasicMaterial({color: this.colors[2]})
+      let geometry = new THREE.Geometry()
+      geometry.vertices.push(new THREE.Vector3(x, y, z))
+      geometry.vertices.push(new THREE.Vector3(x + 1, y, z))
+      let line = new THREE.Line(geometry, material)
+      this.scene.add(line)
+      raycaster.creatingEdge = line
     }
 
     b5Scene.finishEdge = function() {
       let { raycaster } = this
-      // raycaster.creatingEdge.end = raycaster.pos
+
+      if (
+        raycaster.intersected !== this.objects.plane &&
+        raycaster.intersected !== null
+      ) {
+        raycaster.creatingEdge.geometry.vertices[1] = raycaster.crystalPos
+        raycaster.creatingEdge.geometry.verticesNeedUpdate = true;
+        raycaster.creatingEdge.geometry.dynamic = true;
+        // add siblings to graph nodes
+      } else {
+        this.scene.remove(raycaster.creatingEdge)
+      }
+
       raycaster.creatingEdge = false
     }
 
@@ -40,16 +60,18 @@ const b5 = {
       let intersects = this.raycaster.raycaster.intersectObjects(this.scene.children)
 
       if (intersects.length > 0) {
-        if (intersects[0].object === this.objects.plane) {
+        window.intersect = intersects[0]
+          if (intersects[0].object === this.objects.plane) {
           this.raycaster.intersected = this.objects.plane
           this.raycaster.pos = intersects[0].point
         } else if (
-          intersects[0].object.geometry === crystalObjs[0] ||
-          intersects[0].object.geometry === crystalObjs[1] ||
-          intersects[0].object.geometry === crystalObjs[2]
+          intersects[0].object.geometry === crystalObjs[0].geometry ||
+          intersects[0].object.geometry === crystalObjs[1].geometry ||
+          intersects[0].object.geometry === crystalObjs[2].geometry
         ) {
           this.raycaster.intersected = intersects[0].object.geometry
-          this.raycaster.pos = intersects[0].object.position
+          this.raycaster.crystalPos = intersects[0].object.position
+          console.log(this.raycaster.intersected)
         }
       } else {
         this.raycaster.intersected = null
@@ -82,7 +104,7 @@ const b5 = {
 
     b5Scene.maybeCreateEdge = function() {
       let { crystalObjs } = this.objects
-      let { raycaster, mouseDown } = this
+      let { raycaster, mouseState } = this
       if (
         (
           raycaster.intersected === crystalObjs[0] ||
@@ -103,12 +125,7 @@ const b5 = {
     }
 
     function collectPoints( sources ) {
-      let colors = [
-        0xB4F0A8, 0xA8F0B4, 0xA8F0CC, 0xA8F0E4, 0xA8E4F0,
-      0xA8CCF0, 0xA8C0F0, 0xA8A8F0, 0xC0A8F0, 0xD8A8F0,
-      0xF0A8F0, 0xF0A8D8, 0xF0A8C0, 0xF0A8A8, 0xF0C0A8,
-      0xF0D8A8, 0xF0F0A8
-      ];
+
       window.THREE = THREE;
       let resolution = new THREE.Vector2( window.innerWidth, window.innerHeight );
 
@@ -118,7 +135,7 @@ const b5 = {
         let material = new THREE.MeshLineMaterial( {
         	map: THREE.ImageUtils.loadTexture( '../img/stroke.png' ),
         	useMap: false,
-        	color: new THREE.Color( colors[ color ] ),
+        	color: new THREE.Color( this.colors[ color ] ),
         	opacity: 0.5,
         	resolution: resolution,
         	sizeAttenuation: false,
@@ -228,6 +245,13 @@ const b5 = {
       this.mouseState = {}
       this.mouseState.mouseDown = false
       this.raycaster.creatingEdge = false
+      this.colors = [
+        0xB4F0A8, 0xA8F0B4, 0xA8F0CC, 0xA8F0E4, 0xA8E4F0,
+        0xA8CCF0, 0xA8C0F0, 0xA8A8F0, 0xC0A8F0, 0xD8A8F0,
+        0xF0A8F0, 0xF0A8D8, 0xF0A8C0, 0xF0A8A8, 0xF0C0A8,
+        0xF0D8A8, 0xF0F0A8
+      ];
+
       this.prepObjects()
       this.readModel().then(collectPoints.bind(this));
       document.querySelector('canvas').addEventListener('click', (e) => {
@@ -260,7 +284,11 @@ const b5 = {
     }
 
     b5Scene.updateEdge = function() {
+      let { raycaster } = this.state
 
+      raycaster.creatingEdge.geometry.vertices[1] = raycaster.pos
+      raycaster.creatingEdge.geometry.verticesNeedUpdate = true;
+      raycaster.creatingEdge.geometry.dynamic = true;
     }
 
     b5Scene.init();

@@ -68,7 +68,7 @@
 
 	var _b8 = _interopRequireDefault(_b7);
 
-	var _fastclickMin = __webpack_require__(30);
+	var _fastclickMin = __webpack_require__(29);
 
 	var _fastclickMin2 = _interopRequireDefault(_fastclickMin);
 
@@ -337,7 +337,7 @@
 	      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera);
 	      var intersects = this.raycaster.raycaster.intersectObjects(this.scene.children);
 
-	      var tempIntersection = void 0;
+	      var tempIntersection = undefined;
 	      tempIntersection = intersects[0] && intersects[0].object === this.objects.obj1[0] ? true : false;
 
 	      if (this.raycaster.intersection !== tempIntersection) {
@@ -450,12 +450,12 @@
 	      var particlesArr = [],
 	          materials = [];
 
-	      for (var _i = 0; _i < this.objects.particlesParameters.length; _i++) {
-	        var color = this.objects.particlesParameters[_i][0];
-	        var size = this.objects.particlesParameters[_i][1];
+	      for (var i = 0; i < this.objects.particlesParameters.length; i++) {
+	        var color = this.objects.particlesParameters[i][0];
+	        var size = this.objects.particlesParameters[i][1];
 
-	        materials[_i] = new _three2.default.PointsMaterial({ size: size });
-	        var particles = new _three2.default.Points(geometry, materials[_i]);
+	        materials[i] = new _three2.default.PointsMaterial({ size: size });
+	        var particles = new _three2.default.Points(geometry, materials[i]);
 	        particles.rotation.x = Math.random() * 30;
 	        particles.rotation.y = Math.random() * 30;
 	        particles.rotation.z = Math.random() * 30;
@@ -39117,7 +39117,7 @@
 	    var b3Scene = _bScene2.default.create({ container: container, renderer: renderer });
 
 	    b3Scene.changeMaterial = function (mesh, shading) {
-	      var shadingType = void 0;
+	      var shadingType = undefined;
 	      shadingType = shading === "smooth" ? _three2.default.SmoothShading : _three2.default.FlatShading;
 	      var material = new _three2.default.MeshPhongMaterial({
 	        color: 0x333333,
@@ -39130,7 +39130,7 @@
 	      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera);
 	      var intersects = this.raycaster.raycaster.intersectObjects(this.scene.children);
 
-	      var tempIntersection = void 0;
+	      var tempIntersection = undefined;
 	      tempIntersection = intersects[0] && intersects[0].object === this.objects.bigSphere ? true : false;
 
 	      if (this.raycaster.intersection !== tempIntersection) {
@@ -39458,7 +39458,7 @@
 	        var rotation = [Math.random() * 3, Math.random() * 3, Math.random() * 3];
 	        var geom = new _three2.default.TetrahedronGeometry(objSize, 0);
 
-	        var mesh = void 0;
+	        var mesh = undefined;
 
 	        mesh = new _three2.default.Mesh(geom, new _three2.default.MeshPhongMaterial({
 	          color: 0xffffff,
@@ -47280,7 +47280,7 @@
 	        value: value,
 	        next: null
 	      };
-	      var current = void 0;
+	      var current = undefined;
 
 	      if (this.head === null) {
 	        this.head = node;
@@ -47296,7 +47296,7 @@
 	  }, {
 	    key: "remove",
 	    value: function remove(node) {
-	      var current = void 0,
+	      var current = undefined,
 	          value = node.value;
 
 	      if (this.head !== null) {
@@ -47362,8 +47362,7 @@
 	exports.default = GraphNode;
 
 /***/ },
-/* 29 */,
-/* 30 */
+/* 29 */
 /***/ function(module, exports) {
 
 	"use strict";
