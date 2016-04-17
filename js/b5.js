@@ -24,13 +24,13 @@ const b5 = {
     }
 
     b5Scene.createEdge = function() {
-      let { raycaster } = this.state
+      let { raycaster } = this
       let { x, y, z } = raycaster.pos
 
       let material = new THREE.MeshBasicMaterial({color: this.colors[2]})
       let geometry = new THREE.Geometry()
-      geometry.vertices.push(new THREE.Vector3(x, y, z))
-      geometry.vertices.push(new THREE.Vector3(x + 1, y, z))
+      geometry.vertices.push(new THREE.Vector3(x, y + 5, z))
+      geometry.vertices.push(new THREE.Vector3(x + 1, y + 5, z))
       let line = new THREE.Line(geometry, material)
       this.scene.add(line)
       raycaster.creatingEdge = line
@@ -60,7 +60,6 @@ const b5 = {
       let intersects = this.raycaster.raycaster.intersectObjects(this.scene.children)
 
       if (intersects.length > 0) {
-        window.intersect = intersects[0]
           if (intersects[0].object === this.objects.plane) {
           this.raycaster.intersected = this.objects.plane
           this.raycaster.pos = intersects[0].point
@@ -71,7 +70,6 @@ const b5 = {
         ) {
           this.raycaster.intersected = intersects[0].object.geometry
           this.raycaster.crystalPos = intersects[0].object.position
-          console.log(this.raycaster.intersected)
         }
       } else {
         this.raycaster.intersected = null
@@ -107,9 +105,9 @@ const b5 = {
       let { raycaster, mouseState } = this
       if (
         (
-          raycaster.intersected === crystalObjs[0] ||
-          raycaster.intersected === crystalObjs[1] ||
-          raycaster.intersected === crystalObjs[2]
+          raycaster.intersected === crystalObjs[0].geometry ||
+          raycaster.intersected === crystalObjs[1].geometry ||
+          raycaster.intersected === crystalObjs[2].geometry
         )
         && raycaster.creatingEdge === false
       ) {
@@ -154,36 +152,38 @@ const b5 = {
         scaleMatrix.makeScale( 1, 1, 1 );
         g.applyMatrix( scaleMatrix );
 
-        var o = new THREE.Mesh( g, new THREE.MeshNormalMaterial() );
-        //this.scene.add( o );
+        var o = new THREE.Mesh( g, material );
+        this.objects.crystalObjs.push(o)
 
-        var raycaster = new THREE.Raycaster();
-
-        var points = [];
-
-        var y = -200;
-        var a = 0;
-        var r = 1000;
-        var origin = new THREE.Vector3();
-        var direction = new THREE.Vector3();
-        for( var j = 0; j < 6000; j++ ) {
-          a += .05;
-          y += 0.075;
-          origin.set( r * Math.cos( a ), y, r * Math.sin( a ) );
-          direction.set( -origin.x, 0, -origin.z );
-          direction = direction.normalize();
-          raycaster.set( origin, direction );
-
-          var i = raycaster.intersectObject( o, true );
-          if( i.length ) {
-            points.push( i[ 0 ].point.x, i[ 0 ].point.y, i[ 0 ].point.z );
-          }
-        }
-
-        var l = new THREE.MeshLine();
-        l.setGeometry( points, function( p ) { return p } );
-        var line = new THREE.Mesh( l.geometry, material );
-        this.objects.crystalObjs.push(line)
+        // var raycaster = new THREE.Raycaster();
+        //
+        // var points = [];
+        //
+        // var y = -200;
+        // var a = 0;
+        // var r = 1000;
+        // var origin = new THREE.Vector3();
+        // var direction = new THREE.Vector3();
+        // for( var j = 0; j < 6000; j++ ) {
+        //   a += .05;
+        //   y += 0.075;
+        //   origin.set( r * Math.cos( a ), y, r * Math.sin( a ) );
+        //   direction.set( -origin.x, 0, -origin.z );
+        //   direction = direction.normalize();
+        //   raycaster.set( origin, direction );
+        //
+        //   var i = raycaster.intersectObject( o, true );
+        //   if( i.length ) {
+        //     points.push( i[ 0 ].point.x, i[ 0 ].point.y, i[ 0 ].point.z );
+        //   }
+        // }
+        //
+        // var l = new THREE.MeshLine();
+        // l.setGeometry( points, function( p ) { return p } );
+        // var line = new THREE.Mesh( l.geometry, material );
+        // l.setMatrixWorld(line.matrixWorld);
+        // this.objects.meshLines.push(l)
+        // this.objects.crystalObjs.push(line)
       }
   }
 
@@ -284,9 +284,10 @@ const b5 = {
     }
 
     b5Scene.updateEdge = function() {
-      let { raycaster } = this.state
+      let { raycaster } = this
+      let {x, y, z} = raycaster.pos
 
-      raycaster.creatingEdge.geometry.vertices[1] = raycaster.pos
+      raycaster.creatingEdge.geometry.vertices[1] = new THREE.Vector3(x, y + 5, z)
       raycaster.creatingEdge.geometry.verticesNeedUpdate = true;
       raycaster.creatingEdge.geometry.dynamic = true;
     }
