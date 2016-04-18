@@ -47445,6 +47445,7 @@
 	    _classCallCheck(this, GraphNode);
 
 	    this.adjacent = props.adjacent || [];
+	    this.mesh = props.mesh || null;
 	  }
 
 	  _createClass(GraphNode, [{
@@ -47500,13 +47501,14 @@
 
 	    b5Scene.createCrystal = function () {
 	      var currentCrystal = this.counters.currentCrystal;
-	      var _raycaster$pos = this.raycaster.pos;
-	      var x = _raycaster$pos.x;
-	      var y = _raycaster$pos.y;
-	      var z = _raycaster$pos.z;
+	      var _raycaster$intersecte = this.raycaster.intersected.plane.pos;
+	      var x = _raycaster$intersecte.x;
+	      var y = _raycaster$intersecte.y;
+	      var z = _raycaster$intersecte.z;
 
 	      var crystal = this.objects.crystalObjs[currentCrystal].clone();
 	      crystal.position.set(x, y, z);
+	      crystal.graphNode = new _utils.GraphNode({ mesh: crystal });
 	      this.scene.add(crystal);
 	      this.objects.crystals.push(crystal);
 
@@ -47515,10 +47517,10 @@
 
 	    b5Scene.createEdge = function () {
 	      var raycaster = this.raycaster;
-	      var _raycaster$pos2 = raycaster.pos;
-	      var x = _raycaster$pos2.x;
-	      var y = _raycaster$pos2.y;
-	      var z = _raycaster$pos2.z;
+	      var _raycaster$intersecte2 = raycaster.intersected.crystal.pos;
+	      var x = _raycaster$intersecte2.x;
+	      var y = _raycaster$intersecte2.y;
+	      var z = _raycaster$intersecte2.z;
 
 	      var material = new _three2.default.MeshBasicMaterial({ color: this.colors[2] });
 	      var geometry = new _three2.default.Geometry();
@@ -47527,39 +47529,56 @@
 	      var line = new _three2.default.Line(geometry, material);
 	      this.scene.add(line);
 	      raycaster.creatingEdge = line;
+	      raycaster.intersected.firstCrystal = raycaster.intersected.crystal.obj;
 	    };
 
 	    b5Scene.finishEdge = function () {
 	      var raycaster = this.raycaster;
+	      var intersected = raycaster.intersected;
+	      var creatingEdge = raycaster.creatingEdge;
 
-	      if (raycaster.intersected !== this.objects.plane && raycaster.intersected !== null) {
-	        raycaster.creatingEdge.geometry.vertices[1] = raycaster.crystalPos;
-	        raycaster.creatingEdge.geometry.verticesNeedUpdate = true;
-	        raycaster.creatingEdge.geometry.dynamic = true;
-	        // add siblings to graph nodes
+	      if (intersected.crystal.obj && intersected.crystal.obj !== intersected.firstCrystal) {
+	        creatingEdge.geometry.vertices[1] = raycaster.intersected.crystal.pos;
+	        creatingEdge.geometry.verticesNeedUpdate = true;
+	        creatingEdge.geometry.dynamic = true;
+
+	        intersected.crystal.obj.graphNode.add(intersected.firstCrystal.graphNode);
 	      } else {
-	          this.scene.remove(raycaster.creatingEdge);
-	        }
+	        this.scene.remove(raycaster.creatingEdge);
+	      }
 
 	      raycaster.creatingEdge = false;
+	      raycaster.intersected.firstCrystal = null;
 	    };
 
 	    b5Scene.handleRaycasterIntersection = function () {
+	      var _this = this;
+
 	      var crystalObjs = this.objects.crystalObjs;
 
 	      this.raycaster.raycaster.setFromCamera(this.mouse, this.camera);
 	      var intersects = this.raycaster.raycaster.intersectObjects(this.scene.children);
 
 	      if (intersects.length > 0) {
-	        if (intersects[0].object === this.objects.plane) {
-	          this.raycaster.intersected = this.objects.plane;
-	          this.raycaster.pos = intersects[0].point;
-	        } else if (intersects[0].object.geometry === crystalObjs[0].geometry || intersects[0].object.geometry === crystalObjs[1].geometry || intersects[0].object.geometry === crystalObjs[2].geometry) {
-	          this.raycaster.intersected = intersects[0].object.geometry;
-	          this.raycaster.crystalPos = intersects[0].object.position;
-	        }
-	      } else {
-	        this.raycaster.intersected = null;
+	        (function () {
+	          var crystal = { obj: null, pos: null };
+	          var plane = { obj: null, pos: null };
+
+	          intersects.forEach(function (i) {
+	            if (i.object === _this.objects.plane) {
+	              plane.obj = _this.objects.plane;
+	              plane.pos = i.point;
+	            } else if (i.object.graphNode) {
+	              crystal.obj = i.object;
+	              crystal.pos = i.object.position;
+	            }
+	          });
+
+	          _this.raycaster.intersected.plane.obj = plane.obj;
+	          _this.raycaster.intersected.plane.pos = plane.pos;
+	          _this.raycaster.intersected.crystal.obj = crystal.obj;
+	          _this.raycaster.intersected.crystal.pos = crystal.pos;
+	        })();
 	      }
 	    };
 
@@ -47582,7 +47601,7 @@
 	    };
 
 	    b5Scene.maybeCreateCrystal = function () {
-	      if (this.raycaster.intersected === this.objects.plane) {
+	      if (this.raycaster.intersected.plane.obj) {
 	        this.createCrystal();
 	      }
 	    };
@@ -47592,7 +47611,7 @@
 	      var raycaster = this.raycaster;
 	      var mouseState = this.mouseState;
 
-	      if ((raycaster.intersected === crystalObjs[0].geometry || raycaster.intersected === crystalObjs[1].geometry || raycaster.intersected === crystalObjs[2].geometry) && raycaster.creatingEdge === false) {
+	      if (raycaster.intersected.crystal.obj && raycaster.creatingEdge === false) {
 	        this.createEdge();
 	      } else if (raycaster.creatingEdge) {
 	        this.updateEdge();
@@ -47722,7 +47741,7 @@
 	    };
 
 	    b5Scene.uniqueSetup = function () {
-	      var _this = this;
+	      var _this2 = this;
 
 	      window.crystals = this.objects.crystals = [];
 	      window.raycaster = this.raycaster;
@@ -47730,27 +47749,32 @@
 	      this.mouseState = {};
 	      this.mouseState.mouseDown = false;
 	      this.raycaster.creatingEdge = false;
+	      this.raycaster.intersected = {
+	        plane: { obj: null, pos: null },
+	        crystal: { obj: null, pos: null },
+	        firstCrystal: null
+	      };
 	      this.colors = [0xB4F0A8, 0xA8F0B4, 0xA8F0CC, 0xA8F0E4, 0xA8E4F0, 0xA8CCF0, 0xA8C0F0, 0xA8A8F0, 0xC0A8F0, 0xD8A8F0, 0xF0A8F0, 0xF0A8D8, 0xF0A8C0, 0xF0A8A8, 0xF0C0A8, 0xF0D8A8, 0xF0F0A8];
 
 	      this.prepObjects();
 	      this.readModel().then(collectPoints.bind(this));
 	      document.querySelector('canvas').addEventListener('click', function (e) {
 	        if (e.ctrlKey) {
-	          _this.maybeCreateCrystal();
+	          _this2.maybeCreateCrystal();
 	        }
 	      });
 	      document.querySelector('canvas').addEventListener('mousedown', function (e) {
-	        _this.mouseState.mouseDown = true;
+	        _this2.mouseState.mouseDown = true;
 	      });
 	      document.querySelector('canvas').addEventListener('mouseup', function (e) {
-	        _this.mouseState.mouseDown = false;
-	        if (_this.raycaster.creatingEdge) {
-	          _this.finishEdge();
+	        _this2.mouseState.mouseDown = false;
+	        if (_this2.raycaster.creatingEdge) {
+	          _this2.finishEdge();
 	        }
 	      });
 	      document.querySelector('canvas').addEventListener('mousemove', function (e) {
-	        if (_this.mouseState.mouseDown && e.shiftKey) {
-	          _this.maybeCreateEdge();
+	        if (_this2.mouseState.mouseDown && e.shiftKey) {
+	          _this2.maybeCreateEdge();
 	        }
 	      });
 
@@ -47760,12 +47784,20 @@
 	      }).bind(this);
 	    };
 
+	    b5Scene.pointerCursor = function () {
+	      document.body.style.cursor = 'pointer';
+	    };
+
+	    b5Scene.initialCursor = function () {
+	      document.body.style.cursor = 'initial';
+	    };
+
 	    b5Scene.updateEdge = function () {
 	      var raycaster = this.raycaster;
-	      var _raycaster$pos3 = raycaster.pos;
-	      var x = _raycaster$pos3.x;
-	      var y = _raycaster$pos3.y;
-	      var z = _raycaster$pos3.z;
+	      var _raycaster$intersecte3 = raycaster.intersected.plane.pos;
+	      var x = _raycaster$intersecte3.x;
+	      var y = _raycaster$intersecte3.y;
+	      var z = _raycaster$intersecte3.z;
 
 	      raycaster.creatingEdge.geometry.vertices[1] = new _three2.default.Vector3(x, y + 5, z);
 	      raycaster.creatingEdge.geometry.verticesNeedUpdate = true;

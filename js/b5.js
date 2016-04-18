@@ -3,7 +3,7 @@
 import THREE from 'three';
 import bScene from './bScene.js';
 import TweenLite from 'gsap';
-import { LinkedList } from './utils'
+import { LinkedList, GraphNode } from './utils'
 import { MeshLine, MeshLineMaterial } from './vendor';
 
 const b5 = {
@@ -13,10 +13,11 @@ const b5 = {
 
     b5Scene.createCrystal = function() {
       let { currentCrystal } = this.counters
-      let { x, y, z } = this.raycaster.pos
+      let { x, y, z } = this.raycaster.intersected.plane.pos
 
       let crystal = this.objects.crystalObjs[currentCrystal].clone()
       crystal.position.set(x, y, z)
+      crystal.graphNode = new GraphNode({mesh: crystal})
       this.scene.add(crystal)
       this.objects.crystals.push(crystal)
 
@@ -25,7 +26,7 @@ const b5 = {
 
     b5Scene.createEdge = function() {
       let { raycaster } = this
-      let { x, y, z } = raycaster.pos
+      let { x, y, z } = raycaster.intersected.crystal.pos
 
       let material = new THREE.MeshBasicMaterial({color: this.colors[2]})
       let geometry = new THREE.Geometry()
@@ -34,24 +35,26 @@ const b5 = {
       let line = new THREE.Line(geometry, material)
       this.scene.add(line)
       raycaster.creatingEdge = line
+      raycaster.intersected.firstCrystal = raycaster.intersected.crystal.obj
     }
 
     b5Scene.finishEdge = function() {
       let { raycaster } = this
+      let { intersected, creatingEdge } = raycaster
 
-      if (
-        raycaster.intersected !== this.objects.plane &&
-        raycaster.intersected !== null
-      ) {
-        raycaster.creatingEdge.geometry.vertices[1] = raycaster.crystalPos
-        raycaster.creatingEdge.geometry.verticesNeedUpdate = true;
-        raycaster.creatingEdge.geometry.dynamic = true;
-        // add siblings to graph nodes
+      if (intersected.crystal.obj &&
+        intersected.crystal.obj !== intersected.firstCrystal) {
+        creatingEdge.geometry.vertices[1] = raycaster.intersected.crystal.pos
+        creatingEdge.geometry.verticesNeedUpdate = true;
+        creatingEdge.geometry.dynamic = true;
+
+        intersected.crystal.obj.graphNode.add(intersected.firstCrystal.graphNode)
       } else {
         this.scene.remove(raycaster.creatingEdge)
       }
 
       raycaster.creatingEdge = false
+      raycaster.intersected.firstCrystal = null
     }
 
     b5Scene.handleRaycasterIntersection = function() {
@@ -60,19 +63,23 @@ const b5 = {
       let intersects = this.raycaster.raycaster.intersectObjects(this.scene.children)
 
       if (intersects.length > 0) {
-          if (intersects[0].object === this.objects.plane) {
-          this.raycaster.intersected = this.objects.plane
-          this.raycaster.pos = intersects[0].point
-        } else if (
-          intersects[0].object.geometry === crystalObjs[0].geometry ||
-          intersects[0].object.geometry === crystalObjs[1].geometry ||
-          intersects[0].object.geometry === crystalObjs[2].geometry
-        ) {
-          this.raycaster.intersected = intersects[0].object.geometry
-          this.raycaster.crystalPos = intersects[0].object.position
-        }
-      } else {
-        this.raycaster.intersected = null
+        let crystal = {obj: null, pos: null};
+        let plane = {obj: null, pos: null};
+
+        intersects.forEach(i => {
+          if (i.object === this.objects.plane) {
+            plane.obj = this.objects.plane
+            plane.pos = i.point
+          } else if (i.object.graphNode) {
+            crystal.obj = i.object
+            crystal.pos = i.object.position
+          }
+        })
+
+        this.raycaster.intersected.plane.obj = plane.obj
+        this.raycaster.intersected.plane.pos = plane.pos
+        this.raycaster.intersected.crystal.obj = crystal.obj
+        this.raycaster.intersected.crystal.pos = crystal.pos
       }
     }
 
@@ -95,7 +102,7 @@ const b5 = {
     }
 
     b5Scene.maybeCreateCrystal = function() {
-      if (this.raycaster.intersected === this.objects.plane) {
+      if (this.raycaster.intersected.plane.obj) {
         this.createCrystal()
       }
     }
@@ -103,14 +110,7 @@ const b5 = {
     b5Scene.maybeCreateEdge = function() {
       let { crystalObjs } = this.objects
       let { raycaster, mouseState } = this
-      if (
-        (
-          raycaster.intersected === crystalObjs[0].geometry ||
-          raycaster.intersected === crystalObjs[1].geometry ||
-          raycaster.intersected === crystalObjs[2].geometry
-        )
-        && raycaster.creatingEdge === false
-      ) {
+      if (raycaster.intersected.crystal.obj && raycaster.creatingEdge === false) {
         this.createEdge()
       } else if (raycaster.creatingEdge) {
         this.updateEdge()
@@ -245,6 +245,11 @@ const b5 = {
       this.mouseState = {}
       this.mouseState.mouseDown = false
       this.raycaster.creatingEdge = false
+      this.raycaster.intersected = {
+        plane: {obj: null, pos: null},
+        crystal: {obj: null, pos: null},
+        firstCrystal: null,
+      }
       this.colors = [
         0xB4F0A8, 0xA8F0B4, 0xA8F0CC, 0xA8F0E4, 0xA8E4F0,
         0xA8CCF0, 0xA8C0F0, 0xA8A8F0, 0xC0A8F0, 0xD8A8F0,
@@ -283,9 +288,17 @@ const b5 = {
       )
     }
 
+    b5Scene.pointerCursor = function() {
+      document.body.style.cursor = 'pointer'
+    }
+
+    b5Scene.initialCursor = function() {
+      document.body.style.cursor = 'initial'
+    }
+
     b5Scene.updateEdge = function() {
       let { raycaster } = this
-      let {x, y, z} = raycaster.pos
+      let {x, y, z} = raycaster.intersected.plane.pos
 
       raycaster.creatingEdge.geometry.vertices[1] = new THREE.Vector3(x, y + 5, z)
       raycaster.creatingEdge.geometry.verticesNeedUpdate = true;

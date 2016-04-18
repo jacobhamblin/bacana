@@ -1,6 +1,7 @@
 class GraphNode {
   constructor(props) {
     this.adjacent = props.adjacent || [];
+    this.mesh = props.mesh || null;
   }
 
   add(node) {
