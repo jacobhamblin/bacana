@@ -16,6 +16,8 @@ const b5 = {
       let { x, y, z } = this.raycaster.intersected.plane.pos
 
       let crystal = this.objects.crystalObjs[currentCrystal].clone()
+      crystal.material = this.objects.crystalObjs[currentCrystal].material.clone();
+      crystal.material.oldColor = crystal.material.color;
       crystal.position.set(x, y, z)
       crystal.graphNode = new GraphNode({mesh: crystal})
       this.scene.add(crystal)
@@ -73,6 +75,7 @@ const b5 = {
           } else if (i.object.graphNode) {
             crystal.obj = i.object
             crystal.pos = i.object.position
+            b5Scene.pointerCursor()
           }
         })
 
@@ -80,11 +83,16 @@ const b5 = {
         this.raycaster.intersected.plane.pos = plane.pos
         this.raycaster.intersected.crystal.obj = crystal.obj
         this.raycaster.intersected.crystal.pos = crystal.pos
+        if (crystal.obj === null) b5Scene.initialCursor()
       }
     }
 
     b5Scene.incrementCounters = function() {
       this.counters.a += 0.02;
+    }
+
+    b5Scene.initialCursor = function() {
+      document.body.style.cursor = 'initial'
     }
 
     b5Scene.makeLine = function (geo) {
@@ -102,7 +110,11 @@ const b5 = {
     }
 
     b5Scene.maybeCreateCrystal = function() {
-      if (this.raycaster.intersected.plane.obj) {
+      let { raycaster } = this
+
+      if (raycaster.intersected.crystal.obj) {
+        this.maybeSetRoot()
+      } else if (raycaster.intersected.plane.obj) {
         this.createCrystal()
       }
     }
@@ -117,6 +129,21 @@ const b5 = {
       }
     }
 
+    b5Scene.maybeSetRoot = function() {
+      let { raycaster } = this
+
+      if (raycaster.intersected.crystal.obj) {
+        if (this.rootNode) {
+          this.rootNode.mesh.material.color = this.rootNode.mesh.material.oldColor
+          this.rootNode = raycaster.intersected.crystal.obj.graphNode
+        } else {
+          this.rootNode = raycaster.intersected.crystal.obj.graphNode
+        }
+
+        this.rootNode.mesh.material.color = new THREE.Color(this.colors[6])
+      }
+    }
+
     b5Scene.prepObjects = function () {
       this.prepPlane();
       this.objects.crystalObjs = []
@@ -128,22 +155,28 @@ const b5 = {
       let resolution = new THREE.Vector2( window.innerWidth, window.innerHeight );
 
       for (var h = 0; h < sources.length; h++) {
-        let color = h + 1
+        let color = this.colors[h + 1]
 
-        let material = new THREE.MeshLineMaterial( {
-        	map: THREE.ImageUtils.loadTexture( '../img/stroke.png' ),
-        	useMap: false,
-        	color: new THREE.Color( this.colors[ color ] ),
-        	opacity: 0.5,
-        	resolution: resolution,
-        	sizeAttenuation: false,
-        	lineWidth: 10,
-        	near: this.camera.near,
-        	far: this.camera.far,
-        	depthWrite: false,
-        	depthTest: false,
-        	transparent: true
-        });
+        // let material = new THREE.MeshLineMaterial( {
+        // 	map: THREE.ImageUtils.loadTexture( '../img/stroke.png' ),
+        // 	useMap: false,
+        // 	color: new THREE.Color( this.colors[ color ] ),
+        // 	opacity: 0.5,
+        // 	resolution: resolution,
+        // 	sizeAttenuation: false,
+        // 	lineWidth: 10,
+        // 	near: this.camera.near,
+        // 	far: this.camera.far,
+        // 	depthWrite: false,
+        // 	depthTest: false,
+        // 	transparent: true
+        // });
+
+        let material = new THREE.MeshBasicMaterial({
+          color,
+          opacity: 0.5,
+          transparent: true
+        })
 
         let source = sources[h]
         var g = source.children[ 0 ].geometry;
@@ -238,6 +271,10 @@ const b5 = {
       this.objects.plane = plane
     }
 
+    b5Scene.pointerCursor = function() {
+      document.body.style.cursor = 'pointer'
+    }
+
     b5Scene.uniqueSetup = function () {
       window.crystals = this.objects.crystals = []
       window.raycaster = this.raycaster
@@ -245,6 +282,7 @@ const b5 = {
       this.mouseState = {}
       this.mouseState.mouseDown = false
       this.raycaster.creatingEdge = false
+      this.rootNode = null
       this.raycaster.intersected = {
         plane: {obj: null, pos: null},
         crystal: {obj: null, pos: null},
@@ -286,14 +324,6 @@ const b5 = {
 
         }.bind(this)
       )
-    }
-
-    b5Scene.pointerCursor = function() {
-      document.body.style.cursor = 'pointer'
-    }
-
-    b5Scene.initialCursor = function() {
-      document.body.style.cursor = 'initial'
     }
 
     b5Scene.updateEdge = function() {

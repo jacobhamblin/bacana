@@ -47507,6 +47507,8 @@
 	      var z = _raycaster$intersecte.z;
 
 	      var crystal = this.objects.crystalObjs[currentCrystal].clone();
+	      crystal.material = this.objects.crystalObjs[currentCrystal].material.clone();
+	      crystal.material.oldColor = crystal.material.color;
 	      crystal.position.set(x, y, z);
 	      crystal.graphNode = new _utils.GraphNode({ mesh: crystal });
 	      this.scene.add(crystal);
@@ -47571,6 +47573,7 @@
 	            } else if (i.object.graphNode) {
 	              crystal.obj = i.object;
 	              crystal.pos = i.object.position;
+	              b5Scene.pointerCursor();
 	            }
 	          });
 
@@ -47578,12 +47581,17 @@
 	          _this.raycaster.intersected.plane.pos = plane.pos;
 	          _this.raycaster.intersected.crystal.obj = crystal.obj;
 	          _this.raycaster.intersected.crystal.pos = crystal.pos;
+	          if (crystal.obj === null) b5Scene.initialCursor();
 	        })();
 	      }
 	    };
 
 	    b5Scene.incrementCounters = function () {
 	      this.counters.a += 0.02;
+	    };
+
+	    b5Scene.initialCursor = function () {
+	      document.body.style.cursor = 'initial';
 	    };
 
 	    b5Scene.makeLine = function (geo) {
@@ -47601,7 +47609,11 @@
 	    };
 
 	    b5Scene.maybeCreateCrystal = function () {
-	      if (this.raycaster.intersected.plane.obj) {
+	      var raycaster = this.raycaster;
+
+	      if (raycaster.intersected.crystal.obj) {
+	        this.maybeSetRoot();
+	      } else if (raycaster.intersected.plane.obj) {
 	        this.createCrystal();
 	      }
 	    };
@@ -47618,6 +47630,21 @@
 	      }
 	    };
 
+	    b5Scene.maybeSetRoot = function () {
+	      var raycaster = this.raycaster;
+
+	      if (raycaster.intersected.crystal.obj) {
+	        if (this.rootNode) {
+	          this.rootNode.mesh.material.color = this.rootNode.mesh.material.oldColor;
+	          this.rootNode = raycaster.intersected.crystal.obj.graphNode;
+	        } else {
+	          this.rootNode = raycaster.intersected.crystal.obj.graphNode;
+	        }
+
+	        this.rootNode.mesh.material.color = new _three2.default.Color(this.colors[6]);
+	      }
+	    };
+
 	    b5Scene.prepObjects = function () {
 	      this.prepPlane();
 	      this.objects.crystalObjs = [];
@@ -47629,20 +47656,26 @@
 	      var resolution = new _three2.default.Vector2(window.innerWidth, window.innerHeight);
 
 	      for (var h = 0; h < sources.length; h++) {
-	        var color = h + 1;
+	        var color = this.colors[h + 1];
 
-	        var _material = new _three2.default.MeshLineMaterial({
-	          map: _three2.default.ImageUtils.loadTexture('../img/stroke.png'),
-	          useMap: false,
-	          color: new _three2.default.Color(this.colors[color]),
+	        // let material = new THREE.MeshLineMaterial( {
+	        // 	map: THREE.ImageUtils.loadTexture( '../img/stroke.png' ),
+	        // 	useMap: false,
+	        // 	color: new THREE.Color( this.colors[ color ] ),
+	        // 	opacity: 0.5,
+	        // 	resolution: resolution,
+	        // 	sizeAttenuation: false,
+	        // 	lineWidth: 10,
+	        // 	near: this.camera.near,
+	        // 	far: this.camera.far,
+	        // 	depthWrite: false,
+	        // 	depthTest: false,
+	        // 	transparent: true
+	        // });
+
+	        var _material = new _three2.default.MeshBasicMaterial({
+	          color: color,
 	          opacity: 0.5,
-	          resolution: resolution,
-	          sizeAttenuation: false,
-	          lineWidth: 10,
-	          near: this.camera.near,
-	          far: this.camera.far,
-	          depthWrite: false,
-	          depthTest: false,
 	          transparent: true
 	        });
 
@@ -47740,6 +47773,10 @@
 	      this.objects.plane = plane;
 	    };
 
+	    b5Scene.pointerCursor = function () {
+	      document.body.style.cursor = 'pointer';
+	    };
+
 	    b5Scene.uniqueSetup = function () {
 	      var _this2 = this;
 
@@ -47749,6 +47786,7 @@
 	      this.mouseState = {};
 	      this.mouseState.mouseDown = false;
 	      this.raycaster.creatingEdge = false;
+	      this.rootNode = null;
 	      this.raycaster.intersected = {
 	        plane: { obj: null, pos: null },
 	        crystal: { obj: null, pos: null },
@@ -47782,14 +47820,6 @@
 	        this.incrementCounters();
 	        this.handleRaycasterIntersection();
 	      }).bind(this);
-	    };
-
-	    b5Scene.pointerCursor = function () {
-	      document.body.style.cursor = 'pointer';
-	    };
-
-	    b5Scene.initialCursor = function () {
-	      document.body.style.cursor = 'initial';
 	    };
 
 	    b5Scene.updateEdge = function () {
