@@ -40,6 +40,30 @@ const b5 = {
       raycaster.intersected.firstCrystal = raycaster.intersected.crystal.obj
     }
 
+    b5Scene.click = function(e) {
+      if (e.ctrlKey || e.metaKey) {
+        this.maybeCreateCrystal()
+      }
+    }
+
+    b5Scene.destroy = function() {
+      cancelAnimationFrame(this.animFrameReq);
+      this.scene = null;
+      this.projector = null;
+      this.camera = null;
+      this.controls = null;
+      this.objects = null;
+      this.lights = null;
+      this.counters = null;
+      this.raycaster = null;
+      this.ended = true;
+
+      document.querySelector('canvas').removeEventListener('mousedown', this.mousedown.bind(this))
+      document.querySelector('canvas').removeEventListener('mouseup', this.mouseup.bind(this))
+      document.querySelector('canvas').removeEventListener('mousemove', this.mousemove.bind(this))
+      document.querySelector('canvas').removeEventListener('click', this.click.bind(this))
+    }
+
     b5Scene.finishEdge = function() {
       let { raycaster } = this
       let { intersected, creatingEdge } = raycaster
@@ -93,6 +117,23 @@ const b5 = {
 
     b5Scene.initialCursor = function() {
       document.body.style.cursor = 'initial'
+    }
+
+    b5Scene.mousedown = function(e) {
+      this.mouseState.mouseDown = true
+    }
+
+    b5Scene.mousemove = function(e) {
+      if (this.mouseState.mouseDown && e.shiftKey) {
+        this.maybeCreateEdge()
+      }
+    }
+
+    b5Scene.mouseup = function(e) {
+      this.mouseState.mouseDown = false
+      if (this.raycaster.creatingEdge) {
+        this.finishEdge()
+      }
     }
 
     b5Scene.makeLine = function (geo) {
@@ -297,25 +338,10 @@ const b5 = {
 
       this.prepObjects()
       this.readModel().then(collectPoints.bind(this));
-      document.querySelector('canvas').addEventListener('click', (e) => {
-        if (e.ctrlKey) {
-          this.maybeCreateCrystal()
-        }
-      })
-      document.querySelector('canvas').addEventListener('mousedown', (e) => {
-        this.mouseState.mouseDown = true
-      })
-      document.querySelector('canvas').addEventListener('mouseup', (e) => {
-        this.mouseState.mouseDown = false
-        if (this.raycaster.creatingEdge) {
-          this.finishEdge()
-        }
-      })
-      document.querySelector('canvas').addEventListener('mousemove', (e) => {
-        if (this.mouseState.mouseDown && e.shiftKey) {
-          this.maybeCreateEdge()
-        }
-      })
+      document.querySelector('canvas').addEventListener('click', this.click.bind(this))
+      document.querySelector('canvas').addEventListener('mousedown', this.mousedown.bind(this))
+      document.querySelector('canvas').addEventListener('mouseup', this.mouseup.bind(this))
+      document.querySelector('canvas').addEventListener('mousemove', this.mousemove.bind(this))
 
       return (
         function() {
