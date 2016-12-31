@@ -7,6 +7,7 @@ const bScene = {
   container: null,
   controls: null,
   counters: {a: 0, b: 0},
+  destroyActions: [],
   lights: {},
   mouse: new THREE.Vector2(),
   objects: {},
@@ -33,14 +34,17 @@ const bScene = {
   },
   destroy () {
     cancelAnimationFrame(this.animFrameReq);
-    this.scene = null;
-    this.projector = null;
-    this.camera = null;
-    this.controls = null;
-    this.objects = null;
-    this.lights = null;
-    this.counters = null;
-    this.raycaster = null;
+    this.tempMem.forEach(name => {
+      if (this[name] instanceof HTMLElement) {
+        if (document.querySelector('.' + this[name]['className'])) {
+          this[name].parentElement.removeChild(this[name])
+        }
+      }
+      else if (this[name]) {
+        this[name] = null;
+      }
+    })
+    this.destroyActions.forEach(action => {action()})
     this.ended = true;
   },
   init () {
@@ -78,6 +82,18 @@ const bScene = {
 
     this.scene = scene;
   },
+  prepTempMem () {
+    this.tempMem = [
+      'scene',
+      'projector',
+      'camera',
+      'controls',
+      'objects',
+      'lights',
+      'counters',
+      'raycaster'
+    ]
+  },
   onMouseMove () {
     event.preventDefault();
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -102,6 +118,7 @@ const bScene = {
     this.prepScene()
     this.prepCamera()
     this.prepControls()
+    this.prepTempMem()
 
     window.addEventListener(
       'resize',

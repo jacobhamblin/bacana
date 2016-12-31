@@ -1,0 +1,28 @@
+.hud {
+  max-width: 300px;
+  width: 20%;
+  background-color: rgba(1,1,1,.2);
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  opacity: 0;
+  z-index: 2;
+  transition: all 1s ease;
+  
+  .nodeContainer {
+    margin: 60px 20px 0;
+    display: flex;
+    justify-content: space-around;
+    flex-flow: row wrap;
+    
+    .rootNode {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #A8C0F0;
+      display: inline-block;
+      margin: 0 auto;
+    }
+  }
+}

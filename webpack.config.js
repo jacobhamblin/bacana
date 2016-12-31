@@ -9,9 +9,11 @@ module.exports = {
   entry: './js/main.js',
   output: {
     filename: 'main.js',
+    sourceMapFilename: '[file].map',
     path: path.join(__dirname, 'compiled'),
     publicPath: 'compiled/',
   },
+  devtool: 'source-map',
   module: {
     loaders: [
       {

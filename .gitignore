@@ -6,3 +6,4 @@
 *.sublime-workspace
 node_modules
 dev
+npm-debug.log

@@ -5,6 +5,7 @@ import bScene from './bScene.js';
 import TweenLite from 'gsap';
 import { LinkedList, GraphNode } from './utils'
 import { MeshLine, MeshLineMaterial } from './vendor';
+import '../sass/b5.scss';
 
 const b5 = {
   init({container, renderer}) {
@@ -44,24 +45,6 @@ const b5 = {
       if (e.ctrlKey || e.metaKey) {
         this.maybeCreateCrystal()
       }
-    }
-
-    b5Scene.destroy = function() {
-      cancelAnimationFrame(this.animFrameReq);
-      this.scene = null;
-      this.projector = null;
-      this.camera = null;
-      this.controls = null;
-      this.objects = null;
-      this.lights = null;
-      this.counters = null;
-      this.raycaster = null;
-      this.ended = true;
-
-      document.querySelector('canvas').removeEventListener('mousedown', this.mousedown.bind(this))
-      document.querySelector('canvas').removeEventListener('mouseup', this.mouseup.bind(this))
-      document.querySelector('canvas').removeEventListener('mousemove', this.mousemove.bind(this))
-      document.querySelector('canvas').removeEventListener('click', this.click.bind(this))
     }
 
     b5Scene.finishEdge = function() {
@@ -109,6 +92,20 @@ const b5 = {
         this.raycaster.intersected.crystal.pos = crystal.pos
         if (crystal.obj === null) b5Scene.initialCursor()
       }
+    }
+    
+    b5Scene.hudInit = function() {
+      var hudDOM = document.createElement('div')
+      hudDOM.className = 'hud'
+      document.querySelector('.fullscreen.active').appendChild(hudDOM)
+      this.HUD = hudDOM
+      var nodeContainer = document.createElement('div')
+      nodeContainer.className = 'nodeContainer'
+      this.HUD.appendChild(nodeContainer)
+      this.tempMem.push('HUD')
+      setTimeout(() => {
+        hudDOM.style.opacity = '1'
+      }, 500)
     }
 
     b5Scene.incrementCounters = function() {
@@ -182,6 +179,7 @@ const b5 = {
         }
 
         this.rootNode.mesh.material.color = new THREE.Color(this.colors[6])
+        this.updateHUD();
       }
     }
 
@@ -342,7 +340,17 @@ const b5 = {
       document.querySelector('canvas').addEventListener('mousedown', this.mousedown.bind(this))
       document.querySelector('canvas').addEventListener('mouseup', this.mouseup.bind(this))
       document.querySelector('canvas').addEventListener('mousemove', this.mousemove.bind(this))
+      
+      this.hudInit()
 
+      this.destroyActions.push(
+        function() {
+          // document.querySelector('canvas').removeEventListener('mousedown', this.mousedown.bind(this))
+          // document.querySelector('canvas').removeEventListener('mouseup', this.mouseup.bind(this))
+          // document.querySelector('canvas').removeEventListener('mousemove', this.mousemove.bind(this))
+          // document.querySelector('canvas').removeEventListener('click', this.click.bind(this))
+        }
+      )
       return (
         function() {
           this.incrementCounters()
@@ -361,6 +369,16 @@ const b5 = {
       raycaster.creatingEdge.geometry.dynamic = true;
     }
 
+    b5Scene.updateHUD = function() {
+      if (this.rootNode) {
+        if (!this.HUD.querySelector('.rootNode')) {
+          var root = document.createElement('div')
+          root.className = 'rootNode'
+          this.HUD.querySelector('.nodeContainer').appendChild(root)
+        }
+      }
+    }
+    
     b5Scene.init();
 
     return b5Scene;
