@@ -104,7 +104,7 @@ function prepareDemos() {
     preview.style.backgroundImage = 'url(' + demo.preview + ')';
     let num = i;
     preview.addEventListener('click', function (e) {
-      event.preventDefault();
+      e.preventDefault();
       if (interaction.open) {
         window.location = "#/";
       } else {
