@@ -36368,7 +36368,7 @@ var bScene = {
   prepTempMem: function prepTempMem() {
     this.tempMem = ['scene', 'projector', 'camera', 'controls', 'objects', 'lights', 'counters', 'raycaster'];
   },
-  onMouseMove: function onMouseMove() {
+  onMouseMove: function onMouseMove(event) {
     event.preventDefault();
     this.mouse.x = event.clientX / window.innerWidth * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -36393,11 +36393,11 @@ var bScene = {
     this.prepControls();
     this.prepTempMem();
 
-    window.addEventListener('resize', function () {
-      this.onWindowResize();
+    window.addEventListener('resize', function (e) {
+      this.onWindowResize(e);
     }.bind(this), false);
-    window.addEventListener('mousemove', function () {
-      this.onMouseMove();
+    window.addEventListener('mousemove', function (e) {
+      this.onMouseMove(e);
     }.bind(this), false);
   },
   uniqueSetup: function uniqueSetup() {

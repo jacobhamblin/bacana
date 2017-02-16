@@ -94,7 +94,7 @@ const bScene = {
       'raycaster'
     ]
   },
-  onMouseMove () {
+  onMouseMove (event) {
     event.preventDefault();
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		this.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
@@ -122,12 +122,12 @@ const bScene = {
 
     window.addEventListener(
       'resize',
-      function() { this.onWindowResize() }.bind(this),
+      function(e) { this.onWindowResize(e) }.bind(this),
       false
     );
     window.addEventListener(
       'mousemove',
-      function() { this.onMouseMove() }.bind(this),
+      function(e) { this.onMouseMove(e) }.bind(this),
       false
     );
   },
