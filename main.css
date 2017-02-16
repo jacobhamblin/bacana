@@ -3,62 +3,56 @@
   font-weight: 300;
   font-style: normal;
   src: url(compiled/ca6317c5440e1dc88a2fcee44595bef2.woff) format("woff"); }
-
 @font-face {
   font-family: "Helvetica Neue";
   font-weight: 200;
   font-style: normal;
   src: url(compiled/0f09c03ea48b868fede3c98bee746d98.woff) format("woff"); }
-
 @font-face {
   font-family: "Helvetica Neue";
   font-weight: 300;
   font-style: italic;
   src: url(compiled/82f9957cedb96ce4dda15994d084baba.woff) format("woff"); }
-
 @font-face {
   font-family: "Helvetica Neue";
   font-style: 200;
   font-weight: italic;
   src: url(compiled/68eead767aefbb308e1d4745f3052d90.woff) format("woff"); }
-
 @font-face {
   font-family: "Helvetica Neue";
   font-weight: 300;
   font-style: normal;
   src: url(compiled/ca6317c5440e1dc88a2fcee44595bef2.woff) format("woff"); }
-
 @font-face {
   font-family: "Helvetica Neue";
   font-weight: 200;
   font-style: normal;
   src: url(compiled/0f09c03ea48b868fede3c98bee746d98.woff) format("woff"); }
-
 @font-face {
   font-family: "Helvetica Neue";
   font-weight: 300;
   font-style: italic;
   src: url(compiled/82f9957cedb96ce4dda15994d084baba.woff) format("woff"); }
-
 @font-face {
   font-family: "Helvetica Neue";
   font-style: 200;
   font-weight: italic;
   src: url(compiled/68eead767aefbb308e1d4745f3052d90.woff) format("woff"); }
-
 div.previews-container.one {
   background-color: #d0d6d6; }
-  div.previews-container.one div.preview-container div.preview-overlay {
+div.previews-container.one div.preview-container div.preview-overlay {
     background-color: #d0d6d6; }
-
 div.previews-container {
   display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
           justify-content: space-between;
   overflow: hidden; }
-  div.previews-container div.preview-container {
+div.previews-container div.preview-container {
     width: 15rem;
     height: 15rem;
     overflow: hidden;
@@ -66,7 +60,7 @@ div.previews-container {
     z-index: 0;
     position: relative;
     margin-bottom: 1.5rem; }
-    div.previews-container div.preview-container div.title {
+div.previews-container div.preview-container div.title {
       position: absolute;
       bottom: 0;
       left: 0;
@@ -75,7 +69,7 @@ div.previews-container {
       padding: 0 0.5rem;
       pointer-events: none;
       overflow: hidden; }
-      div.previews-container div.preview-container div.title:after {
+div.previews-container div.preview-container div.title:after {
         position: absolute;
         -webkit-transition: .3s;
         transition: .3s;
@@ -90,7 +84,7 @@ div.previews-container {
         -webkit-transform: skewX(15deg);
         transform: skewX(-25deg);
         z-index: 0; }
-      div.previews-container div.preview-container div.title h6 {
+div.previews-container div.preview-container div.title h6 {
         font-family: 'Helvetica Neue', Arial;
         font-size: 1.4rem;
         font-weight: 200;
@@ -104,13 +98,13 @@ div.previews-container {
         -webkit-transition: margin-left 1s ease;
         transition: margin-left 1s ease;
         z-index: 1; }
-    div.previews-container div.preview-container:hover div.title:after {
+div.previews-container div.preview-container:hover div.title:after {
       left: -10%;
       width: 130%; }
-    div.previews-container div.preview-container:hover div.title h6 {
+div.previews-container div.preview-container:hover div.title h6 {
       color: #333;
       margin-left: 0; }
-    div.previews-container div.preview-container div.preview-overlay {
+div.previews-container div.preview-container div.preview-overlay {
       position: absolute;
       width: 15rem;
       height: 15rem;
@@ -120,7 +114,7 @@ div.previews-container {
       top: 0;
       display: none;
       pointer-events: none; }
-      div.previews-container div.preview-container div.preview-overlay:nth-of-type(2) {
+div.previews-container div.preview-container div.preview-overlay:nth-of-type(2) {
         -webkit-transform: rotate(45deg);
                 transform: rotate(45deg);
         margin-left: -12rem;
@@ -133,7 +127,7 @@ div.previews-container {
                 animation-direction: alternate;
         -webkit-animation-name: retract1;
                 animation-name: retract1; }
-      div.previews-container div.preview-container div.preview-overlay:nth-of-type(3) {
+div.previews-container div.preview-container div.preview-overlay:nth-of-type(3) {
         -webkit-transform: rotate(45deg);
                 transform: rotate(45deg);
         -webkit-animation-iteration-count: infinite;
@@ -146,7 +140,7 @@ div.previews-container {
                 animation-name: retract2;
         margin-left: 12rem;
         margin-top: 12rem; }
-    div.previews-container div.preview-container div.preview {
+div.previews-container div.preview-container div.preview {
       background-size: cover;
       width: 15rem;
       height: 15rem;
@@ -155,10 +149,9 @@ div.previews-container {
               transform: scale(1);
       -webkit-transition: .2s all ease;
       transition: .2s all ease; }
-      div.previews-container div.preview-container div.preview:hover {
+div.previews-container div.preview-container div.preview:hover {
         -webkit-transform: scale(1.25);
                 transform: scale(1.25); }
-
 @-webkit-keyframes retract1 {
   from {
     margin-left: -12rem;
@@ -166,7 +159,6 @@ div.previews-container {
   to {
     margin-left: -11.5rem;
     margin-top: -11.5rem; } }
-
 @keyframes retract1 {
   from {
     margin-left: -12rem;
@@ -174,7 +166,6 @@ div.previews-container {
   to {
     margin-left: -11.5rem;
     margin-top: -11.5rem; } }
-
 @-webkit-keyframes retract2 {
   from {
     margin-left: 12rem;
@@ -182,7 +173,6 @@ div.previews-container {
   to {
     margin-left: 11.5rem;
     margin-top: 11.5rem; } }
-
 @keyframes retract2 {
   from {
     margin-left: 12rem;
@@ -190,22 +180,19 @@ div.previews-container {
   to {
     margin-left: 11.5rem;
     margin-top: 11.5rem; } }
-
 html body.one {
   background-color: #d0d6d6; }
-
 html body.two {
   background-color: #eee; }
-
 html body {
   margin: 0;
   padding: 0;
   color: #DDE2E2;
   overflow-x: hidden;
   font-family: "Open Sans", sans-serif; }
-  html body a {
+html body a {
     text-decoration: none; }
-  html body div.fullscreen {
+html body div.fullscreen {
     position: fixed;
     top: 0;
     left: 100vw;
@@ -215,21 +202,21 @@ html body {
     z-index: 2;
     -webkit-transition: all .5s ease;
     transition: all .5s ease; }
-    html body div.fullscreen canvas {
+html body div.fullscreen canvas {
       display: block; }
-    html body div.fullscreen.active {
+html body div.fullscreen.active {
       left: 0; }
-      html body div.fullscreen.active div.close-container div.close div.line {
+html body div.fullscreen.active div.close-container div.close div.line {
         width: 22px; }
-      html body div.fullscreen.active div.close-container div.close div.line:first-of-type {
+html body div.fullscreen.active div.close-container div.close div.line:first-of-type {
         -webkit-transform: rotate(45deg) translateY(7px) translateX(5px);
                 transform: rotate(45deg) translateY(7px) translateX(5px); }
-      html body div.fullscreen.active div.close-container div.close div.line:nth-of-type(2) {
+html body div.fullscreen.active div.close-container div.close div.line:nth-of-type(2) {
         width: 0; }
-      html body div.fullscreen.active div.close-container div.close div.line:last-of-type {
+html body div.fullscreen.active div.close-container div.close div.line:last-of-type {
         -webkit-transform: rotate(-45deg) translateY(-1px) translateX(-2px);
                 transform: rotate(-45deg) translateY(-1px) translateX(-2px); }
-    html body div.fullscreen div.close-container {
+html body div.fullscreen div.close-container {
       position: absolute;
       top: 0;
       right: 0;
@@ -237,10 +224,10 @@ html body {
       z-index: 5;
       cursor: pointer;
       background: #222; }
-      html body div.fullscreen div.close-container div.close {
+html body div.fullscreen div.close-container div.close {
         width: 20px;
         height: 20px; }
-        html body div.fullscreen div.close-container div.close div.line {
+html body div.fullscreen div.close-container div.close div.line {
           width: 15px;
           height: 2px;
           display: block;
@@ -250,48 +237,46 @@ html body {
                   transform: rotate(0deg);
           -webkit-transition: all .2s ease;
           transition: all .2s ease; }
-  html body header {
+html body header {
     width: 90%;
     max-width: 48em;
     padding: 3em 0;
     margin: 2rem auto 1rem auto;
     text-align: center; }
-    html body header h1 {
+html body header h1 {
       color: #555;
       margin-bottom: 0.7em; }
-    html body header h4 {
+html body header h4 {
       color: #888;
       font-weight: normal;
       margin-top: 0; }
-    html body header div.box {
+html body header div.box {
       width: 100%;
       height: 100%;
       z-index: 1;
       position: relative; }
-  html body section.content {
+html body section.content {
     width: 90%;
     max-width: 48em;
     margin: 0 auto;
     z-index: 1;
     overflow: hidden;
     position: relative; }
-  html body footer {
+html body footer {
     width: 90%;
     max-width: 48em;
     text-align: center;
     margin: 0 auto;
     padding: 4rem 0; }
-    html body footer svg {
+html body footer svg {
       fill: #333; }
-      html body footer svg:hover {
+html body footer svg:hover {
         fill: #777; }
-
 @-webkit-keyframes changeOpacity {
   from {
     opacity: 0.7; }
   to {
     opacity: 0.8; } }
-
 @keyframes changeOpacity {
   from {
     opacity: 0.7; }
@@ -312,10 +297,15 @@ html body {
   .hud .nodeContainer {
     margin: 60px 20px 0;
     display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-around;
-    flex-flow: row wrap; }
-    .hud .nodeContainer .rootNode {
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row wrap;
+            flex-flow: row wrap; }
+  .hud .nodeContainer .rootNode {
       width: 40px;
       height: 40px;
       border-radius: 50%;
