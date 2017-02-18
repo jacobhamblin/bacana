@@ -20,7 +20,7 @@ const b5 = {
       crystal.material = this.objects.crystalObjs[currentCrystal].material.clone();
       crystal.material.oldColor = crystal.material.color;
       crystal.position.set(x, y, z)
-      crystal.graphNode = new GraphNode({mesh: crystal})
+      crystal.graphNode = new GraphNode({mesh: crystal, id: this.counters.currentGraphNodeID++})
       this.scene.add(crystal)
       this.objects.crystals.push(crystal)
 
@@ -58,6 +58,7 @@ const b5 = {
         creatingEdge.geometry.dynamic = true;
 
         intersected.crystal.obj.graphNode.add(intersected.firstCrystal.graphNode)
+        this.updateHUD()
       } else {
         this.scene.remove(raycaster.creatingEdge)
       }
@@ -95,11 +96,11 @@ const b5 = {
     }
     
     b5Scene.hudInit = function() {
-      var hudDOM = document.createElement('div')
+      let hudDOM = document.createElement('div')
       hudDOM.className = 'hud'
       document.querySelector('.fullscreen.active').appendChild(hudDOM)
       this.HUD = hudDOM
-      var nodeContainer = document.createElement('div')
+      let nodeContainer = document.createElement('div')
       nodeContainer.className = 'nodeContainer'
       this.HUD.appendChild(nodeContainer)
       this.tempMem.push('HUD')
@@ -322,6 +323,7 @@ const b5 = {
       this.mouseState.mouseDown = false
       this.raycaster.creatingEdge = false
       this.rootNode = null
+      this.counters.currentGraphNodeID = 1;
       this.raycaster.intersected = {
         plane: {obj: null, pos: null},
         crystal: {obj: null, pos: null},
@@ -371,11 +373,27 @@ const b5 = {
 
     b5Scene.updateHUD = function() {
       if (this.rootNode) {
-        if (!this.HUD.querySelector('.rootNode')) {
-          var root = document.createElement('div')
-          root.className = 'rootNode'
-          this.HUD.querySelector('.nodeContainer').appendChild(root)
+        let nodeContainer = this.HUD.querySelector('.nodeContainer')
+        while (nodeContainer.firstChild) {
+          nodeContainer.removeChild(nodeContainer.firstChild)
         }
+        const levels = []
+        this.rootNode.bfs(undefined, undefined, (node, target, level) => {
+          if (typeof levels[level] !== "object") levels[level] = []
+          levels[level].push(node) 
+          return false
+        })
+        levels.forEach((l, index) => {
+          const container = document.createElement('div')
+          container.className = 'level'
+          l.forEach(n => {
+            const node = document.createElement('div')
+            node.className = 'node'
+            if (index === 0) node.className += ' root'
+            container.appendChild(node)
+          })
+         nodeContainer.appendChild(container) 
+        })   
       }
     }
     

@@ -305,12 +305,22 @@ html body footer svg:hover {
     -webkit-box-direction: normal;
         -ms-flex-flow: row wrap;
             flex-flow: row wrap; }
-  .hud .nodeContainer .rootNode {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: #A8C0F0;
-      display: inline-block;
-      margin: 0 auto; }
+  .hud .nodeContainer .level {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
+      margin-bottom: 50px;
+      width: 100%; }
+  .hud .nodeContainer .level .node {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: inline-block;
+        margin: 0 auto;
+        background-color: #84f0ab; }
+  .hud .nodeContainer .level .node.root {
+          background-color: #A8C0F0; }
 
 /*# sourceMappingURL=main.css.map*/

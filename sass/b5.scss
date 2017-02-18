@@ -16,13 +16,24 @@
     justify-content: space-around;
     flex-flow: row wrap;
     
-    .rootNode {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: #A8C0F0;
-      display: inline-block;
-      margin: 0 auto;
+    .level {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 50px;
+      width: 100%;
+
+      .node {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: inline-block;
+        margin: 0 auto;
+        background-color: #84f0ab;
+        
+        &.root {
+          background-color: #A8C0F0;
+        }
+      }
     }
   }
 }

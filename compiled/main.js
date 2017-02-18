@@ -46400,6 +46400,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; // b5.js
+
 var _three = __webpack_require__(0);
 
 var _three2 = _interopRequireDefault(_three);
@@ -46419,8 +46421,6 @@ var _vendor = __webpack_require__(2);
 __webpack_require__(22);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// b5.js
 
 var b5 = {
   init: function init(_ref) {
@@ -46442,7 +46442,7 @@ var b5 = {
       crystal.material = this.objects.crystalObjs[currentCrystal].material.clone();
       crystal.material.oldColor = crystal.material.color;
       crystal.position.set(x, y, z);
-      crystal.graphNode = new _utils.GraphNode({ mesh: crystal });
+      crystal.graphNode = new _utils.GraphNode({ mesh: crystal, id: this.counters.currentGraphNodeID++ });
       this.scene.add(crystal);
       this.objects.crystals.push(crystal);
 
@@ -46485,6 +46485,7 @@ var b5 = {
         creatingEdge.geometry.dynamic = true;
 
         intersected.crystal.obj.graphNode.add(intersected.firstCrystal.graphNode);
+        this.updateHUD();
       } else {
         this.scene.remove(raycaster.creatingEdge);
       }
@@ -46757,6 +46758,7 @@ var b5 = {
       this.mouseState.mouseDown = false;
       this.raycaster.creatingEdge = false;
       this.rootNode = null;
+      this.counters.currentGraphNodeID = 1;
       this.raycaster.intersected = {
         plane: { obj: null, pos: null },
         crystal: { obj: null, pos: null },
@@ -46800,11 +46802,27 @@ var b5 = {
 
     b5Scene.updateHUD = function () {
       if (this.rootNode) {
-        if (!this.HUD.querySelector('.rootNode')) {
-          var root = document.createElement('div');
-          root.className = 'rootNode';
-          this.HUD.querySelector('.nodeContainer').appendChild(root);
+        var nodeContainer = this.HUD.querySelector('.nodeContainer');
+        while (nodeContainer.firstChild) {
+          nodeContainer.removeChild(nodeContainer.firstChild);
         }
+        var levels = [];
+        this.rootNode.bfs(undefined, undefined, function (node, target, level) {
+          if (_typeof(levels[level]) !== "object") levels[level] = [];
+          levels[level].push(node);
+          return false;
+        });
+        levels.forEach(function (l, index) {
+          var container = document.createElement('div');
+          container.className = 'level';
+          l.forEach(function (n) {
+            var node = document.createElement('div');
+            node.className = 'node';
+            if (index === 0) node.className += ' root';
+            container.appendChild(node);
+          });
+          nodeContainer.appendChild(container);
+        });
       }
     };
 
@@ -47028,6 +47046,7 @@ var GraphNode = function () {
 
     this.adjacent = props.adjacent || [];
     this.mesh = props.mesh || null;
+    this.id = props.id;
   }
 
   _createClass(GraphNode, [{
@@ -47037,6 +47056,35 @@ var GraphNode = function () {
       node.adjacent.push(this);
 
       return node;
+    }
+  }, {
+    key: "bfs",
+    value: function bfs(target) {
+      var queue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+      var callback = arguments[2];
+      var seen = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+      var level = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+
+      var newLevel = level;
+      seen[this.id] = true;
+      if (this === target) return this;
+      if (callback) {
+        callback(this, target, level);
+        if (callback(this, target)) return this;
+      } else if (this === target) {
+        return this;
+      }
+      this.adjacent.forEach(function (n) {
+        var newNodes = false;
+        if (!seen[n.id]) {
+          queue.push(n);
+          seen[n.id] = true;
+          newNodes = true;
+        }
+        if (newNodes) newLevel++;
+      });
+      if (!queue.length) return null;
+      return queue.pop().bfs(target, queue, callback, seen, newLevel);
     }
   }]);
 
