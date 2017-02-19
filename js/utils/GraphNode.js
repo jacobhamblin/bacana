@@ -12,27 +12,23 @@ class GraphNode {
     return node;
   }
 
-  bfs(target, queue = [], callback, seen = {}, level = 0) {
-    let newLevel = level;
-    seen[this.id] = true;
+  bfs(target, queue = [], callback, seen = {}) {
+    seen[this.id] = seen[this.id] || [];
     if (this === target) return this;
     if (callback) {
-      callback(this, target, level);
-      if (callback(this, target)) return this;
+      callback(this, target, seen[this.id]);
+      //if (callback(this, target, seen[this.id])) return this;
     } else if (this === target) {
       return this;
     }
     this.adjacent.forEach((n) => {
-      let newNodes = false;
       if (!seen[n.id]) {
         queue.push(n);
-        seen[n.id] = true;
-        newNodes = true;
+        seen[n.id] = seen[this.id].concat(this.id);
       }
-      if (newNodes) newLevel++;
     });
     if (!queue.length) return null;
-    return queue.pop().bfs(target, queue, callback, seen, newLevel);
+    return queue.pop().bfs(target, queue, callback, seen);
   }
 }
 

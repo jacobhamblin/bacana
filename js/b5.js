@@ -378,9 +378,9 @@ const b5 = {
           nodeContainer.removeChild(nodeContainer.firstChild)
         }
         const levels = []
-        this.rootNode.bfs(undefined, undefined, (node, target, level) => {
-          if (typeof levels[level] !== "object") levels[level] = []
-          levels[level].push(node) 
+        this.rootNode.bfs(undefined, undefined, (node, target, path) => {
+          if (typeof levels[path.length] !== "object") levels[path.length] = []
+          levels[path.length].push(node.id) 
           return false
         })
         levels.forEach((l, index) => {

@@ -46807,9 +46807,9 @@ var b5 = {
           nodeContainer.removeChild(nodeContainer.firstChild);
         }
         var levels = [];
-        this.rootNode.bfs(undefined, undefined, function (node, target, level) {
-          if (_typeof(levels[level]) !== "object") levels[level] = [];
-          levels[level].push(node);
+        this.rootNode.bfs(undefined, undefined, function (node, target, path) {
+          if (_typeof(levels[path.length]) !== "object") levels[path.length] = [];
+          levels[path.length].push(node.id);
           return false;
         });
         levels.forEach(function (l, index) {
@@ -47061,30 +47061,28 @@ var GraphNode = function () {
     key: "bfs",
     value: function bfs(target) {
       var queue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+      var _this = this;
+
       var callback = arguments[2];
       var seen = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-      var level = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
 
-      var newLevel = level;
-      seen[this.id] = true;
+      seen[this.id] = seen[this.id] || [];
       if (this === target) return this;
       if (callback) {
-        callback(this, target, level);
-        if (callback(this, target)) return this;
+        callback(this, target, seen[this.id]);
+        //if (callback(this, target, seen[this.id])) return this;
       } else if (this === target) {
         return this;
       }
       this.adjacent.forEach(function (n) {
-        var newNodes = false;
         if (!seen[n.id]) {
           queue.push(n);
-          seen[n.id] = true;
-          newNodes = true;
+          seen[n.id] = seen[_this.id].concat(_this.id);
         }
-        if (newNodes) newLevel++;
       });
       if (!queue.length) return null;
-      return queue.pop().bfs(target, queue, callback, seen, newLevel);
+      return queue.pop().bfs(target, queue, callback, seen);
     }
   }]);
 
