@@ -46561,6 +46561,8 @@ var b5 = {
       this.mouseState.mouseDown = false;
       if (this.raycaster.creatingEdge) {
         this.finishEdge();
+      } else if (e.shiftKey) {
+        this.maybeSetTarget();
       }
     };
 
@@ -46583,9 +46585,18 @@ var b5 = {
 
 
       if (raycaster.intersected.crystal.obj) {
-        this.maybeSetRoot();
+        this.maybeSetSpecial('rootNode');
       } else if (raycaster.intersected.plane.obj) {
         this.createCrystal();
+      }
+    };
+
+    b5Scene.maybeSetTarget = function () {
+      var raycaster = this.raycaster;
+
+
+      if (raycaster.intersected.crystal.obj) {
+        this.maybeSetSpecial('targetNode');
       }
     };
 
@@ -46601,19 +46612,18 @@ var b5 = {
       }
     };
 
-    b5Scene.maybeSetRoot = function () {
+    b5Scene.maybeSetSpecial = function (type) {
       var raycaster = this.raycaster;
 
 
       if (raycaster.intersected.crystal.obj) {
-        if (this.rootNode) {
-          this.rootNode.mesh.material.color = this.rootNode.mesh.material.oldColor;
-          this.rootNode = raycaster.intersected.crystal.obj.graphNode;
-        } else {
-          this.rootNode = raycaster.intersected.crystal.obj.graphNode;
+        if (this[type]) {
+          this[type].mesh.material.color = this[type].mesh.material.oldColor;
         }
+        this[type] = raycaster.intersected.crystal.obj.graphNode;
 
-        this.rootNode.mesh.material.color = new _three2.default.Color(this.colors[6]);
+        var color = type === 'rootNode' ? 6 : 4;
+        this[type].mesh.material.color = new _three2.default.Color(this.colors[color]);
         this.updateHUD();
       }
     };
@@ -46801,6 +46811,8 @@ var b5 = {
     };
 
     b5Scene.updateHUD = function () {
+      var _this2 = this;
+
       if (this.rootNode) {
         var nodeContainer = this.HUD.querySelector('.nodeContainer');
         while (nodeContainer.firstChild) {
@@ -46819,6 +46831,7 @@ var b5 = {
             var node = document.createElement('div');
             node.className = 'node';
             if (index === 0) node.className += ' root';
+            if (_this2.targetNode && _this2.targetNode.id === n) node.className += ' target';
             container.appendChild(node);
           });
           nodeContainer.appendChild(container);

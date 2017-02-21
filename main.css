@@ -322,5 +322,7 @@ html body footer svg:hover {
         background-color: #84f0ab; }
   .hud .nodeContainer .level .node.root {
           background-color: #A8C0F0; }
+  .hud .nodeContainer .level .node.target {
+          background-color: #A8F0E4; }
 
 /*# sourceMappingURL=main.css.map*/

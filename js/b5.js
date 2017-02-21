@@ -131,6 +131,8 @@ const b5 = {
       this.mouseState.mouseDown = false
       if (this.raycaster.creatingEdge) {
         this.finishEdge()
+      } else if (e.shiftKey) {
+        this.maybeSetTarget()
       }
     }
 
@@ -152,9 +154,17 @@ const b5 = {
       let { raycaster } = this
 
       if (raycaster.intersected.crystal.obj) {
-        this.maybeSetRoot()
+        this.maybeSetSpecial('rootNode')
       } else if (raycaster.intersected.plane.obj) {
         this.createCrystal()
+      }
+    }
+
+    b5Scene.maybeSetTarget = function() {
+      let { raycaster } = this
+
+      if (raycaster.intersected.crystal.obj) {
+        this.maybeSetSpecial('targetNode')
       }
     }
 
@@ -168,18 +178,17 @@ const b5 = {
       }
     }
 
-    b5Scene.maybeSetRoot = function() {
+    b5Scene.maybeSetSpecial = function(type) {
       let { raycaster } = this
 
       if (raycaster.intersected.crystal.obj) {
-        if (this.rootNode) {
-          this.rootNode.mesh.material.color = this.rootNode.mesh.material.oldColor
-          this.rootNode = raycaster.intersected.crystal.obj.graphNode
-        } else {
-          this.rootNode = raycaster.intersected.crystal.obj.graphNode
+        if (this[type]) {
+          this[type].mesh.material.color = this[type].mesh.material.oldColor
         }
+        this[type] = raycaster.intersected.crystal.obj.graphNode
 
-        this.rootNode.mesh.material.color = new THREE.Color(this.colors[6])
+        let color = type === 'rootNode' ? 6 : 4;
+        this[type].mesh.material.color = new THREE.Color(this.colors[color])
         this.updateHUD();
       }
     }
@@ -390,6 +399,7 @@ const b5 = {
             const node = document.createElement('div')
             node.className = 'node'
             if (index === 0) node.className += ' root'
+            if (this.targetNode && this.targetNode.id === n) node.className += ' target'
             container.appendChild(node)
           })
          nodeContainer.appendChild(container) 
