@@ -46400,7 +46400,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; // b5.js
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _three = __webpack_require__(0);
 
@@ -46421,6 +46421,8 @@ var _vendor = __webpack_require__(2);
 __webpack_require__(22);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; } // b5.js
 
 var b5 = {
   init: function init(_ref) {
@@ -46468,7 +46470,7 @@ var b5 = {
     };
 
     b5Scene.click = function (e) {
-      if (e.ctrlKey || e.metaKey) {
+      if (this.editable && e.ctrlKey || this.editable && e.metaKey) {
         this.maybeCreateCrystal();
       }
     };
@@ -46526,10 +46528,57 @@ var b5 = {
     };
 
     b5Scene.hudInit = function () {
+      var _this2 = this;
+
       var hudDOM = document.createElement('div');
       hudDOM.className = 'hud';
       document.querySelector('.fullscreen.active').appendChild(hudDOM);
       this.HUD = hudDOM;
+      var buttonContainer = document.createElement('div');
+
+      buttonContainer.className = 'buttonContainer';
+      var dfs = document.createElement('a');
+      dfs.innerHTML = 'dfs';
+      dfs.addEventListener('click', function (e) {
+        if (_this2.rootNode && _this2.targetNode) {
+          _this2.editable = false;
+          _this2.rootNode.dfs(_this2.targetNode.id, function () {
+            var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(n) {
+              var material;
+              return regeneratorRuntime.wrap(function _callee$(_context) {
+                while (1) {
+                  switch (_context.prev = _context.next) {
+                    case 0:
+                      material = n.mesh.material;
+
+                      material.currentColor = material.color;
+                      material.color = _this2.colors[_this2.colors.length - 1];
+                      _context.next = 5;
+                      return (0, _utils.sleep)(2000);
+
+                    case 5:
+                      material.color = material.currentColor;
+
+                    case 6:
+                    case 'end':
+                      return _context.stop();
+                  }
+                }
+              }, _callee, _this2);
+            }));
+
+            return function (_x) {
+              return _ref2.apply(this, arguments);
+            };
+          }());
+          _this2.editable = true;
+        }
+      });
+      var bfs = document.createElement('a');
+      bfs.innerHTML = 'bfs';
+      buttonContainer.appendChild(bfs);
+      buttonContainer.appendChild(dfs);
+      this.HUD.appendChild(buttonContainer);
       var nodeContainer = document.createElement('div');
       nodeContainer.className = 'nodeContainer';
       this.HUD.appendChild(nodeContainer);
@@ -46552,7 +46601,7 @@ var b5 = {
     };
 
     b5Scene.mousemove = function (e) {
-      if (this.mouseState.mouseDown && e.shiftKey) {
+      if (this.mouseState.mouseDown && e.shiftKey && this.editable) {
         this.maybeCreateEdge();
       }
     };
@@ -46561,7 +46610,7 @@ var b5 = {
       this.mouseState.mouseDown = false;
       if (this.raycaster.creatingEdge) {
         this.finishEdge();
-      } else if (e.shiftKey) {
+      } else if (e.shiftKey && this.editable) {
         this.maybeSetTarget();
       }
     };
@@ -46768,6 +46817,7 @@ var b5 = {
       this.mouseState.mouseDown = false;
       this.raycaster.creatingEdge = false;
       this.rootNode = null;
+      this.editable = true;
       this.counters.currentGraphNodeID = 1;
       this.raycaster.intersected = {
         plane: { obj: null, pos: null },
@@ -46811,7 +46861,7 @@ var b5 = {
     };
 
     b5Scene.updateHUD = function () {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this.rootNode) {
         var nodeContainer = this.HUD.querySelector('.nodeContainer');
@@ -46831,7 +46881,7 @@ var b5 = {
             var node = document.createElement('div');
             node.className = 'node';
             if (index === 0) node.className += ' root';
-            if (_this2.targetNode && _this2.targetNode.id === n) node.className += ' target';
+            if (_this3.targetNode && _this3.targetNode.id === n) node.className += ' target';
             container.appendChild(node);
           });
           nodeContainer.appendChild(container);
@@ -47081,12 +47131,9 @@ var GraphNode = function () {
       var seen = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
       seen[this.id] = seen[this.id] || [];
-      if (this === target) return this;
+      if (this.id === target) return this;
       if (callback) {
-        callback(this, target, seen[this.id]);
-        //if (callback(this, target, seen[this.id])) return this;
-      } else if (this === target) {
-        return this;
+        if (callback(this, target, seen[this.id])) return this;
       }
       this.adjacent.forEach(function (n) {
         if (!seen[n.id]) {
@@ -47094,8 +47141,28 @@ var GraphNode = function () {
           seen[n.id] = seen[_this.id].concat(_this.id);
         }
       });
-      if (!queue.length) return null;
+      if (!queue.length) return -1;
       return queue.pop().bfs(target, queue, callback, seen);
+    }
+  }, {
+    key: "dfs",
+    value: function dfs(target, callback) {
+      var _this2 = this;
+
+      var seen = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      seen[this.id] = seen[this.id] || [];
+      if (this.id === target) return this;
+      if (callback) {
+        if (callback(this, target, seen[this.id])) return this;
+      }
+      this.adjacent.forEach(function (n) {
+        if (!seen[_this2.id]) {
+          seen[n.id] = seen[_this2.id].concat(_this2.id);
+          return n.dfs(target, callback, seen);
+        }
+      });
+      return -1;
     }
   }]);
 

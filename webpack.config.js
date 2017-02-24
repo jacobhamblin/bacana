@@ -6,7 +6,7 @@ const autoprefixer = require('autoprefixer');
 
 module.exports = {
   context: __dirname,
-  entry: './js/main.js',
+  entry: ['babel-polyfill', './js/main.js'],
   output: {
     filename: 'main.js',
     sourceMapFilename: '[file].map',

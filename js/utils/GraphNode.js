@@ -14,12 +14,9 @@ class GraphNode {
 
   bfs(target, queue = [], callback, seen = {}) {
     seen[this.id] = seen[this.id] || [];
-    if (this === target) return this;
+    if (this.id === target) return this;
     if (callback) {
-      callback(this, target, seen[this.id]);
-      //if (callback(this, target, seen[this.id])) return this;
-    } else if (this === target) {
-      return this;
+      if (callback(this, target, seen[this.id])) return this;
     }
     this.adjacent.forEach((n) => {
       if (!seen[n.id]) {
@@ -27,8 +24,23 @@ class GraphNode {
         seen[n.id] = seen[this.id].concat(this.id);
       }
     });
-    if (!queue.length) return null;
+    if (!queue.length) return -1;
     return queue.pop().bfs(target, queue, callback, seen);
+  }
+
+  dfs(target, callback, seen = {}) {
+    seen[this.id] = seen[this.id] || [];
+    if (this.id === target) return this;
+    if (callback) {
+      if (callback(this, target, seen[this.id])) return this;
+    }
+    this.adjacent.forEach((n) => {
+      if (!seen[this.id]) {
+        seen[n.id] = seen[this.id].concat(this.id);
+        return n.dfs(target, callback, seen);
+      }
+    });
+    return -1;
   }
 }
 

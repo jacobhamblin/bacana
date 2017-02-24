@@ -3,7 +3,7 @@
 import THREE from 'three';
 import bScene from './bScene.js';
 import TweenLite from 'gsap';
-import { LinkedList, GraphNode } from './utils'
+import { LinkedList, GraphNode, sleep } from './utils'
 import { MeshLine, MeshLineMaterial } from './vendor';
 import '../sass/b5.scss';
 
@@ -42,7 +42,7 @@ const b5 = {
     }
 
     b5Scene.click = function(e) {
-      if (e.ctrlKey || e.metaKey) {
+      if (this.editable && e.ctrlKey || this.editable && e.metaKey) {
         this.maybeCreateCrystal()
       }
     }
@@ -100,7 +100,30 @@ const b5 = {
       hudDOM.className = 'hud'
       document.querySelector('.fullscreen.active').appendChild(hudDOM)
       this.HUD = hudDOM
-      let nodeContainer = document.createElement('div')
+      const buttonContainer = document.createElement('div')
+
+      buttonContainer.className = 'buttonContainer'
+      const dfs = document.createElement('a')
+      dfs.innerHTML = 'dfs'
+      dfs.addEventListener('click', e => {
+        if (this.rootNode && this.targetNode) {
+          this.editable = false
+          this.rootNode.dfs(this.targetNode.id, async n => {
+            const { material } = n.mesh
+            material.currentColor = material.color
+            material.color = this.colors[this.colors.length - 1]
+            await sleep(2000)
+            material.color = material.currentColor
+          })
+          this.editable = true
+        }
+      })
+      const bfs = document.createElement('a')
+      bfs.innerHTML = 'bfs' 
+      buttonContainer.appendChild(bfs)
+      buttonContainer.appendChild(dfs)
+      this.HUD.appendChild(buttonContainer)
+      const nodeContainer = document.createElement('div')
       nodeContainer.className = 'nodeContainer'
       this.HUD.appendChild(nodeContainer)
       this.tempMem.push('HUD')
@@ -122,7 +145,7 @@ const b5 = {
     }
 
     b5Scene.mousemove = function(e) {
-      if (this.mouseState.mouseDown && e.shiftKey) {
+      if (this.mouseState.mouseDown && e.shiftKey && this.editable) {
         this.maybeCreateEdge()
       }
     }
@@ -131,16 +154,16 @@ const b5 = {
       this.mouseState.mouseDown = false
       if (this.raycaster.creatingEdge) {
         this.finishEdge()
-      } else if (e.shiftKey) {
+      } else if (e.shiftKey && this.editable) {
         this.maybeSetTarget()
       }
     }
 
     b5Scene.makeLine = function (geo) {
-    	var g = new THREE.MeshLine();
+    	const g = new THREE.MeshLine();
     	g.setGeometry(geo);
 
-    	var mesh = new THREE.Mesh( g.geometry, material );
+    	const mesh = new THREE.Mesh( g.geometry, material );
     	mesh.position.z += 500;
     	mesh.position.y += 300;
     	mesh.rotation.y = -Math.PI / 2;
@@ -332,6 +355,7 @@ const b5 = {
       this.mouseState.mouseDown = false
       this.raycaster.creatingEdge = false
       this.rootNode = null
+      this.editable = true
       this.counters.currentGraphNodeID = 1;
       this.raycaster.intersected = {
         plane: {obj: null, pos: null},
