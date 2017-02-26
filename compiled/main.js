@@ -50013,7 +50013,7 @@ var b5 = {
       }
     };
 
-    b5Scene.graphTraversalCallback = function (e, method) {
+    b5Scene.graphTraversalCallback = function (method) {
       var _this2 = this;
 
       if (this.rootNode && this.targetNode) {
@@ -50025,25 +50025,24 @@ var b5 = {
                 while (1) {
                   switch (_context.prev = _context.next) {
                     case 0:
-                      console.log('nodeID: ' + n.id);
                       material = n.mesh.material;
 
                       material.currentColor = material.color;
                       material.color = _this2.colors[_this2.colors.length - 1];
-                      _context.next = 6;
-                      return (0, _utils.sleep)(1000);
+                      _context.next = 5;
+                      return (0, _utils.sleep)(500);
 
-                    case 6:
+                    case 5:
                       material.color = material.currentColor;
 
                       if (!(n.id !== target)) {
-                        _context.next = 9;
+                        _context.next = 8;
                         break;
                       }
 
                       return _context.abrupt('return', false);
 
-                    case 9:
+                    case 8:
                     case 'end':
                       return _context.stop();
                   }
@@ -50071,12 +50070,12 @@ var b5 = {
       var dfs = document.createElement('a');
       dfs.innerHTML = 'dfs';
       dfs.addEventListener('click', function (e) {
-        return b5Scene.graphTraversalCallback(e, 'dfs');
+        return b5Scene.graphTraversalCallback('dfs');
       });
       var bfs = document.createElement('a');
       bfs.innerHTML = 'bfs';
       bfs.addEventListener('click', function (e) {
-        return b5Scene.graphTraversalCallback(e, 'bfs');
+        return b5Scene.graphTraversalCallback('bfs');
       });
       buttonContainer.appendChild(bfs);
       buttonContainer.appendChild(dfs);
@@ -50371,11 +50370,11 @@ var b5 = {
           nodeContainer.removeChild(nodeContainer.firstChild);
         }
         var levels = [];
-        this.rootNode.bfs(undefined, undefined, function (node, target, path) {
-          if (_typeof(levels[path.length]) !== "object") levels[path.length] = [];
-          levels[path.length].push(node.id);
-          return false;
-        });
+        this.rootNode.bfs({ callback: function callback(node, target, path) {
+            if (_typeof(levels[path.length]) !== "object") levels[path.length] = [];
+            levels[path.length].push(node.id);
+            return false;
+          } });
         levels.forEach(function (l, index) {
           var container = document.createElement('div');
           container.className = 'level';
@@ -50445,8 +50444,9 @@ var GraphNode = function () {
 
       seen[this.id] = seen[this.id] || [];
       if (this.id === target) return this;
+      debugger;
       if (callback) {
-        if (callback(this, target, seen[this.id])) return this;
+        callback(this, target, seen[this.id]);
       }
       this.adjacent.forEach(function (n) {
         if (!seen[n.id]) {

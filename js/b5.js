@@ -95,15 +95,14 @@ const b5 = {
       }
     }
     
-    b5Scene.graphTraversalCallback = function(e, method) {
+    b5Scene.graphTraversalCallback = function(method) {
       if (this.rootNode && this.targetNode) {
         this.editable = false
         this.rootNode[method]({target: this.targetNode.id, callback: async (n, target) => {
-          console.log('nodeID: ' + n.id)
           const { material } = n.mesh
           material.currentColor = material.color
           material.color = this.colors[this.colors.length - 1]
-          await sleep(1000)
+          await sleep(500)
           material.color = material.currentColor
           if (n.id !== target) return false;
         }})
@@ -122,10 +121,10 @@ const b5 = {
       buttonContainer.className = 'buttonContainer'
       const dfs = document.createElement('a')
       dfs.innerHTML = 'dfs'
-      dfs.addEventListener('click', e => b5Scene.graphTraversalCallback(e, 'dfs'))
+      dfs.addEventListener('click', e => b5Scene.graphTraversalCallback('dfs'))
       const bfs = document.createElement('a')
       bfs.innerHTML = 'bfs' 
-      bfs.addEventListener('click', e => b5Scene.graphTraversalCallback(e, 'bfs'))
+      bfs.addEventListener('click', e => b5Scene.graphTraversalCallback('bfs'))
       buttonContainer.appendChild(bfs)
       buttonContainer.appendChild(dfs)
       this.HUD.appendChild(buttonContainer)
@@ -417,11 +416,11 @@ const b5 = {
           nodeContainer.removeChild(nodeContainer.firstChild)
         }
         const levels = []
-        this.rootNode.bfs(undefined, undefined, (node, target, path) => {
+        this.rootNode.bfs({callback: (node, target, path) => {
           if (typeof levels[path.length] !== "object") levels[path.length] = []
           levels[path.length].push(node.id) 
           return false
-        })
+        }})
         levels.forEach((l, index) => {
           const container = document.createElement('div')
           container.className = 'level'

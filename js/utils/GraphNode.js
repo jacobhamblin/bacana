@@ -15,8 +15,9 @@ class GraphNode {
   bfs({target, queue = [], callback, seen = {}}) {
     seen[this.id] = seen[this.id] || [];
     if (this.id === target) return this;
+debugger
     if (callback) {
-      if (callback(this, target, seen[this.id])) return this;
+      callback(this, target, seen[this.id])
     }
     this.adjacent.forEach((n) => {
       if (!seen[n.id]) {
