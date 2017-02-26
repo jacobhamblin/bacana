@@ -95,8 +95,25 @@ const b5 = {
       }
     }
     
+    b5Scene.graphTraversalCallback = function(e, method) {
+      if (this.rootNode && this.targetNode) {
+        this.editable = false
+        this.rootNode[method]({target: this.targetNode.id, callback: async (n, target) => {
+          console.log('nodeID: ' + n.id)
+          const { material } = n.mesh
+          material.currentColor = material.color
+          material.color = this.colors[this.colors.length - 1]
+          await sleep(1000)
+          material.color = material.currentColor
+          if (n.id !== target) return false;
+        }})
+        this.editable = true
+      }
+    }
+
     b5Scene.hudInit = function() {
       let hudDOM = document.createElement('div')
+      let b5Scene = this;
       hudDOM.className = 'hud'
       document.querySelector('.fullscreen.active').appendChild(hudDOM)
       this.HUD = hudDOM
@@ -105,21 +122,10 @@ const b5 = {
       buttonContainer.className = 'buttonContainer'
       const dfs = document.createElement('a')
       dfs.innerHTML = 'dfs'
-      dfs.addEventListener('click', e => {
-        if (this.rootNode && this.targetNode) {
-          this.editable = false
-          this.rootNode.dfs(this.targetNode.id, async n => {
-            const { material } = n.mesh
-            material.currentColor = material.color
-            material.color = this.colors[this.colors.length - 1]
-            await sleep(2000)
-            material.color = material.currentColor
-          })
-          this.editable = true
-        }
-      })
+      dfs.addEventListener('click', e => b5Scene.graphTraversalCallback(e, 'dfs'))
       const bfs = document.createElement('a')
       bfs.innerHTML = 'bfs' 
+      bfs.addEventListener('click', e => b5Scene.graphTraversalCallback(e, 'bfs'))
       buttonContainer.appendChild(bfs)
       buttonContainer.appendChild(dfs)
       this.HUD.appendChild(buttonContainer)
