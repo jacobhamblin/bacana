@@ -101,7 +101,7 @@ const b5 = {
         this.rootNode[method]({target: this.targetNode.id, callback: async (n, target) => {
           const { material } = n.mesh
           material.currentColor = material.color
-          material.color = this.colors[this.colors.length - 1]
+          material.color = new THREE.Color(this.colors[this.colors.length - 1])
           await sleep(500)
           material.color = material.currentColor
           if (n.id !== target) return false;

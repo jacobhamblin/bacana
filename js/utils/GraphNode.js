@@ -15,7 +15,6 @@ class GraphNode {
   bfs({target, queue = [], callback, seen = {}}) {
     seen[this.id] = seen[this.id] || [];
     if (this.id === target) return this;
-debugger
     if (callback) {
       callback(this, target, seen[this.id])
     }

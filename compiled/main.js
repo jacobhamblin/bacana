@@ -50028,7 +50028,7 @@ var b5 = {
                       material = n.mesh.material;
 
                       material.currentColor = material.color;
-                      material.color = _this2.colors[_this2.colors.length - 1];
+                      material.color = new _three2.default.Color(_this2.colors[_this2.colors.length - 1]);
                       _context.next = 5;
                       return (0, _utils.sleep)(500);
 
@@ -50444,7 +50444,6 @@ var GraphNode = function () {
 
       seen[this.id] = seen[this.id] || [];
       if (this.id === target) return this;
-      debugger;
       if (callback) {
         callback(this, target, seen[this.id]);
       }
