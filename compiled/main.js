@@ -50016,44 +50016,62 @@ var b5 = {
     b5Scene.graphTraversalCallback = function (method) {
       var _this2 = this;
 
+      var callbackFinish = function callbackFinish(_ref2) {
+        var node = _ref2.node,
+            callbackQueue = _ref2.callbackQueue,
+            callbackStart = _ref2.callbackStart;
+        var material = node.mesh.material;
+
+        material.color = material.currentColor;
+        if (callbackQueue.length) callbackStart({ callbackQueue: callbackQueue, callbackFinish: callbackFinish });
+      };
+      var callbackStart = function () {
+        var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(_ref4) {
+          var callbackQueue = _ref4.callbackQueue,
+              callbackFinish = _ref4.callbackFinish,
+              target = _ref4.target;
+          var node, material;
+          return regeneratorRuntime.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  node = callbackQueue.pop();
+
+                  if (!(node.id === target)) {
+                    _context.next = 3;
+                    break;
+                  }
+
+                  return _context.abrupt('return', node);
+
+                case 3:
+                  material = node.mesh.material;
+
+                  material.currentColor = material.color;
+                  material.color = new _three2.default.Color(_this2.colors[_this2.colors.length - 1]);
+                  _context.next = 8;
+                  return (0, _utils.sleep)(500);
+
+                case 8:
+                  callbackFinish({ node: node, callbackQueue: callbackQueue, callbackStart: callbackStart });
+
+                case 9:
+                case 'end':
+                  return _context.stop();
+              }
+            }
+          }, _callee, _this2);
+        }));
+
+        return function callbackStart(_x) {
+          return _ref3.apply(this, arguments);
+        };
+      }();
       if (this.rootNode && this.targetNode) {
         this.editable = false;
-        this.rootNode[method]({ target: this.targetNode.id, callback: function () {
-            var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(n, target) {
-              var material;
-              return regeneratorRuntime.wrap(function _callee$(_context) {
-                while (1) {
-                  switch (_context.prev = _context.next) {
-                    case 0:
-                      material = n.mesh.material;
-
-                      material.currentColor = material.color;
-                      material.color = new _three2.default.Color(_this2.colors[_this2.colors.length - 1]);
-                      _context.next = 5;
-                      return (0, _utils.sleep)(500);
-
-                    case 5:
-                      material.color = material.currentColor;
-
-                      if (!(n.id !== target)) {
-                        _context.next = 8;
-                        break;
-                      }
-
-                      return _context.abrupt('return', false);
-
-                    case 8:
-                    case 'end':
-                      return _context.stop();
-                  }
-                }
-              }, _callee, _this2);
-            }));
-
-            return function callback(_x, _x2) {
-              return _ref2.apply(this, arguments);
-            };
-          }() });
+        this.rootNode[method]({
+          target: this.targetNode.id, callback: callbackStart, callbackFinish: callbackFinish
+        });
         this.editable = true;
       }
     };
@@ -50370,7 +50388,11 @@ var b5 = {
           nodeContainer.removeChild(nodeContainer.firstChild);
         }
         var levels = [];
-        this.rootNode.bfs({ callback: function callback(node, target, path) {
+        this.rootNode.bfs({ callback: function callback(_ref5) {
+            var node = _ref5.node,
+                target = _ref5.target,
+                path = _ref5.path;
+
             if (_typeof(levels[path.length]) !== "object") levels[path.length] = [];
             levels[path.length].push(node.id);
             return false;
@@ -50440,21 +50462,34 @@ var GraphNode = function () {
           queue = _ref$queue === undefined ? [] : _ref$queue,
           callback = _ref.callback,
           _ref$seen = _ref.seen,
-          seen = _ref$seen === undefined ? {} : _ref$seen;
+          seen = _ref$seen === undefined ? {} : _ref$seen,
+          _ref$callbackQueue = _ref.callbackQueue,
+          callbackQueue = _ref$callbackQueue === undefined ? [] : _ref$callbackQueue,
+          callbackFinish = _ref.callbackFinish,
+          _ref$continueCallback = _ref.continueCallback,
+          continueCallback = _ref$continueCallback === undefined ? true : _ref$continueCallback;
 
       seen[this.id] = seen[this.id] || [];
       if (this.id === target) return this;
-      if (callback) {
-        callback(this, target, seen[this.id]);
-      }
       this.adjacent.forEach(function (n) {
         if (!seen[n.id]) {
           queue.push(n);
+          callbackQueue.push(n);
           seen[n.id] = seen[_this.id].concat(_this.id);
         }
       });
+      if (callback && continueCallback) {
+        if (callbackFinish) continueCallback = false;
+        callback({
+          node: this, target: target, path: seen[this.id],
+          callbackFinish: callbackFinish, callbackQueue: callbackQueue
+        });
+      }
       if (!queue.length) return -1;
-      return queue.pop().bfs({ target: target, queue: queue, callback: callback, seen: seen });
+      return queue.pop().bfs({
+        target: target, queue: queue, callback: callback, seen: seen, continueCallback: continueCallback,
+        callbackQueue: callbackQueue, callbackFinish: callbackFinish
+      });
     }
   }, {
     key: "dfs",
@@ -50464,17 +50499,30 @@ var GraphNode = function () {
       var target = _ref2.target,
           callback = _ref2.callback,
           _ref2$seen = _ref2.seen,
-          seen = _ref2$seen === undefined ? {} : _ref2$seen;
+          seen = _ref2$seen === undefined ? {} : _ref2$seen,
+          _ref2$callbackQueue = _ref2.callbackQueue,
+          callbackQueue = _ref2$callbackQueue === undefined ? [this] : _ref2$callbackQueue,
+          callbackFinish = _ref2.callbackFinish,
+          _ref2$continueCallbac = _ref2.continueCallback,
+          continueCallback = _ref2$continueCallbac === undefined ? true : _ref2$continueCallbac;
 
       seen[this.id] = seen[this.id] || [];
       if (this.id === target) return this;
-      if (callback) {
-        if (callback(this, target, seen[this.id])) return this;
+      if (callback && continueCallback) {
+        if (callbackFinish) continueCallback = false;
+        callback({
+          node: this, target: target, path: seen[this.id],
+          callbackFinish: callbackFinish, callbackQueue: callbackQueue
+        });
       }
       this.adjacent.forEach(function (n) {
         if (!seen[n.id]) {
           seen[n.id] = seen[_this2.id].concat(_this2.id);
-          return n.dfs({ target: target, callback: callback, seen: seen });
+          callbackQueue.push(n);
+          return n.dfs({
+            target: target, callback: callback, seen: seen, continueCallback: continueCallback,
+            callbackQueue: callbackQueue, callbackFinish: callbackFinish
+          });
         }
       });
       return -1;

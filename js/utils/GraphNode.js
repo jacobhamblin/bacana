@@ -12,32 +12,54 @@ class GraphNode {
     return node;
   }
 
-  bfs({target, queue = [], callback, seen = {}}) {
+  bfs({
+      target, queue = [], callback, seen = {}, 
+      callbackQueue = [], callbackFinish, continueCallback = true
+    }) {
     seen[this.id] = seen[this.id] || [];
     if (this.id === target) return this;
-    if (callback) {
-      callback(this, target, seen[this.id])
-    }
     this.adjacent.forEach((n) => {
       if (!seen[n.id]) {
         queue.push(n);
+        callbackQueue.push(n);
         seen[n.id] = seen[this.id].concat(this.id);
       }
     });
+    if (callback && continueCallback) {
+      if (callbackFinish) continueCallback = false;
+      callback({
+        node: this, target, path: seen[this.id],
+        callbackFinish, callbackQueue
+      });
+    }
     if (!queue.length) return -1;
-    return queue.pop().bfs({target, queue, callback, seen});
+    return queue.pop().bfs({
+      target, queue, callback, seen, continueCallback,
+      callbackQueue, callbackFinish
+    });
   }
 
-  dfs({target, callback, seen = {}}) {
+  dfs({
+      target, callback, seen = {},
+      callbackQueue = [this], callbackFinish, continueCallback = true
+    }) {
     seen[this.id] = seen[this.id] || [];
     if (this.id === target) return this;
-    if (callback) {
-      if (callback(this, target, seen[this.id])) return this;
+    if (callback && continueCallback) {
+      if (callbackFinish) continueCallback = false;
+      callback({
+        node: this, target, path: seen[this.id],
+        callbackFinish, callbackQueue
+      });
     }
     this.adjacent.forEach((n) => {
       if (!seen[n.id]) {
         seen[n.id] = seen[this.id].concat(this.id);
-        return n.dfs({target, callback, seen});
+        callbackQueue.push(n)
+        return n.dfs({
+          target, callback, seen, continueCallback,
+          callbackQueue, callbackFinish
+        });
       }
     });
     return -1;

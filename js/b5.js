@@ -96,16 +96,25 @@ const b5 = {
     }
     
     b5Scene.graphTraversalCallback = function(method) {
+      const callbackFinish = ({node, callbackQueue, callbackStart}) => {
+        const { material } = node.mesh  
+        material.color = material.currentColor
+        if (callbackQueue.length) callbackStart({callbackQueue, callbackFinish})
+      }
+      const callbackStart = async ({callbackQueue, callbackFinish, target}) => {
+        const node = callbackQueue.pop()
+        if (node.id === target) return node;
+        const { material } = node.mesh
+        material.currentColor = material.color
+        material.color = new THREE.Color(this.colors[this.colors.length - 1])
+        await sleep(500)
+        callbackFinish({node, callbackQueue, callbackStart})
+      }
       if (this.rootNode && this.targetNode) {
         this.editable = false
-        this.rootNode[method]({target: this.targetNode.id, callback: async (n, target) => {
-          const { material } = n.mesh
-          material.currentColor = material.color
-          material.color = new THREE.Color(this.colors[this.colors.length - 1])
-          await sleep(500)
-          material.color = material.currentColor
-          if (n.id !== target) return false;
-        }})
+        this.rootNode[method]({
+          target: this.targetNode.id, callback: callbackStart, callbackFinish
+        })
         this.editable = true
       }
     }
@@ -416,7 +425,7 @@ const b5 = {
           nodeContainer.removeChild(nodeContainer.firstChild)
         }
         const levels = []
-        this.rootNode.bfs({callback: (node, target, path) => {
+        this.rootNode.bfs({callback: ({node, target, path}) => {
           if (typeof levels[path.length] !== "object") levels[path.length] = []
           levels[path.length].push(node.id) 
           return false
