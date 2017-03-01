@@ -33,7 +33,7 @@ class GraphNode {
       });
     }
     if (!queue.length) return -1;
-    return queue.pop().bfs({
+    return queue.shift().bfs({
       target, queue, callback, seen, continueCallback,
       callbackQueue, callbackFinish
     });

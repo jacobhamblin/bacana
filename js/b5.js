@@ -96,19 +96,19 @@ const b5 = {
     }
     
     b5Scene.graphTraversalCallback = function(method) {
-      const callbackFinish = ({node, callbackQueue, callbackStart}) => {
+      const callbackFinish = ({node, callbackQueue, callbackStart, target}) => {
         const { material } = node.mesh  
         material.color = material.currentColor
-        if (callbackQueue.length) callbackStart({callbackQueue, callbackFinish})
+        if (callbackQueue.length) callbackStart({callbackQueue, callbackFinish, target})
       }
       const callbackStart = async ({callbackQueue, callbackFinish, target}) => {
-        const node = callbackQueue.pop()
+        const node = callbackQueue.shift()
         if (node.id === target) return node;
         const { material } = node.mesh
         material.currentColor = material.color
         material.color = new THREE.Color(this.colors[this.colors.length - 1])
         await sleep(500)
-        callbackFinish({node, callbackQueue, callbackStart})
+        callbackFinish({node, callbackQueue, callbackStart, target})
       }
       if (this.rootNode && this.targetNode) {
         this.editable = false

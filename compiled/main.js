@@ -50019,11 +50019,12 @@ var b5 = {
       var callbackFinish = function callbackFinish(_ref2) {
         var node = _ref2.node,
             callbackQueue = _ref2.callbackQueue,
-            callbackStart = _ref2.callbackStart;
+            callbackStart = _ref2.callbackStart,
+            target = _ref2.target;
         var material = node.mesh.material;
 
         material.color = material.currentColor;
-        if (callbackQueue.length) callbackStart({ callbackQueue: callbackQueue, callbackFinish: callbackFinish });
+        if (callbackQueue.length) callbackStart({ callbackQueue: callbackQueue, callbackFinish: callbackFinish, target: target });
       };
       var callbackStart = function () {
         var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(_ref4) {
@@ -50035,7 +50036,7 @@ var b5 = {
             while (1) {
               switch (_context.prev = _context.next) {
                 case 0:
-                  node = callbackQueue.pop();
+                  node = callbackQueue.shift();
 
                   if (!(node.id === target)) {
                     _context.next = 3;
@@ -50053,7 +50054,7 @@ var b5 = {
                   return (0, _utils.sleep)(500);
 
                 case 8:
-                  callbackFinish({ node: node, callbackQueue: callbackQueue, callbackStart: callbackStart });
+                  callbackFinish({ node: node, callbackQueue: callbackQueue, callbackStart: callbackStart, target: target });
 
                 case 9:
                 case 'end':
@@ -50486,7 +50487,7 @@ var GraphNode = function () {
         });
       }
       if (!queue.length) return -1;
-      return queue.pop().bfs({
+      return queue.shift().bfs({
         target: target, queue: queue, callback: callback, seen: seen, continueCallback: continueCallback,
         callbackQueue: callbackQueue, callbackFinish: callbackFinish
       });
