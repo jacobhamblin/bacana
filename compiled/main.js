@@ -50464,7 +50464,7 @@ var GraphNode = function () {
           seen = _ref$seen === undefined ? {} : _ref$seen,
           targetFound = _ref.targetFound,
           _ref$callbackQueue = _ref.callbackQueue,
-          callbackQueue = _ref$callbackQueue === undefined ? [] : _ref$callbackQueue,
+          callbackQueue = _ref$callbackQueue === undefined ? [this] : _ref$callbackQueue,
           callbackFinish = _ref.callbackFinish,
           _ref$continueCallback = _ref.continueCallback,
           continueCallback = _ref$continueCallback === undefined ? true : _ref$continueCallback;
@@ -50474,13 +50474,6 @@ var GraphNode = function () {
         targetFound = true;
         return this;
       }
-      this.adjacent.forEach(function (n) {
-        if (!seen[n.id]) {
-          queue.push(n);
-          callbackQueue.push(n);
-          seen[n.id] = seen[_this.id].concat(_this.id);
-        }
-      });
       if (callback && continueCallback) {
         if (callbackFinish) continueCallback = false;
         callback({
@@ -50488,6 +50481,13 @@ var GraphNode = function () {
           callbackFinish: callbackFinish, callbackQueue: callbackQueue
         });
       }
+      this.adjacent.forEach(function (n) {
+        if (!seen[n.id]) {
+          queue.push(n);
+          callbackQueue.push(n);
+          seen[n.id] = seen[_this.id].concat(_this.id);
+        }
+      });
       if (!queue.length) return -1;
       return queue.shift().bfs({
         target: target, queue: queue, callback: callback, seen: seen, continueCallback: continueCallback,
