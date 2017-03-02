@@ -167,7 +167,7 @@ const b5 = {
 
     b5Scene.mouseup = function(e) {
       this.mouseState.mouseDown = false
-      if (this.raycaster.creatingEdge) {
+      if (this.raycaster && this.raycaster.creatingEdge) {
         this.finishEdge()
       } else if (e.shiftKey && this.editable) {
         this.maybeSetTarget()
@@ -395,7 +395,7 @@ const b5 = {
       this.hudInit()
 
       this.destroyActions.push(
-        function() {
+        () => {
           // document.querySelector('canvas').removeEventListener('mousedown', this.mousedown.bind(this))
           // document.querySelector('canvas').removeEventListener('mouseup', this.mouseup.bind(this))
           // document.querySelector('canvas').removeEventListener('mousemove', this.mousemove.bind(this))

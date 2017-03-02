@@ -100,10 +100,12 @@ const bScene = {
 		this.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
   },
   onWindowResize () {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
+    if (this.camera) {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
 
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
   },
   render(fn) {
     if (this.ended) return

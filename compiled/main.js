@@ -37671,10 +37671,12 @@ var bScene = {
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   },
   onWindowResize: function onWindowResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
+    if (this.camera) {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
 
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
   },
   render: function render(fn) {
     if (this.ended) return;
@@ -50129,7 +50131,7 @@ var b5 = {
 
     b5Scene.mouseup = function (e) {
       this.mouseState.mouseDown = false;
-      if (this.raycaster.creatingEdge) {
+      if (this.raycaster && this.raycaster.creatingEdge) {
         this.finishEdge();
       } else if (e.shiftKey && this.editable) {
         this.maybeSetTarget();
