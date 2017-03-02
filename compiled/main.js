@@ -50026,6 +50026,7 @@ var b5 = {
         var material = node.mesh.material;
 
         material.color = material.currentColor;
+        if (node.id === target) return node;
         if (callbackQueue.length && !_this2.targetFound) callbackStart({ callbackQueue: callbackQueue, callbackFinish: callbackFinish, target: target });
       };
       var callbackStart = function () {
@@ -50033,27 +50034,20 @@ var b5 = {
           var callbackQueue = _ref4.callbackQueue,
               callbackFinish = _ref4.callbackFinish,
               target = _ref4.target;
-          var node, material;
+          var node, targetNode, highlightColor, material;
           return regeneratorRuntime.wrap(function _callee$(_context) {
             while (1) {
               switch (_context.prev = _context.next) {
                 case 0:
                   node = callbackQueue.shift();
-
-                  if (!(node.id === target)) {
-                    _context.next = 3;
-                    break;
-                  }
-
-                  return _context.abrupt('return', node);
-
-                case 3:
+                  targetNode = node.id === target;
+                  highlightColor = new _three2.default.Color(_this2.colors[_this2.colors.length - (targetNode ? 2 : 1)]);
                   material = node.mesh.material;
 
                   material.currentColor = material.color;
-                  material.color = new _three2.default.Color(_this2.colors[_this2.colors.length - 1]);
+                  material.color = highlightColor;
                   _context.next = 8;
-                  return (0, _utils.sleep)(500);
+                  return (0, _utils.sleep)(targetNode ? 1000 : 500);
 
                 case 8:
                   callbackFinish({ node: node, callbackQueue: callbackQueue, callbackStart: callbackStart, target: target });
@@ -50194,7 +50188,7 @@ var b5 = {
         }
         this[type] = raycaster.intersected.crystal.obj.graphNode;
 
-        var color = type === 'rootNode' ? 6 : 4;
+        var color = type === 'rootNode' ? 6 : this.colors.length - 1;
         this[type].mesh.material.color = new _three2.default.Color(this.colors[color]);
         this.updateHUD();
       }

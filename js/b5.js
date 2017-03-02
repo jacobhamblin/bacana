@@ -99,15 +99,17 @@ const b5 = {
       const callbackFinish = ({node, callbackQueue, callbackStart, target}) => {
         const { material } = node.mesh  
         material.color = material.currentColor
+        if (node.id === target) return node;
         if (callbackQueue.length && !this.targetFound) callbackStart({callbackQueue, callbackFinish, target})
       }
       const callbackStart = async ({callbackQueue, callbackFinish, target}) => {
         const node = callbackQueue.shift()
-        if (node.id === target) return node;
+        const targetNode = node.id === target
+        const highlightColor = new THREE.Color(this.colors[this.colors.length - (targetNode ? 2 : 1)])
         const { material } = node.mesh
         material.currentColor = material.color
-        material.color = new THREE.Color(this.colors[this.colors.length - 1])
-        await sleep(500)
+        material.color = highlightColor
+        await sleep(targetNode ? 1000 : 500)
         callbackFinish({node, callbackQueue, callbackStart, target})
       }
       if (this.rootNode && this.targetNode) {
@@ -225,7 +227,7 @@ const b5 = {
         }
         this[type] = raycaster.intersected.crystal.obj.graphNode
 
-        let color = type === 'rootNode' ? 6 : 4;
+        let color = type === 'rootNode' ? 6 : this.colors.length - 1;
         this[type].mesh.material.color = new THREE.Color(this.colors[color])
         this.updateHUD();
       }
