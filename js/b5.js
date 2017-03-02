@@ -99,7 +99,7 @@ const b5 = {
       const callbackFinish = ({node, callbackQueue, callbackStart, target}) => {
         const { material } = node.mesh  
         material.color = material.currentColor
-        if (callbackQueue.length) callbackStart({callbackQueue, callbackFinish, target})
+        if (callbackQueue.length && !this.targetFound) callbackStart({callbackQueue, callbackFinish, target})
       }
       const callbackStart = async ({callbackQueue, callbackFinish, target}) => {
         const node = callbackQueue.shift()
@@ -112,8 +112,9 @@ const b5 = {
       }
       if (this.rootNode && this.targetNode) {
         this.editable = false
+        this.targetFound = false
         this.rootNode[method]({
-          target: this.targetNode.id, callback: callbackStart, callbackFinish
+          target: this.targetNode.id, callback: callbackStart, callbackFinish, targetFound: this.targetFound
         })
         this.editable = true
       }
@@ -364,24 +365,25 @@ const b5 = {
     b5Scene.uniqueSetup = function () {
       window.crystals = this.objects.crystals = []
       window.raycaster = this.raycaster
-      this.counters.currentCrystal = 0
-      this.mouseState = {}
-      this.mouseState.mouseDown = false
-      this.raycaster.creatingEdge = false
-      this.rootNode = null
-      this.editable = true
-      this.counters.currentGraphNodeID = 1;
-      this.raycaster.intersected = {
-        plane: {obj: null, pos: null},
-        crystal: {obj: null, pos: null},
-        firstCrystal: null,
-      }
       this.colors = [
         0xB4F0A8, 0xA8F0B4, 0xA8F0CC, 0xA8F0E4, 0xA8E4F0,
         0xA8CCF0, 0xA8C0F0, 0xA8A8F0, 0xC0A8F0, 0xD8A8F0,
         0xF0A8F0, 0xF0A8D8, 0xF0A8C0, 0xF0A8A8, 0xF0C0A8,
         0xF0D8A8, 0xF0F0A8
       ];
+      this.counters.currentCrystal = 0
+      this.counters.currentGraphNodeID = 1
+      this.editable = true
+      this.targetFound = false
+      this.mouseState = {}
+      this.mouseState.mouseDown = false
+      this.raycaster.creatingEdge = false
+      this.raycaster.intersected = {
+        plane: {obj: null, pos: null},
+        crystal: {obj: null, pos: null},
+        firstCrystal: null,
+      }
+      this.rootNode = null
 
       this.prepObjects()
       this.readModel().then(collectPoints.bind(this));

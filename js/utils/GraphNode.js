@@ -13,11 +13,14 @@ class GraphNode {
   }
 
   bfs({
-      target, queue = [], callback, seen = {}, 
+      target, queue = [], callback, seen = {}, targetFound, 
       callbackQueue = [], callbackFinish, continueCallback = true
     }) {
     seen[this.id] = seen[this.id] || [];
-    if (this.id === target) return this;
+    if (this.id === target) {
+      targetFound = true;  
+      return this;
+    }
     this.adjacent.forEach((n) => {
       if (!seen[n.id]) {
         queue.push(n);
@@ -35,16 +38,19 @@ class GraphNode {
     if (!queue.length) return -1;
     return queue.shift().bfs({
       target, queue, callback, seen, continueCallback,
-      callbackQueue, callbackFinish
+      callbackQueue, callbackFinish, targetFound
     });
   }
 
   dfs({
-      target, callback, seen = {},
+      target, callback, seen = {}, targetFound,
       callbackQueue = [this], callbackFinish, continueCallback = true
     }) {
     seen[this.id] = seen[this.id] || [];
-    if (this.id === target) return this;
+    if (this.id === target) {
+        targetFound = true;
+        return this;
+    }
     if (callback && continueCallback) {
       if (callbackFinish) continueCallback = false;
       callback({
@@ -58,7 +64,7 @@ class GraphNode {
         callbackQueue.push(n)
         return n.dfs({
           target, callback, seen, continueCallback,
-          callbackQueue, callbackFinish
+          callbackQueue, callbackFinish, targetFound
         });
       }
     });

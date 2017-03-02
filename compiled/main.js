@@ -50024,7 +50024,7 @@ var b5 = {
         var material = node.mesh.material;
 
         material.color = material.currentColor;
-        if (callbackQueue.length) callbackStart({ callbackQueue: callbackQueue, callbackFinish: callbackFinish, target: target });
+        if (callbackQueue.length && !_this2.targetFound) callbackStart({ callbackQueue: callbackQueue, callbackFinish: callbackFinish, target: target });
       };
       var callbackStart = function () {
         var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(_ref4) {
@@ -50070,8 +50070,9 @@ var b5 = {
       }();
       if (this.rootNode && this.targetNode) {
         this.editable = false;
+        this.targetFound = false;
         this.rootNode[method]({
-          target: this.targetNode.id, callback: callbackStart, callbackFinish: callbackFinish
+          target: this.targetNode.id, callback: callbackStart, callbackFinish: callbackFinish, targetFound: this.targetFound
         });
         this.editable = true;
       }
@@ -50332,19 +50333,20 @@ var b5 = {
     b5Scene.uniqueSetup = function () {
       window.crystals = this.objects.crystals = [];
       window.raycaster = this.raycaster;
+      this.colors = [0xB4F0A8, 0xA8F0B4, 0xA8F0CC, 0xA8F0E4, 0xA8E4F0, 0xA8CCF0, 0xA8C0F0, 0xA8A8F0, 0xC0A8F0, 0xD8A8F0, 0xF0A8F0, 0xF0A8D8, 0xF0A8C0, 0xF0A8A8, 0xF0C0A8, 0xF0D8A8, 0xF0F0A8];
       this.counters.currentCrystal = 0;
+      this.counters.currentGraphNodeID = 1;
+      this.editable = true;
+      this.targetFound = false;
       this.mouseState = {};
       this.mouseState.mouseDown = false;
       this.raycaster.creatingEdge = false;
-      this.rootNode = null;
-      this.editable = true;
-      this.counters.currentGraphNodeID = 1;
       this.raycaster.intersected = {
         plane: { obj: null, pos: null },
         crystal: { obj: null, pos: null },
         firstCrystal: null
       };
-      this.colors = [0xB4F0A8, 0xA8F0B4, 0xA8F0CC, 0xA8F0E4, 0xA8E4F0, 0xA8CCF0, 0xA8C0F0, 0xA8A8F0, 0xC0A8F0, 0xD8A8F0, 0xF0A8F0, 0xF0A8D8, 0xF0A8C0, 0xF0A8A8, 0xF0C0A8, 0xF0D8A8, 0xF0F0A8];
+      this.rootNode = null;
 
       this.prepObjects();
       this.readModel().then(collectPoints.bind(this));
@@ -50464,6 +50466,7 @@ var GraphNode = function () {
           callback = _ref.callback,
           _ref$seen = _ref.seen,
           seen = _ref$seen === undefined ? {} : _ref$seen,
+          targetFound = _ref.targetFound,
           _ref$callbackQueue = _ref.callbackQueue,
           callbackQueue = _ref$callbackQueue === undefined ? [] : _ref$callbackQueue,
           callbackFinish = _ref.callbackFinish,
@@ -50471,7 +50474,10 @@ var GraphNode = function () {
           continueCallback = _ref$continueCallback === undefined ? true : _ref$continueCallback;
 
       seen[this.id] = seen[this.id] || [];
-      if (this.id === target) return this;
+      if (this.id === target) {
+        targetFound = true;
+        return this;
+      }
       this.adjacent.forEach(function (n) {
         if (!seen[n.id]) {
           queue.push(n);
@@ -50489,7 +50495,7 @@ var GraphNode = function () {
       if (!queue.length) return -1;
       return queue.shift().bfs({
         target: target, queue: queue, callback: callback, seen: seen, continueCallback: continueCallback,
-        callbackQueue: callbackQueue, callbackFinish: callbackFinish
+        callbackQueue: callbackQueue, callbackFinish: callbackFinish, targetFound: targetFound
       });
     }
   }, {
@@ -50501,6 +50507,7 @@ var GraphNode = function () {
           callback = _ref2.callback,
           _ref2$seen = _ref2.seen,
           seen = _ref2$seen === undefined ? {} : _ref2$seen,
+          targetFound = _ref2.targetFound,
           _ref2$callbackQueue = _ref2.callbackQueue,
           callbackQueue = _ref2$callbackQueue === undefined ? [this] : _ref2$callbackQueue,
           callbackFinish = _ref2.callbackFinish,
@@ -50508,7 +50515,10 @@ var GraphNode = function () {
           continueCallback = _ref2$continueCallbac === undefined ? true : _ref2$continueCallbac;
 
       seen[this.id] = seen[this.id] || [];
-      if (this.id === target) return this;
+      if (this.id === target) {
+        targetFound = true;
+        return this;
+      }
       if (callback && continueCallback) {
         if (callbackFinish) continueCallback = false;
         callback({
@@ -50522,7 +50532,7 @@ var GraphNode = function () {
           callbackQueue.push(n);
           return n.dfs({
             target: target, callback: callback, seen: seen, continueCallback: continueCallback,
-            callbackQueue: callbackQueue, callbackFinish: callbackFinish
+            callbackQueue: callbackQueue, callbackFinish: callbackFinish, targetFound: targetFound
           });
         }
       });
