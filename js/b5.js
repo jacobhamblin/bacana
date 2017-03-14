@@ -398,10 +398,10 @@ const b5 = {
 
       this.destroyActions.push(
         () => {
-          // document.querySelector('canvas').removeEventListener('mousedown', this.mousedown.bind(this))
-          // document.querySelector('canvas').removeEventListener('mouseup', this.mouseup.bind(this))
-          // document.querySelector('canvas').removeEventListener('mousemove', this.mousemove.bind(this))
-          // document.querySelector('canvas').removeEventListener('click', this.click.bind(this))
+           document.querySelector('canvas').removeEventListener('mousedown', this.mousedown.bind(this))
+           document.querySelector('canvas').removeEventListener('mouseup', this.mouseup.bind(this))
+           document.querySelector('canvas').removeEventListener('mousemove', this.mousemove.bind(this))
+           document.querySelector('canvas').removeEventListener('click', this.click.bind(this))
         }
       )
       return (
