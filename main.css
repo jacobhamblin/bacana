@@ -323,6 +323,8 @@ html body footer svg:hover {
   .hud .nodeContainer .level .node.root {
           background-color: #A8C0F0; }
   .hud .nodeContainer .level .node.target {
-          background-color: #A8F0E4; }
+          background-color: #F0D8A8; }
+  .hud .nodeContainer .level .node.current {
+          background-color: #F0F0A8; }
 
 /*# sourceMappingURL=main.css.map*/

@@ -99,6 +99,7 @@ const b5 = {
       const callbackFinish = ({node, callbackQueue, callbackStart, target}) => {
         const { material } = node.mesh  
         material.color = material.currentColor
+        this.highlightedNode = undefined
         if (node.id === target) return node;
         if (callbackQueue.length && !this.targetFound) callbackStart({callbackQueue, callbackFinish, target})
       }
@@ -106,9 +107,11 @@ const b5 = {
         const node = callbackQueue.shift()
         const targetNode = node.id === target
         const highlightColor = new THREE.Color(this.colors[this.colors.length - (targetNode ? 2 : 1)])
+        this.highlightedNode = node
         const { material } = node.mesh
         material.currentColor = material.color
         material.color = highlightColor
+        this.updateHUD()
         await sleep(targetNode ? 1000 : 500)
         callbackFinish({node, callbackQueue, callbackStart, target})
       }
@@ -442,6 +445,7 @@ const b5 = {
             node.className = 'node'
             if (index === 0) node.className += ' root'
             if (this.targetNode && this.targetNode.id === n) node.className += ' target'
+            if (this.highlightedNode && this.highlightedNode.id === n) node.className += ' current';
             container.appendChild(node)
           })
          nodeContainer.appendChild(container) 

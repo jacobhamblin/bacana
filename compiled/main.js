@@ -50026,6 +50026,7 @@ var b5 = {
         var material = node.mesh.material;
 
         material.color = material.currentColor;
+        _this2.highlightedNode = undefined;
         if (node.id === target) return node;
         if (callbackQueue.length && !_this2.targetFound) callbackStart({ callbackQueue: callbackQueue, callbackFinish: callbackFinish, target: target });
       };
@@ -50042,17 +50043,20 @@ var b5 = {
                   node = callbackQueue.shift();
                   targetNode = node.id === target;
                   highlightColor = new _three2.default.Color(_this2.colors[_this2.colors.length - (targetNode ? 2 : 1)]);
+
+                  _this2.highlightedNode = node;
                   material = node.mesh.material;
 
                   material.currentColor = material.color;
                   material.color = highlightColor;
-                  _context.next = 8;
+                  _this2.updateHUD();
+                  _context.next = 10;
                   return (0, _utils.sleep)(targetNode ? 1000 : 500);
 
-                case 8:
+                case 10:
                   callbackFinish({ node: node, callbackQueue: callbackQueue, callbackStart: callbackStart, target: target });
 
-                case 9:
+                case 11:
                 case 'end':
                   return _context.stop();
               }
@@ -50327,6 +50331,8 @@ var b5 = {
     };
 
     b5Scene.uniqueSetup = function () {
+      var _this3 = this;
+
       window.crystals = this.objects.crystals = [];
       window.raycaster = this.raycaster;
       this.colors = [0xB4F0A8, 0xA8F0B4, 0xA8F0CC, 0xA8F0E4, 0xA8E4F0, 0xA8CCF0, 0xA8C0F0, 0xA8A8F0, 0xC0A8F0, 0xD8A8F0, 0xF0A8F0, 0xF0A8D8, 0xF0A8C0, 0xF0A8A8, 0xF0C0A8, 0xF0D8A8, 0xF0F0A8];
@@ -50354,10 +50360,10 @@ var b5 = {
       this.hudInit();
 
       this.destroyActions.push(function () {
-        // document.querySelector('canvas').removeEventListener('mousedown', this.mousedown.bind(this))
-        // document.querySelector('canvas').removeEventListener('mouseup', this.mouseup.bind(this))
-        // document.querySelector('canvas').removeEventListener('mousemove', this.mousemove.bind(this))
-        // document.querySelector('canvas').removeEventListener('click', this.click.bind(this))
+        document.querySelector('canvas').removeEventListener('mousedown', _this3.mousedown.bind(_this3));
+        document.querySelector('canvas').removeEventListener('mouseup', _this3.mouseup.bind(_this3));
+        document.querySelector('canvas').removeEventListener('mousemove', _this3.mousemove.bind(_this3));
+        document.querySelector('canvas').removeEventListener('click', _this3.click.bind(_this3));
       });
       return function () {
         this.incrementCounters();
@@ -50379,7 +50385,7 @@ var b5 = {
     };
 
     b5Scene.updateHUD = function () {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.rootNode) {
         var nodeContainer = this.HUD.querySelector('.nodeContainer');
@@ -50403,7 +50409,8 @@ var b5 = {
             var node = document.createElement('div');
             node.className = 'node';
             if (index === 0) node.className += ' root';
-            if (_this3.targetNode && _this3.targetNode.id === n) node.className += ' target';
+            if (_this4.targetNode && _this4.targetNode.id === n) node.className += ' target';
+            if (_this4.highlightedNode && _this4.highlightedNode.id === n) node.className += ' current';
             container.appendChild(node);
           });
           nodeContainer.appendChild(container);
