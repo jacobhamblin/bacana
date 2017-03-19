@@ -50087,7 +50087,6 @@ var b5 = {
 
       var gui = new _datGui2.default.GUI({ autoPlace: false });
       gui.add(this, 'speed', 1, 10);
-      //document.querySelector('.dg').style['zIndex'] = 3;
 
       var hudDOM = document.createElement('div');
       var b5Scene = this;
@@ -50121,7 +50120,7 @@ var b5 = {
       setTimeout(function () {
         hudDOM.style.opacity = '1';
         _this3.HUD.querySelector('.dg.main').style['width'] = '100%';
-        _this3.HUD.querySelector('.dg .close-button').style['width'] = '100%';
+        _this3.HUD.querySelector('.close-button').style['width'] = '100%';
       }, 500);
     };
 

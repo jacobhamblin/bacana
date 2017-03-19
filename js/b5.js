@@ -129,7 +129,6 @@ const b5 = {
     b5Scene.hudInit = function() {
       const gui = new dat.GUI({ autoPlace: false });
       gui.add(this, 'speed', 1, 10)
-      //document.querySelector('.dg').style['zIndex'] = 3;
       
       let hudDOM = document.createElement('div')
       let b5Scene = this;
@@ -159,7 +158,7 @@ const b5 = {
       setTimeout(() => {
         hudDOM.style.opacity = '1'
         this.HUD.querySelector('.dg.main').style['width'] = '100%';
-        this.HUD.querySelector('.dg .close-button').style['width'] = '100%';
+        this.HUD.querySelector('.close-button').style['width'] = '100%';
       }, 500)
     }
 

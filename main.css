@@ -299,7 +299,7 @@ html body footer svg:hover {
   -webkit-transition: all 1s ease;
   transition: all 1s ease; }
   .hud .controls {
-    margin: 100px 25px 25px 25px;
+    margin: 60px 25px 25px 25px;
     position: relative; }
   .hud .controls .dg {
       margin-bottom: 50px; }
