@@ -189,7 +189,9 @@ html body {
   padding: 0;
   color: #DDE2E2;
   overflow-x: hidden;
-  font-family: "Open Sans", sans-serif; }
+  font-family: "Helvetica Neue", "Open Sans", sans-serif;
+  font-style: normal;
+  font-weight: 200; }
 html body a {
     text-decoration: none; }
 html body div.fullscreen {
@@ -245,11 +247,13 @@ html body header {
     text-align: center; }
 html body header h1 {
       color: #555;
-      margin-bottom: 0.7em; }
+      margin-bottom: 0.7em;
+      font-weight: 200; }
 html body header h4 {
       color: #888;
       font-weight: normal;
-      margin-top: 0; }
+      margin-top: 0;
+      font-weight: 200; }
 html body header div.box {
       width: 100%;
       height: 100%;
@@ -294,6 +298,22 @@ html body footer svg:hover {
   z-index: 2;
   -webkit-transition: all 1s ease;
   transition: all 1s ease; }
+  .hud .controls {
+    margin: 100px 25px 25px 25px;
+    position: relative; }
+  .hud .controls .dg {
+      margin-bottom: 50px; }
+  .hud .controls .buttonContainer {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
+      cursor: pointer; }
+  .hud .controls .buttonContainer a {
+        padding: 10px 30px;
+        background-color: #000; }
   .hud .nodeContainer {
     margin: 60px 20px 0;
     display: -webkit-box;

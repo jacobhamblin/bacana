@@ -21,7 +21,9 @@ html {
     padding: 0;
     color: #DDE2E2;
     overflow-x: hidden;
-    font-family: "Open Sans", sans-serif;
+    font-family: "Helvetica Neue", "Open Sans", sans-serif;
+    font-style: normal;
+    font-weight: 200;
     a {
       text-decoration: none;
     }
@@ -88,11 +90,13 @@ html {
       h1 {
         color: #555;
         margin-bottom: 0.7em;
+        font-weight: 200;
       }
       h4 {
         color: #888;
         font-weight: normal;
         margin-top: 0;
+        font-weight: 200;
       }
       div.box {
         width: 100%;

@@ -10,6 +10,26 @@
   z-index: 2;
   transition: all 1s ease;
   
+  .controls {
+    margin: 100px 25px 25px 25px;
+    position: relative;
+
+    .dg {
+      margin-bottom: 50px;
+    }
+
+    .buttonContainer {
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+      
+      a {
+        padding: 10px 30px;
+        background-color: #000;
+      }
+    }
+  }
+
   .nodeContainer {
     margin: 60px 20px 0;
     display: flex;

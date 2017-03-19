@@ -6,6 +6,7 @@ import TweenLite from 'gsap';
 import { LinkedList, GraphNode, sleep } from './utils'
 import { MeshLine, MeshLineMaterial } from './vendor';
 import '../sass/b5.scss';
+import dat from 'dat-gui';
 
 const b5 = {
   init({container, renderer}) {
@@ -112,7 +113,7 @@ const b5 = {
         material.currentColor = material.color
         material.color = highlightColor
         this.updateHUD()
-        await sleep(targetNode ? 1000 : 500)
+        await sleep(targetNode ? 2200 - (this.speed * 200): 1100 - (this.speed * 100));
         callbackFinish({node, callbackQueue, callbackStart, target})
       }
       if (this.rootNode && this.targetNode) {
@@ -126,6 +127,10 @@ const b5 = {
     }
 
     b5Scene.hudInit = function() {
+      const gui = new dat.GUI({ autoPlace: false });
+      gui.add(this, 'speed', 1, 10)
+      //document.querySelector('.dg').style['zIndex'] = 3;
+      
       let hudDOM = document.createElement('div')
       let b5Scene = this;
       hudDOM.className = 'hud'
@@ -142,13 +147,19 @@ const b5 = {
       bfs.addEventListener('click', e => b5Scene.graphTraversalCallback('bfs'))
       buttonContainer.appendChild(bfs)
       buttonContainer.appendChild(dfs)
-      this.HUD.appendChild(buttonContainer)
+      const controls = document.createElement('div');
+      controls.appendChild(gui.domElement);
+      controls.appendChild(buttonContainer);
+      controls.className = 'controls';
+      this.HUD.appendChild(controls);
       const nodeContainer = document.createElement('div')
       nodeContainer.className = 'nodeContainer'
       this.HUD.appendChild(nodeContainer)
       this.tempMem.push('HUD')
       setTimeout(() => {
         hudDOM.style.opacity = '1'
+        this.HUD.querySelector('.dg.main').style['width'] = '100%';
+        this.HUD.querySelector('.dg .close-button').style['width'] = '100%';
       }, 500)
     }
 
@@ -389,6 +400,7 @@ const b5 = {
         firstCrystal: null,
       }
       this.rootNode = null
+      this.speed = 5;
 
       this.prepObjects()
       this.readModel().then(collectPoints.bind(this));
