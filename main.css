@@ -287,6 +287,16 @@ html body footer svg:hover {
   to {
     opacity: 0.8; } }
 .hud {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column wrap;
+          flex-flow: column wrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   max-width: 300px;
   width: 20%;
   background-color: rgba(1, 1, 1, 0.2);
@@ -299,10 +309,10 @@ html body footer svg:hover {
   -webkit-transition: all 1s ease;
   transition: all 1s ease; }
   .hud .controls {
-    margin: 60px 25px 25px 25px;
+    margin: 60px 25px 5px 25px;
     position: relative; }
   .hud .controls .dg {
-      margin-bottom: 50px; }
+      margin-bottom: 30px; }
   .hud .controls .buttonContainer {
       display: -webkit-box;
       display: -ms-flexbox;
@@ -315,7 +325,7 @@ html body footer svg:hover {
         padding: 10px 30px;
         background-color: #000; }
   .hud .nodeContainer {
-    margin: 60px 20px 0;
+    margin: 5px 25px 5px 25px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -331,8 +341,10 @@ html body footer svg:hover {
       display: flex;
       -ms-flex-pack: distribute;
           justify-content: space-around;
-      margin-bottom: 50px;
+      margin-bottom: 30px;
       width: 100%; }
+  .hud .nodeContainer .level:last-of-type {
+        margin-bottom: 0; }
   .hud .nodeContainer .level .node {
         width: 30px;
         height: 30px;
@@ -346,5 +358,12 @@ html body footer svg:hover {
           background-color: #F0D8A8; }
   .hud .nodeContainer .level .node.current {
           background-color: #F0F0A8; }
+  .hud .tips {
+    margin: 5px 25px 25px 25px; }
+  .hud .tips ul {
+      padding: 0 0 0 10px;
+      margin: 0; }
+  .hud .tips ul li {
+        font-size: 14px; }
 
 /*# sourceMappingURL=main.css.map*/

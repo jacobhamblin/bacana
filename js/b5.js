@@ -3,6 +3,7 @@
 import THREE from 'three';
 import bScene from './bScene.js';
 import TweenLite from 'gsap';
+import _ from 'lodash';
 import { LinkedList, GraphNode, sleep } from './utils'
 import { MeshLine, MeshLineMaterial } from './vendor';
 import '../sass/b5.scss';
@@ -151,9 +152,26 @@ const b5 = {
       controls.appendChild(buttonContainer);
       controls.className = 'controls';
       this.HUD.appendChild(controls);
-      const nodeContainer = document.createElement('div')
+      const nodeContainer = document.createElement('div');
       nodeContainer.className = 'nodeContainer'
       this.HUD.appendChild(nodeContainer)
+      const tips = document.createElement('div');
+      tips.className = 'tips';
+      const list = document.createElement('ul');
+      const messages = [
+        "Ctrl/cmd + click to place a node",
+        "Shift + click and drag to connect nodes",
+        "Ctrl/cmd + click node to set root node",
+        "Shift click on a node to set as target",
+      ];
+      for (let i = 0; i < 4; i++) {
+        let item = document.createElement('li');
+        item.innerHTML = messages[i];
+        list.appendChild(item);
+      }
+      tips.appendChild(list);
+      this.HUD.appendChild(tips);
+      
       this.tempMem.push('HUD')
       setTimeout(() => {
         hudDOM.style.opacity = '1'

@@ -1,4 +1,7 @@
 .hud {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-between;
   max-width: 300px;
   width: 20%;
   background-color: rgba(1,1,1,.2);
@@ -11,11 +14,11 @@
   transition: all 1s ease;
   
   .controls {
-    margin: 60px 25px 25px 25px;
+    margin: 60px 25px 5px 25px;
     position: relative;
 
     .dg {
-      margin-bottom: 50px;
+      margin-bottom: 30px;
     }
 
     .buttonContainer {
@@ -31,7 +34,7 @@
   }
 
   .nodeContainer {
-    margin: 60px 20px 0;
+    margin: 5px 25px 5px 25px;
     display: flex;
     justify-content: space-around;
     flex-flow: row wrap;
@@ -39,8 +42,11 @@
     .level {
       display: flex;
       justify-content: space-around;
-      margin-bottom: 50px;
+      margin-bottom: 30px;
       width: 100%;
+      &:last-of-type {
+        margin-bottom: 0;
+      }
 
       .node {
         width: 30px;
@@ -61,6 +67,17 @@
         &.current {
           background-color: #F0F0A8;
         }
+      }
+    }
+  }
+
+  .tips {
+    margin: 5px 25px 25px 25px;
+    ul {
+      padding: 0 0 0 10px;
+      margin: 0;
+      li {
+        font-size: 14px;
       }
     }
   }
